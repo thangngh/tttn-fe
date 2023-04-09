@@ -10,17 +10,17 @@ interface IChildren {
 export default function UserSocketProvider({ children }: IChildren) {
   const [socket, setSocket] = useState<Socket>();
 
-  useEffect(() => {
-    const newSocket = io("localhost:3001", {
-      transports: ["web-socket"],
-      withCredentials: true,
-    });
-    setSocket(newSocket);
+  // useEffect(() => {
+  //   const newSocket = io("localhost:3001", {
+  //     transports: ["web-socket"],
+  //     withCredentials: true,
+  //   });
+  //   setSocket(newSocket);
 
-    return () => {
-      newSocket.disconnect();
-    };
-  }, []);
+  //   return () => {
+  //     newSocket.disconnect();
+  //   };
+  // }, []);
 
   return (
     <SocketContext.Provider value={socket}>{children}</SocketContext.Provider>

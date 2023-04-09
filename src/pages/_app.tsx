@@ -3,7 +3,7 @@ import type { AppProps } from "next/app";
 import "antd/dist/reset.css";
 import { Provider } from "react-redux";
 import store from "@/redux/store";
-import UserSocketProvider from "./provider/userSocket";
+import UserSocketProvider from "../provider/userSocket";
 import { SessionProvider } from "next-auth/react";
 import { Session } from "next-auth";
 import { ToastContainer } from "react-toastify";

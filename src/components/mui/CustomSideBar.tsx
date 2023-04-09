@@ -24,7 +24,6 @@ import Image from "next/image";
 import { Badge, Collapse } from "@mui/material";
 import NotificationsIcon from "@mui/icons-material/Notifications";
 import { ExpandLess, ExpandMore } from "@mui/icons-material";
-import { Menu } from "./menu";
 interface data {
   id: number;
   title: string;
@@ -101,7 +100,28 @@ const Drawer = styled(MuiDrawer, {
   }),
 }));
 
-const CustomSideBar = () => {
+interface IMenu {
+  id: number;
+  title: string;
+  path?: string;
+  icon: React.ReactNode;
+  subItem?: {
+    id: number;
+    title: string;
+    path?: string;
+    icon: React.ReactNode;
+  }[];
+}
+
+interface IProp {
+  data: IMenu[];
+  title?: string;
+  notify?: string;
+  avatar?: string;
+  username?: string;
+}
+
+const CustomSideBar = ({ data, title, username }: IProp) => {
   const router = useRouter();
   const [open, setOpen] = React.useState(false);
   const [openSubMenu, setOpenSubMenu] = React.useState(false);
@@ -123,6 +143,7 @@ const CustomSideBar = () => {
   return (
     <div>
       <CssBaseline />
+      {/* header start */}
       <AppBar position="fixed" open={open}>
         <Toolbar className="flex justify-between items-center">
           <div className="inline-flex items-center">
@@ -144,7 +165,7 @@ const CustomSideBar = () => {
               component="div"
               className="hidden sm:block"
             >
-              Mini variant drawer
+              {title}
             </Typography>
           </div>
           <div className="relative flex space-x-3 items-center">
@@ -167,10 +188,11 @@ const CustomSideBar = () => {
               height={30}
               className="rounded-full"
             />
-            <span>Name</span>
+            <span>{username}</span>
           </div>
         </Toolbar>
       </AppBar>
+      {/* header end */}
       <Drawer variant="permanent" open={open}>
         <DrawerHeader>
           <IconButton
@@ -188,7 +210,7 @@ const CustomSideBar = () => {
             </div>
           </IconButton>
         </DrawerHeader>
-        {Menu.map((text, index) => (
+        {data.map((text, index) => (
           <List key={text.id}>
             {"subItem" in text ? (
               <ListItem

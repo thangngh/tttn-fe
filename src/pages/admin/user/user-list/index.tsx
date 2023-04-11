@@ -296,25 +296,27 @@ const UserList = () => {
             Completed
           </button>
         </div> */}
-        <Form form={forms} component={false}>
-          <Table
-            components={{
-              body: {
-                cell: EditableCell,
-              },
-            }}
-            pagination={{
-              onChange: onPageChange,
-              current: currentPage,
-              pageSize: PAGE_SIZE,
-              defaultPageSize: PAGE_SIZE,
-              total: listUser.total,
-            }}
-            bordered
-            dataSource={dataSource}
-            columns={mergedColumns as ColumnTypes}
-          />
-        </Form>
+        <React.Fragment>
+          <Form form={forms} component={false}>
+            <Table
+              components={{
+                body: {
+                  cell: EditableCell,
+                },
+              }}
+              pagination={{
+                onChange: onPageChange,
+                current: currentPage,
+                pageSize: PAGE_SIZE,
+                defaultPageSize: PAGE_SIZE,
+                total: listUser.total,
+              }}
+              bordered
+              dataSource={dataSource}
+              columns={mergedColumns as ColumnTypes}
+            />
+          </Form>
+        </React.Fragment>
       </div>
     </AdminLayout>
   );

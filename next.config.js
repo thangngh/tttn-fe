@@ -24,6 +24,7 @@ const nextConfig = {
     NEXTAUTH_URL: "http://localhost:3000/",
     NEXTAUTH_SECRET: "mg+eY6YYTirnpMVU/joaQY7fCHO3R9YAbZfntDZMHes",
   },
+  staticPageGenerationTimeout: 100,
 };
 
 module.exports = nextConfig;

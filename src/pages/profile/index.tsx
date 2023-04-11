@@ -1,14 +1,16 @@
 import Screen from "@/layouts/Screen";
 import { Accordion, AccordionSummary } from "@mui/material";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import { useRouter } from "next/router";
 
 export default function Profile() {
+  const router = useRouter();
   return (
     <Screen>
       <div className="w-full mb-5">
         <div className="w-full sm:container  px-4 relative flex items-center  flex-wrap sm:flex-nowrap justify-end container mx-[15px] sm:mx-auto space-3">
           <div
-            // onClick={() => checkIsShop()}
+            onClick={() => router.push("/create-shop")}
             className="px-2 py-2 bg-red-500 text-white font-semibold cursor-pointer rounded-md"
           >
             <span>My Shop</span>

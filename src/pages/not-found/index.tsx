@@ -1,8 +1,12 @@
+import { useRouter } from "next/router";
+
 /* eslint-disable react/no-unescaped-entities */
 const NotFound = () => {
+  const router = useRouter();
+
   return (
     <div className="bg-black text-white">
-      <div className="flex h-screen">
+      <div className="flex h-screen flex-col p-6">
         <div className="m-auto text-center">
           <div>
             <svg
@@ -197,6 +201,12 @@ const NotFound = () => {
             </svg>
           </div>
         </div>
+        <button
+          className="bg-red-500 text-white block text-center 3xl:text-xl rounded-lg py-2 px-5 w-40 h-10 mt-4 mx-auto"
+          onClick={() => router.push("/")}
+        >
+          Back to Home
+        </button>
       </div>
     </div>
   );

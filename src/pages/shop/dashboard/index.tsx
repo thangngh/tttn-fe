@@ -1,3 +1,9 @@
+import ShopLayout from "@/layouts/ShopLayout";
+
 export default function Dashboard() {
-  return <h1>dashboard</h1>;
+  return (
+    <ShopLayout>
+      <h1>dashboard</h1>
+    </ShopLayout>
+  );
 }

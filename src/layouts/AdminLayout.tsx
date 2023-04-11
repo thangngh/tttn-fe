@@ -138,11 +138,20 @@ const AdminLayout = ({ children }: IProp) => {
   }, [dispatch]);
 
   React.useEffect(() => {
+    if (role) {
+      roleRef.current = role?.data;
+    }
+  }, [role]);
+
+  React.useEffect(() => {
+    if (!role) {
+      return;
+    }
     const currentPath = router.pathname;
     const isPrivateRouter = PrivateRoute.some((url) =>
       currentPath.includes(url)
     );
-    if (isPrivateRouter && roleRef.current.trim() !== IRole.ADMIN) {
+    if (isPrivateRouter && roleRef.current?.trim() !== IRole.ADMIN) {
       router.push("/not-found");
     }
   }, [role, router]);

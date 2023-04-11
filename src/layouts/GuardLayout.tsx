@@ -5,7 +5,7 @@ interface IProps {
   children: React.ReactNode;
 }
 
-const PrivateRoute = ["/profile"];
+const PrivateRoute = ["/profile", "/create-shop", "/shop", "/admin"];
 
 export default function GuardLayout({ children }: IProps) {
   const router = useRouter();

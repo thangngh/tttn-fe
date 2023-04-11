@@ -47,16 +47,6 @@ export const UserAPI = {
 		}
 	},
 
-	becomeShop: async () => {
-		try {
-			const response = await axiosConfig.post("/user/become-shop");
-			return response.data;
-		} catch (error: any) {
-			toast.error(error.message);
-			return error;
-		}
-	},
-
 	editProfile: async () => {
 
 	}

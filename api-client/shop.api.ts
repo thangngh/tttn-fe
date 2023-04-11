@@ -31,5 +31,15 @@ export const ShopAPI = {
 			toast.error(error.message);
 			return error;
 		}
+	},
+
+	isShop: async () => {
+		try {
+			const response = await axiosConfig.get("/shop/is-shop");
+			return response.data;
+		} catch (error: any) {
+			toast.error(error.message);
+			return error;
+		}
 	}
 }

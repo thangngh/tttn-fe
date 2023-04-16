@@ -41,5 +41,7 @@ export const ShopAPI = {
 			toast.error(error.message);
 			return error;
 		}
-	}
+	},
+
+
 }

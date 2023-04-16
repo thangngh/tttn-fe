@@ -28,3 +28,21 @@ export const updateCategoryAction = createAsyncThunk(
 		return response;
 	}
 )
+
+export const getAllCategoryAction = createAsyncThunk(
+	"/category/get-all",
+	async () => {
+		const response = await CategoryAPI.getAllCategory();
+
+		return response;
+	}
+)
+
+export const findProductByCategoryAction = createAsyncThunk(
+	"/category/find-product",
+	async (name: string) => {
+		const response = await CategoryAPI.getProductWithCategory(name);
+
+		return response;
+	}
+)

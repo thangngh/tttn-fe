@@ -1,5 +1,5 @@
 export interface IProduct {
-	id: number;
+	id?: number;
 	name: string;
 	description: string;
 	categoryId?: number;
@@ -13,3 +13,26 @@ export interface IProduct {
 }
 
 export interface ICreateProduct extends IProduct { }
+
+export interface IUpdateProduct {
+	id: number;
+	name?: string;
+	description?: string;
+	categoryId?: number;
+	discountId?: number;
+	modifiedAt?: Date;
+}
+
+export interface IProductInventory {
+	id?: number;
+	productId: number;
+	quantity: number;
+	image?: string;
+	price: number;
+	createAt?: Date;
+}
+
+// export interface ICreateProductInventory {
+// 	payload: IProductInventory,
+// 	filesPath?: File
+// }

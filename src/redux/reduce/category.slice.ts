@@ -1,23 +1,31 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { createCategoryAction, getAllCategoryByShopAction, updateCategoryAction } from "../action/category.action";
+import { createCategoryAction, findProductByCategoryAction, getAllCategoryAction, getAllCategoryByShopAction, updateCategoryAction } from "../action/category.action";
 import { ICategory } from "@/type/category.interface";
 
 interface initialState {
 	isSuccess: boolean,
 	isFail: boolean,
-	category: ICategory[]
+	category: ICategory[],
+	listCategory: any[],
+	productWithShop: any[]
 }
 
 const initialState: initialState = {
 	isSuccess: false,
 	isFail: false,
-	category: []
+	category: [],
+	listCategory: [],
+	productWithShop: []
 }
 
 const CategorySlice = createSlice({
 	name: "category",
 	initialState: initialState,
-	reducers: {},
+	reducers: {
+		cleanProductWithCategory: (state) => {
+			state.productWithShop = []
+		}
+	},
 	extraReducers: (builder) => {
 		builder.addCase(createCategoryAction.fulfilled, (state, action) => {
 			console.log("create new category", action.payload)
@@ -38,7 +46,17 @@ const CategorySlice = createSlice({
 				}
 			})
 		})
+
+		builder.addCase(getAllCategoryAction.fulfilled, (state, action) => {
+			state.listCategory = action.payload.data
+		})
+
+		builder.addCase(findProductByCategoryAction.fulfilled, (state, action) => {
+			state.listCategory = action.payload.data
+		})
 	}
 })
+
+export const { cleanProductWithCategory } = CategorySlice.actions
 
 export default CategorySlice.reducer;

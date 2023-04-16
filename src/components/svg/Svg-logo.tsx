@@ -1,4 +1,7 @@
+import { useRouter } from "next/router";
+
 export default function SVGLogo() {
+  const router = useRouter();
   return (
     <svg
       className="w-6 h-6"
@@ -8,6 +11,7 @@ export default function SVGLogo() {
       viewBox="0 0 24 24"
       xmlns="http://www.w3.org/2000/svg"
       aria-hidden="true"
+      onClick={() => router.push("/")}
     >
       <path
         stroke-linecap="round"

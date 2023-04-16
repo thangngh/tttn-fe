@@ -5,6 +5,7 @@ import { IUser } from "@/type/user.interface";
 interface initState {
 	role: any;
 	user: any;
+	success: boolean,
 	listUser: {
 		results: IUser[],
 		pageTotal: number;
@@ -15,6 +16,7 @@ interface initState {
 const initState: initState = {
 	role: null,
 	user: null,
+	success: false,
 	listUser: {
 		results: [],
 		pageTotal: 0,

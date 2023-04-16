@@ -3,6 +3,7 @@ import axiosConfig from "./axios.config";
 import { toast } from "react-toastify";
 
 export const CategoryAPI = {
+
 	createCategory: async (payload: ICreateCategory) => {
 		try {
 			const response = await axiosConfig.post("/category/create-category", payload);
@@ -12,6 +13,7 @@ export const CategoryAPI = {
 			return error;
 		}
 	},
+
 	getCategoryByShop: async () => {
 		try {
 			const response = await axiosConfig.get("/category/get-all-category-shop");
@@ -21,6 +23,7 @@ export const CategoryAPI = {
 			return error;
 		}
 	},
+
 	updateCategory: async (payload: IUpdateCategory) => {
 		const { id, name, modifiedAt } = payload
 		try {
@@ -28,6 +31,26 @@ export const CategoryAPI = {
 				name,
 				modifiedAt
 			});
+			return response.data;
+		} catch (error: any) {
+			toast.error(error.message);
+			return error;
+		}
+	},
+
+	getAllCategory: async () => {
+		try {
+			const response = await axiosConfig.get("/category/get-all");
+			return response.data;
+		} catch (error: any) {
+			toast.error(error.message);
+			return error;
+		}
+	},
+
+	getProductWithCategory: async (name: string) => {
+		try {
+			const response = await axiosConfig.get(`/category/product-with-category?name=${name}`);
 			return response.data;
 		} catch (error: any) {
 			toast.error(error.message);

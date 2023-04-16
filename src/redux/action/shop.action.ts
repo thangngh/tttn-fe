@@ -28,3 +28,4 @@ export const getShopByUserAction = createAsyncThunk(
 		return response;
 	}
 )
+

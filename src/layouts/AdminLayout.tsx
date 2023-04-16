@@ -5,6 +5,7 @@ import { RootState } from "@/redux/store";
 import { IRole } from "@/type/auth.interface";
 import { useRouter } from "next/router";
 import React, { useRef } from "react";
+import GuardLayout from "./GuardLayout";
 
 interface IProp {
   children: React.ReactNode;
@@ -157,14 +158,16 @@ const AdminLayout = ({ children }: IProp) => {
   }, [role, router]);
 
   return (
-    <div className="min-h-screen w-full  h-full flex bg-white  text-black dark:text-white">
-      <CustomSideBar
-        data={AdminMenu}
-        title="Admin Dashboard"
-        username={profile?.username}
-      />
-      {children}
-    </div>
+    <GuardLayout>
+      <div className="min-h-screen w-full  h-full flex bg-white  text-black dark:text-white">
+        <CustomSideBar
+          data={AdminMenu}
+          title="Admin Dashboard"
+          username={profile?.username}
+        />
+        {children}
+      </div>
+    </GuardLayout>
   );
 };
 

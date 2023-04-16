@@ -12,7 +12,7 @@ const initState: initState = {
 	isSuccess: false,
 	isFail: false,
 	isShop: false,
-	shopId: ""
+	shopId: "",
 }
 
 const ShopSlice = createSlice({
@@ -36,9 +36,9 @@ const ShopSlice = createSlice({
 		})
 
 		builder.addCase(getShopByUserAction.fulfilled, (state, action) => {
-			console.log(" action.payload", action.payload)
 			state.shopId = action.payload?.data?.id
 		})
+
 	}
 })
 

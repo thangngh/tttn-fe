@@ -6,7 +6,12 @@ import {
   createCategoryAction,
   getAllCategoryByShopAction,
 } from "@/redux/action/category.action";
-import { getAllProductWithShopAction } from "@/redux/action/product.action";
+import {
+  createProductAction,
+  deleteProductAction,
+  getAllProductWithShopAction,
+  updateProductAction,
+} from "@/redux/action/product.action";
 import { getShopByUserAction } from "@/redux/action/shop.action";
 import { useAppDispatch, useAppSelector } from "@/redux/hook";
 import { RootState } from "@/redux/store";
@@ -21,6 +26,7 @@ import {
   Button,
   InputNumber,
   Select,
+  Row,
 } from "antd";
 import Link from "next/link";
 import { useRouter } from "next/router";
@@ -29,7 +35,7 @@ import { toast } from "react-toastify";
 import { number } from "yup";
 
 interface DataType {
-  id?: number;
+  id?: string;
   name?: string;
   description?: string;
   categoryId?: string;
@@ -123,7 +129,7 @@ export default function Product() {
     const listData: DataType[] = [];
     listProductWithShop.results.forEach((item) => {
       listData.push({
-        id: item.id,
+        id: item?.id as unknown as string,
         name: item.name,
         description: item.description,
         categoryId: item.categoryId as unknown as string,
@@ -146,7 +152,7 @@ export default function Product() {
     dispatch(getAllCategoryByShopAction());
   }, []);
 
-  const isEditing = (record: DataType) => record?.id?.toString() === editingKey;
+  const isEditing = (record: DataType) => record?.id === editingKey;
 
   const cancel = () => {
     setEditingKey("");
@@ -154,16 +160,41 @@ export default function Product() {
 
   const save = async (key: DataType) => {
     const row = await forms.validateFields();
+    try {
+      dispatch(
+        updateProductAction({
+          id: +(key.id as string),
+          name: row.name,
+          description: row.description,
+          categoryId: categoryChange as unknown as number,
+          discountId: row.discount,
+          modifiedAt: new Date(),
+        })
+      );
+      setEditingKey("");
+    } catch (error: any) {
+      toast.error(error);
+    }
   };
 
   const edit = (record: DataType) => {
-    console.log("edit record", record);
     forms.setFieldsValue({
       name: "",
       description: "",
+      category: "",
       ...record,
     });
-    setEditingKey(record?.id?.toString() as string);
+    setCategoryChange(record?.categoryId as string);
+    setEditingKey(record?.id as string);
+  };
+
+  const deleteProduct = (key: DataType) => {
+    try {
+      dispatch(deleteProductAction(key.id as string));
+      setEditingKey("");
+    } catch (error: any) {
+      toast.error(error);
+    }
   };
 
   const columns: (ColumnTypes[number] & {
@@ -194,17 +225,19 @@ export default function Product() {
       title: "category Name",
       dataIndex: "categoryName",
       key: "categoryName",
-      editable: true,
-      render: (record: DataType) => {
-        const editable = isEditing(record);
+      // editable: true,
+      render: (text: string, record: object) => {
+        const typedRecord = record as DataType;
+        const { id, categoryName } = typedRecord;
+        const editable = isEditing(typedRecord);
         return editable ? (
           <Select
             showArrow
             style={{
               width: "100%",
             }}
-            onChange={(value: string) => console.log("category change", value)}
-            defaultValue={record.categoryName}
+            onChange={(value: string) => setCategoryChange(value)}
+            defaultValue={categoryName}
           >
             {category.map((item, idx) => (
               <Select.Option key={idx} value={item.id}>
@@ -213,48 +246,50 @@ export default function Product() {
             ))}
           </Select>
         ) : (
-          <Typography>{record as unknown as string}</Typography>
+          <Typography>{text}</Typography>
         );
       },
     },
-    {
-      title: "Discount Id",
-      dataIndex: "discountId",
-      key: "discountId",
-      editable: true,
-    },
+    // {
+    //   title: "Discount Id",
+    //   dataIndex: "discountId",
+    //   key: "discountId",
+    //   editable: true,
+    // },
     { title: "Created At", dataIndex: "createAt", key: "createAt" },
     { title: "Modified At", dataIndex: "modifiedAt", key: "modifiedAt" },
-    { title: "Deleted At", dataIndex: "deletedAt", key: "deletedAt" },
-    {
-      title: "Is Active",
-      dataIndex: "isActive",
-      key: "isActive",
-      editable: true,
-      render: (value: boolean, record: object, index: number) => {
-        const typedRecord = record as DataType;
-        const { id, isActive } = typedRecord;
-        const editable = isEditing(typedRecord);
-        return editable ? (
-          <Checkbox
-            checked={value}
-            onChange={() => handleCheckboxChange(id as number)}
-          />
-        ) : (
-          <div className="cursor-not-allowed">
-            <Checkbox checked={value} />
-          </div>
-        );
-      },
-    },
+    // { title: "Deleted At", dataIndex: "deletedAt", key: "deletedAt" },
+    // {
+    //   title: "Is Active",
+    //   dataIndex: "isActive",
+    //   key: "isActive",
+    //   editable: true,
+    //   render: (value: boolean, record: object, index: number) => {
+    //     const typedRecord = record as DataType;
+    //     const { id, isActive } = typedRecord;
+    //     const editable = isEditing(typedRecord);
+    //     return editable ? (
+    //       <Checkbox
+    //         checked={value}
+    //         onChange={() => handleCheckboxChange(id as number)}
+    //       />
+    //     ) : (
+    //       <div className="cursor-not-allowed">
+    //         <Checkbox checked={value} />
+    //       </div>
+    //     );
+    //   },
+    // },
     {
       title: "Action",
       dataIndex: "action",
       key: "action",
       fixed: "right",
       width: "20%",
-      render: (record: DataType) => {
-        const editable = isEditing(record);
+      render: (text: string, record: object) => {
+        const typedRecord = record as DataType;
+        const { id, isActive } = typedRecord;
+        const editable = isEditing(typedRecord);
 
         return editable ? (
           <span>
@@ -264,7 +299,7 @@ export default function Product() {
               }}
             >
               <button
-                onClick={() => save(record)}
+                onClick={() => save(typedRecord)}
                 style={{
                   cursor: "pointer",
                   padding: "0 8px",
@@ -285,38 +320,54 @@ export default function Product() {
             </Popconfirm>
           </span>
         ) : (
-          <Typography.Link
-            disabled={editingKey !== ""}
-            onClick={() => edit(record)}
-          >
-            <button
-              style={{
-                cursor: "pointer",
-                padding: "0 10px",
-                background: "danger",
-              }}
+          <Row>
+            <Typography.Link
+              disabled={editingKey !== ""}
+              onClick={() => edit(typedRecord)}
             >
-              Edit
-            </button>
-          </Typography.Link>
+              <button
+                style={{
+                  cursor: "pointer",
+                  padding: "0 10px",
+                  background: "danger",
+                }}
+              >
+                Edit
+              </button>
+            </Typography.Link>
+            <Typography.Link
+              disabled={editingKey !== ""}
+              onClick={() => deleteProduct(typedRecord)}
+            >
+              <button
+                style={{
+                  cursor: "pointer",
+                  padding: "0 10px",
+                  background: "danger",
+                }}
+              >
+                Delete
+              </button>
+            </Typography.Link>
+          </Row>
         );
       },
     },
   ];
 
-  const handleCheckboxChange = (key: number) => {
-    const newData = [...dataSource];
+  // const handleCheckboxChange = (key: number) => {
+  //   const newData = [...dataSource];
 
-    const index = newData.findIndex((item) => key === item.id);
-    if (index > -1) {
-      const item = newData[index];
-      newData.splice(index, 1, {
-        ...item,
-        isActive: !item.isActive,
-      });
-      setDataSource(newData);
-    }
-  };
+  //   const index = newData.findIndex((item) => key === item.id);
+  //   if (index > -1) {
+  //     const item = newData[index];
+  //     newData.splice(index, 1, {
+  //       ...item,
+  //       isActive: !item.isActive,
+  //     });
+  //     setDataSource(newData);
+  //   }
+  // };
 
   const mergedColumns = columns.map((col) => {
     if (!col.editable) {
@@ -343,34 +394,39 @@ export default function Product() {
     },
   };
 
-  const [openOpenDiscountModal, setOpenOpenDiscountModal] =
-    React.useState(false);
-  const [openOpenProductModal, setOpenOpenProductModal] = React.useState(false);
+  const [OpenProductModal, setOpenProductModal] = React.useState(false);
 
-  const handleOpenDiscountModal = () => {
-    if (typeof window != "undefined" && window.document) {
-      document.body.style.overflow = "hidden";
-      document.body.style.pointerEvents = "none";
-    }
-    setOpenOpenDiscountModal(true);
-  };
   const handleOpenProductModal = () => {
-    if (typeof window != "undefined" && window.document) {
-      document.body.style.overflow = "hidden";
-      document.body.style.pointerEvents = "none";
-    }
-    setOpenOpenProductModal(true);
+    // if (typeof window != "undefined" && window.document) {
+    //   document.body.style.overflow = "hidden";
+    //   document.body.style.pointerEvents = "none";
+    // }
+    setOpenProductModal(true);
   };
 
-  const handleCloseDiscountModal = () => {
-    document.body.style.overflow = "unset";
-    document.body.style.pointerEvents = "auto";
-    setOpenOpenDiscountModal(false);
-  };
   const handleCloseProductModal = () => {
-    document.body.style.overflow = "unset";
-    document.body.style.pointerEvents = "auto";
-    setOpenOpenProductModal(false);
+    // document.body.style.overflow = "unset";
+    // document.body.style.pointerEvents = "auto";
+    setOpenProductModal(false);
+  };
+
+  const onCreateProduct = async () => {
+    const values = await forms.validateFields();
+
+    try {
+      dispatch(
+        createProductAction({
+          name: values.name,
+          description: values.description,
+          categoryId: values.category,
+        })
+      );
+
+      handleCloseProductModal();
+      forms.resetFields();
+    } catch (error: any) {
+      toast.error(error);
+    }
   };
 
   return (
@@ -398,61 +454,13 @@ export default function Product() {
           <div className="flex items-center">
             <div className="relative inline-block text-left">
               <div className="space-x-6">
-                {/* <button
-                  type="button"
-                  className="group inline-flex justify-center text-sm font-medium text-gray-700 hover:text-gray-900"
-                  id="menu-button"
-                  aria-expanded="false"
-                  aria-haspopup="true"
-                  onClick={handleOpenCategoryModal}
-                >
-                  <span>Category</span>
-                  <svg
-                    className="-mr-1 ml-1 h-5 w-5 flex-shrink-0 text-gray-400 group-hover:text-gray-500"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth={1.5}
-                    viewBox="0 0 24 24"
-                    xmlns="http://www.w3.org/2000/svg"
-                    aria-hidden="true"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      d="M12 4.5v15m7.5-7.5h-15"
-                    />
-                  </svg>
-                </button> */}
                 <button
                   type="button"
                   className="group inline-flex justify-center text-sm font-medium text-gray-700 hover:text-gray-900"
                   id="menu-button"
                   aria-expanded="false"
                   aria-haspopup="true"
-                >
-                  <span>Discount</span>
-                  <svg
-                    className="-mr-1 ml-1 h-5 w-5 flex-shrink-0 text-gray-400 group-hover:text-gray-500"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth={1.5}
-                    viewBox="0 0 24 24"
-                    xmlns="http://www.w3.org/2000/svg"
-                    aria-hidden="true"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      d="M12 4.5v15m7.5-7.5h-15"
-                    />
-                  </svg>
-                </button>
-                <button
-                  type="button"
-                  className="group inline-flex justify-center text-sm font-medium text-gray-700 hover:text-gray-900"
-                  id="menu-button"
-                  aria-expanded="false"
-                  aria-haspopup="true"
+                  onClick={handleOpenProductModal}
                 >
                   <span>Product</span>
                   <svg
@@ -489,19 +497,19 @@ export default function Product() {
             />
           </Form>
         </React.Fragment>
-        {/* <Modal
+        <Modal
           style={{
             color: "black",
           }}
-          open={openCategoryModal}
-          onOk={handleCloseCategoryModal}
-          onCancel={handleCloseCategoryModal}
+          open={OpenProductModal}
+          onOk={handleCloseProductModal}
+          onCancel={handleCloseProductModal}
           centered
           footer={[
-            <Button key="back" onClick={handleCloseCategoryModal}>
+            <Button key="back" onClick={handleCloseProductModal}>
               Close
             </Button>,
-            <Button key="submit" onClick={onCreateCategory}>
+            <Button key="submit" onClick={onCreateProduct}>
               Add
             </Button>,
           ]}
@@ -512,7 +520,7 @@ export default function Product() {
               validateMessages={validateMessages}
               name="form-name"
               form={forms}
-              onFinish={onCreateCategory}
+              onFinish={onCreateProduct}
             >
               <div className="flex flex-col gap-4">
                 <div className="flex flex-col gap-2">
@@ -521,10 +529,29 @@ export default function Product() {
                     <Input className="w-full px-4 py-3 rounded-lg ring-red-200 focus:ring-4 focus:outline-none transition duration-300 border border-gray-300 focus:shadow-xl" />
                   </Form.Item>
                 </div>
+                <div className="flex flex-col gap-2">
+                  <label htmlFor="description">description</label>
+                  <Form.Item name={"description"} rules={[{ required: true }]}>
+                    <Input className="w-full px-4 py-3 rounded-lg ring-red-200 focus:ring-4 focus:outline-none transition duration-300 border border-gray-300 focus:shadow-xl" />
+                  </Form.Item>
+                </div>
+                <div className="flex flex-col gap-2">
+                  <label htmlFor="category">category</label>
+                  <Form.Item name={"category"} rules={[{ required: true }]}>
+                    <Select>
+                      {category &&
+                        category.map((item, idx) => (
+                          <Select.Option key={idx} value={item.id}>
+                            {item.name}
+                          </Select.Option>
+                        ))}
+                    </Select>
+                  </Form.Item>
+                </div>
               </div>
             </Form>
           </div>
-        </Modal> */}
+        </Modal>
       </div>
     </ShopLayout>
   );

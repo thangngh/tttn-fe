@@ -19,7 +19,9 @@ interface initialState {
 	},
 	getOneProductInventory: any,
 	shop: any,
-	productInMonth: any[]
+	productInMonth: any[],
+	price: string;
+	prePrice: string;
 }
 
 const initialState: initialState = {
@@ -39,13 +41,29 @@ const initialState: initialState = {
 	},
 	getOneProductInventory: null,
 	shop: null,
-	productInMonth: []
+	productInMonth: [],
+	price: '',
+	prePrice: ''
 }
 
 const ProductSlice = createSlice({
 	name: "product",
 	initialState: initialState,
 	reducers: {
+		increasePrice: (state) => {
+			const parseValue = parseInt(state.price.split(" ")[0].replace(/,/g, ""))
+			const prePriceValue = parseInt(state.prePrice.split(" ")[0].replace(/,/g, ""))
+			state.price = (parseValue + prePriceValue).toLocaleString() + "₫";
+		},
+		deCreasePrice: (state) => {
+			const parseValue = parseInt(state.price.split(" ")[0].replace(/,/g, ""))
+			const prePriceValue = parseInt(state.prePrice.split(" ")[0].replace(/,/g, ""))
+			state.price = (parseValue - prePriceValue).toLocaleString() + "₫";
+		},
+		addPrice: (state, action) => {
+			state.price = action.payload
+			state.prePrice = action.payload
+		}
 	},
 	extraReducers: (builder) => {
 		builder.addCase(createProductAction.fulfilled, (state, action) => {
@@ -95,4 +113,5 @@ const ProductSlice = createSlice({
 	}
 })
 
+export const { increasePrice, addPrice, deCreasePrice } = ProductSlice.actions
 export default ProductSlice.reducer

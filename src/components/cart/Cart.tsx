@@ -2,6 +2,8 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import React from "react";
 import Image from "next/image";
+import { useAppSelector } from "@/redux/hook";
+import { RootState } from "@/redux/store";
 interface IProps {
   openModal: boolean;
   handleCloseModal: () => void;
@@ -12,6 +14,12 @@ export default function CartComponent({ openModal, handleCloseModal }: IProps) {
 
   const [data, setData] = React.useState<any[]>([]);
   const [pay, setPay] = React.useState(0);
+
+  const getAllProductCartUser = useAppSelector(
+    (state: RootState) => state.cartReducer.cartProduct
+  );
+
+  // console.log("getAllProductCartUser", getAllProductCartUser);
 
   return (
     <div
@@ -32,7 +40,7 @@ export default function CartComponent({ openModal, handleCloseModal }: IProps) {
       </div>
       <div className="h-full relative">
         <div className="p-4 max-h-full h-[calc(70vh+5px)] overflow-y-auto">
-          {data ? (
+          {data && data.length > 0 ? (
             data.map((item, index) => (
               <div
                 key={index}

@@ -12,8 +12,9 @@ import { ProductAPI } from "../../../../../api-client/product.api";
 import Image from "next/image";
 import { format } from "date-fns";
 import { toast } from "react-toastify";
-import { Button, Form, InputNumber, Modal, Upload } from "antd";
+import { Button, Form, InputNumber, Modal, Select, Upload } from "antd";
 import { PlusOutlined } from "@ant-design/icons";
+import { IAddCart } from "@/type/cart.interface";
 interface DataType {
   createAt?: Date;
   deletedAt?: Date;
@@ -24,6 +25,10 @@ interface DataType {
   productId?: number;
   quantity?: number;
 }
+const currencies = ["₫", "$"];
+
+export const formatter = (value: any) =>
+  `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 
 export default function ProductDetailShop() {
   const router = useRouter();
@@ -35,24 +40,25 @@ export default function ProductDetailShop() {
   const productInventoryDetail = useAppSelector(
     (state: RootState) => state.productReducer.productInventory
   );
+  const [currencySymbol, setCurrencySymbol] = React.useState(currencies[0]);
 
+  const parser = (value: any) =>
+    value.replace(new RegExp(`\\\\s?|(,*)`, "g"), "");
   const [product, setProduct] = React.useState<any>(null);
   const [productInventory, setProductInventory] = React.useState<any>(null);
-
+  const [price, setPrice] = React.useState(0);
   const [openProductInventoryModal, setOpenProductInventoryModal] =
     React.useState(false);
   const [forms] = Form.useForm();
   const handleOpenProductInventoryModal = () => {
-    // if (typeof window != "undefined" && window.document) {
-    //   document.body.style.overflow = "hidden";
-    //   document.body.style.pointerEvents = "none";
-    // }
     setOpenProductInventoryModal(true);
   };
   const handleCloseProductInventoryModal = () => {
-    // document.body.style.overflow = "unset";
-    // document.body.style.pointerEvents = "auto";
     setOpenProductInventoryModal(false);
+  };
+
+  const handleChange = (value: any) => {
+    setPrice(value);
   };
 
   React.useEffect(() => {
@@ -71,18 +77,19 @@ export default function ProductDetailShop() {
   React.useEffect(() => {
     if (!Array.isArray(productInventoryDetail)) return;
     const dataList: DataType[] = [];
-    productInventoryDetail.forEach(async (item) => {
+    productInventoryDetail.forEach((item) => {
       dataList.push({
         id: item.id,
-        price: item.productPrice,
-        image: await ProductAPI.getImageProduct(item.image),
+        price: item.price,
+        image: item.image,
         quantity: item.quantity,
-        createAt: item.createdat,
+        createAt: item.createdAt,
         deletedAt: item.deletedAt,
       });
     });
     setProductInventory(dataList);
   }, [productInventoryDetail]);
+  console.log("productInventory", productInventory);
 
   React.useEffect(() => {
     if (router.isReady) {
@@ -97,10 +104,11 @@ export default function ProductDetailShop() {
   const onCreateProductInventory = async () => {
     const values = await forms.validateFields();
     console.log(values);
+    console.log(formatter(values.price));
     try {
       const data = {
         productId: id as string,
-        price: values.price,
+        price: `${price} ${currencySymbol}`,
         quantity: values.quantity,
       };
       dispatch(
@@ -213,7 +221,7 @@ export default function ProductDetailShop() {
                     `}
                     >
                       <Image
-                        src={product.image as string}
+                        src={`${process.env.API_URL}/product/get-image/${product.image}`}
                         alt=""
                         width={400}
                         height={400}
@@ -239,7 +247,7 @@ export default function ProductDetailShop() {
                             aria-hidden="true"
                             className="absolute inset-0"
                           />
-                          {product.price}
+                          {product.price && formatter(product.price)}
                         </h3>
                       </div>
                     </div>
@@ -309,9 +317,21 @@ export default function ProductDetailShop() {
               </div>
               <div className="flex flex-col gap-2">
                 <label htmlFor="price">Price</label>
-                <Form.Item name={"price"} rules={[{ type: "number", min: 1 }]}>
-                  <InputNumber className="w-full px-4 py-3 rounded-lg ring-red-200 focus:ring-4 focus:outline-none transition duration-300 border border-gray-300 focus:shadow-xl" />
-                </Form.Item>
+                <InputNumber
+                  onChange={handleChange}
+                  formatter={formatter}
+                  parser={parser}
+                  addonAfter={
+                    <Select value={currencySymbol} onChange={setCurrencySymbol}>
+                      {currencies.map((currency) => (
+                        <Select.Option key={currency} value={currency}>
+                          {currency}
+                        </Select.Option>
+                      ))}
+                    </Select>
+                  }
+                  className="w-full px-4 py-3 rounded-lg ring-red-200 focus:ring-4 focus:outline-none transition duration-300  focus:shadow-xl"
+                />
               </div>
             </div>
           </Form>

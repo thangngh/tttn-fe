@@ -28,7 +28,7 @@ const schemaValidation = Yup.object({
     .oneOf([Yup.ref("passwordCurrent")], "Passwords not match"),
 });
 
-export default function ChangePassword() {
+export default function ResetPassword() {
   const router = useRouter();
   const token = router.query.token;
   const dispatch = useAppDispatch();

@@ -67,7 +67,7 @@ export default function ProductItem({ categoryName }: IProp) {
 
   React.useEffect(() => {
     const listData: any[] = [];
-    product.results.forEach((item) => {
+    product?.results?.forEach((item) => {
       listData.push({
         id: item.id,
         productName: item.name,

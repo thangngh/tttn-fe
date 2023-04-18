@@ -49,5 +49,28 @@ export const AuthAPI = {
 			toast.error(error.message);
 			return error;
 		}
-	}
+	},
+
+	sendMailResetPassword: async ({ email }: { email: string }) => {
+
+	},
+
+	resetPasswordWithVerifyToken: async ({
+		password,
+		token
+	}: { password: string, token: string }) => {
+
+	},
+
+	changePassword: async ({
+		oldPassword,
+		newPassword,
+	}: {
+		oldPassword: string;
+		newPassword: string;
+	}) => {
+
+	},
+
+
 }

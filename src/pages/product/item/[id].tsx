@@ -2,16 +2,24 @@ import { DrawerHeader } from "@/components/mui/CustomSideBar";
 import Rating from "@/components/product/rating";
 import SVGLogo from "@/components/svg/Svg-logo";
 import Screen from "@/layouts/Screen";
+import { formatter } from "@/pages/shop/product/[id]";
 import {
   getOneProductAction,
   getOneProductInventoryAction,
 } from "@/redux/action/product.action";
+import { getProfileAction } from "@/redux/action/user.action";
 import { useAppDispatch, useAppSelector } from "@/redux/hook";
+import {
+  addPrice,
+  deCreasePrice,
+  increasePrice,
+} from "@/redux/reduce/product.slice";
 import { RootState } from "@/redux/store";
+import { IAddCart } from "@/type/cart.interface";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import React from "react";
+import React, { useCallback } from "react";
 import Slider, { Settings } from "react-slick";
 import { toast } from "react-toastify";
 import { isTemplateExpression } from "typescript";
@@ -22,30 +30,79 @@ export default function ProductItem() {
   const [data, setData] = React.useState<any>();
   const [amount, setAmount] = React.useState<any>(1);
   const [quantity, setQuantity] = React.useState<number>(1);
+  const [totalPay, setTotalPay] = React.useState<string>("");
+
   const product = useAppSelector(
     (state: RootState) => state.productReducer.product
   );
 
-  const handleAmountChangeInc = (e: any) => {
-    if (amount < quantity) {
-      setAmount(amount + 1);
-    } else {
-      throw toast.warning("not quantity");
+  const profile = useAppSelector((state: RootState) => state.userReducer.user);
+  const getPrice = useAppSelector(
+    (state: RootState) => state.productReducer.price
+  );
+
+  const userIdRef = React.useRef("");
+  React.useEffect(() => {
+    const accessToken = localStorage.getItem("accessToken");
+    if (accessToken) {
+      dispatch(getProfileAction());
     }
-  };
-  const handleAmountChangeDec = (e: any) => {
-    if (amount <= 1) {
-      throw toast.warning("not < 1");
-    } else {
-      setAmount(amount - 1);
+  }, []);
+
+  React.useEffect(() => {
+    if (profile) {
+      userIdRef.current = profile.id;
     }
-  };
+  }, [profile]);
+
+  React.useEffect(() => {
+    if (getPrice) {
+      setTotalPay(getPrice);
+    }
+  }, [getPrice]);
+
+  const handleAmountChangeInc = useCallback(
+    (e: any) => {
+      if (amount < quantity) {
+        setAmount(amount + 1);
+        dispatch(increasePrice());
+      } else {
+        throw toast.warning("not quantity");
+      }
+    },
+    [amount, dispatch, quantity, totalPay]
+  );
+
+  const handleAmountChangeDec = useCallback(
+    (e: any) => {
+      if (amount <= 1) {
+        throw toast.warning("not < 1");
+      } else {
+        setAmount(amount - 1);
+        dispatch(deCreasePrice());
+      }
+    },
+    [amount, totalPay]
+  );
 
   React.useEffect(() => {
     if (router.isReady) {
       dispatch(getOneProductAction(router?.query?.id as string));
     }
   }, [router.isReady]);
+
+  const handleAddProductToCart = (body: IAddCart) => {
+    const accessToken = localStorage.getItem("accessToken");
+    if (!accessToken) {
+      router.push({
+        pathname: "/login",
+        query: {
+          redirect: router.asPath,
+        },
+      });
+      // return null;
+    }
+  };
 
   React.useEffect(() => {
     if (product) {
@@ -58,7 +115,7 @@ export default function ProductItem() {
             setQuantity(productInventory.quantity);
             return {
               id: productInventory.id,
-              price: productInventory.price,
+              price: formatter(productInventory.price),
               quantity: productInventory.quantity,
               image: productInventory.image,
             };
@@ -70,6 +127,7 @@ export default function ProductItem() {
       });
     }
   }, [product]);
+
   const settings: Settings = {
     infinite: true,
     speed: 500,
@@ -77,16 +135,19 @@ export default function ProductItem() {
     slidesToScroll: 1,
     arrows: false,
   };
+
   const sliderRef = React.useRef<any>(null);
-  const handleAfterChange = (oldIndex: any, newIndex: any) => {
-    // Access the Slider ref here
-    const currentSlide = data.product[newIndex];
-    const quantity = currentSlide.quantity;
-    setQuantity(quantity);
-    // if (oldIndex !== newIndex) {
-    //   setQuantity(1);
-    // }
-  };
+
+  const handleAfterChange = useCallback(
+    (oldIndex: any, newIndex: any) => {
+      const currentSlide = data.product[newIndex];
+      const quantity = currentSlide.quantity;
+      setQuantity(quantity);
+      setAmount(1);
+      dispatch(addPrice(currentSlide.price));
+    },
+    [data?.product]
+  );
   const [menu, setMenu] = React.useState(true);
   const [menu1, setMenu1] = React.useState(false);
   return (
@@ -162,7 +223,9 @@ export default function ProductItem() {
                 exercitationem porro saepe ea harum corrupti vero id laudantium
                 enim, libero blanditiis expedita cupiditate a est.
               </p>
-              <p className="text-gray-500  font-bold">total cost:</p>
+              <p className="text-gray-500  font-bold">
+                total cost: {totalPay !== "null" ? totalPay : ""}
+              </p>
             </div>
             <div className="text-base font-mono max-w-[100px] w-full">
               <div className="my-4 space-x-4 flex items-center">
@@ -183,9 +246,11 @@ export default function ProductItem() {
             </div>
             <button
               type="button"
+              disabled={totalPay !== "null" ? true : false}
+              onClick={() => handleAddProductToCart}
               className="h-14 px-6 py-2 text-center font-semibold rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white"
             >
-              Add to Cart
+              {totalPay !== "null" ? "Add to Cart" : "Not Open"}
             </button>
           </div>
         </div>

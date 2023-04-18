@@ -53,6 +53,14 @@ export default function Header() {
 
   const user = useAppSelector((state: RootState) => state.userReducer.user);
 
+  const getAllProductCartUser = useAppSelector(
+    (state: RootState) => state.cartReducer.cartProduct
+  );
+
+  const successAddCart = useAppSelector(
+    (state: RootState) => state.cartReducer.isSuccess
+  );
+
   React.useEffect(() => {
     const accessToken = localStorage.getItem("accessToken");
     if (accessToken) {
@@ -125,11 +133,10 @@ export default function Header() {
                   </svg>
                   <span
                     className={`${
-                      // productInCart?.length === 0 ? "hidden" : "block"
-                      ""
+                      getAllProductCartUser?.length === 0 ? "hidden" : "block"
                     } absolute -top-2 -right-2 flex h-4 w-4 items-center justify-center rounded-full bg-red-500 p-2 text-xs text-white`}
                   >
-                    {/* {productInCart?.length} */} 1
+                    {getAllProductCartUser?.length}
                   </span>
                 </div>
                 <span
@@ -258,7 +265,7 @@ export default function Header() {
                                     <div className="text-gray-900">
                                       <Link href="/profile">
                                         <div className="p-1 my-1 border-l-2 border-white hover:border-[#848ABD] hover:text-[#848ABD] cursor-pointer ">
-                                          <a>Hồ Sơ</a>
+                                          <a>Profile</a>
                                         </div>
                                       </Link>
                                       <hr />
@@ -267,7 +274,7 @@ export default function Header() {
                                         className="p-1 my-1 border-l-2  border-white hover:border-[#848ABD] hover:text-[#848ABD] cursor-pointer "
                                         onClick={logout}
                                       >
-                                        <span>Đăng xuất</span>
+                                        <span>Logout</span>
                                       </div>
                                     </div>
                                   </div>

@@ -10,6 +10,8 @@ import { ProductAPI } from "../../../api-client/product.api";
 import Image from "next/image";
 import Slider, { Settings } from "react-slick";
 import Link from "next/link";
+import InfoIcon from "@mui/icons-material/Info";
+import { formatter } from "@/pages/shop/product/[id]";
 interface IProp {
   categoryName: string;
 }
@@ -94,11 +96,19 @@ export default function ProductItem({ categoryName }: IProp) {
               className="card w-full max-w-80 bg-base-100 shadow-md p-4 space-y-4"
               key={item.id}
             >
-              <div className="card-actions">
-                <h2 className="card-title">{item.name}</h2>
-                <p>{item.description}</p>
+              <div className="card-actions flex-1 grow h-full">
+                <h2
+                  className={`${
+                    !item.name ? "invisible" : "visible"
+                  } card-title `}
+                >
+                  {item.name}
+                </h2>
+                <p className={`${!item.description ? "invisible" : "visible"}`}>
+                  {item.description}
+                </p>
                 <div className="card-actions justify-end">
-                  <div className="badge badge-outline ">
+                  <div className={`badge badge-outline`}>
                     {item.categoryName}
                   </div>
                   <div className="badge badge-outline badge-secondary cursor-pointer">
@@ -119,9 +129,7 @@ export default function ProductItem({ categoryName }: IProp) {
                         >
                           <div className="card-title  mx-auto">
                             <Link href={`/product/item/${item.id}`}>
-                              <button className="btn btn-outline btn-accent btn-xs  ">
-                                view product
-                              </button>
+                              <InfoIcon className="h-6 w-6 group-hover:opacity-50 opacity-70" />
                             </Link>
                             <button
                               className="btn btn-outline btn-primary btn-xs  "
@@ -142,11 +150,19 @@ export default function ProductItem({ categoryName }: IProp) {
                             </button>
                           </div>
                           <div className="card-actions ">
-                            <div className="badge badge-outline cursor-pointer">
-                              price: {image.price}
+                            <div
+                              className={`badge badge-outline cursor-pointer ${
+                                image.price === 0 ? "invisible" : "visible"
+                              }`}
+                            >
+                              {`price: ${formatter(image.price)}`}
                             </div>
-                            <div className="badge badge-outline cursor-pointer badge-success">
-                              quantity: {image.quantity}
+                            <div
+                              className={`badge badge-outline cursor-pointer badge-success ${
+                                image.quantity === 0 ? "invisible" : "visible"
+                              }`}
+                            >
+                              {`quantity: ${image.quantity}`}
                             </div>
                           </div>
                           <Image
@@ -154,7 +170,7 @@ export default function ProductItem({ categoryName }: IProp) {
                             alt=""
                             width={400}
                             height={400}
-                            className="h-full card lg:card-side bg-base-100 shadow-xl  w-full object-cover rounded-md object-center lg:h-full lg:w-full"
+                            className="h-40 rounded-2xl w-full object-cover"
                           />
                         </div>
                       ))

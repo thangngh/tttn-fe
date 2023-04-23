@@ -77,11 +77,11 @@ export default function Category() {
     const listData: DataType[] = [];
     listCategoryWithShop.forEach((item) => {
       listData.push({
-        id: item.id.toString(),
-        name: item.name,
+        id: item?.id.toString(),
+        name: item?.name,
         shopName: (item as any)?.shop?.name,
-        createAt: item.createAt,
-        modifiedAt: item.modifiedAt,
+        createAt: item?.createAt,
+        modifiedAt: item?.modifiedAt,
       });
     });
     setDataSource(listData);

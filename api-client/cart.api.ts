@@ -4,9 +4,9 @@ import { toast } from "react-toastify";
 
 export const CartAPI = {
 	addProductToCart: async (body: IAddCart) => {
-		const { productId, userId, total, price } = body;
+		const { productId, userId, total, price, productInventoryId } = body;
 		try {
-			const response = await axiosConfig.post("/cart/add-cart", { productId, userId, total, price });
+			const response = await axiosConfig.post("/cart/add-cart", { productId, userId, total, price, productInventoryId });
 			toast.success(response.data.message);
 
 			return response.data;

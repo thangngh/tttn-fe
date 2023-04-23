@@ -15,6 +15,8 @@ import Link from "next/link";
 import SvgUser from "../svg/Svg-user";
 import Image from "next/image";
 import CartComponent from "../cart/Cart";
+import { findAllProductCartUserAction } from "@/redux/action/cart.action";
+import { resetSuccess } from "@/redux/reduce/cart.slice";
 const theme = createTheme({
   components: {
     MuiAccordionDetails: {
@@ -60,6 +62,18 @@ export default function Header() {
   const successAddCart = useAppSelector(
     (state: RootState) => state.cartReducer.isSuccess
   );
+
+  React.useEffect(() => {
+    if (successAddCart) {
+      dispatch(findAllProductCartUserAction());
+      dispatch(resetSuccess());
+    }
+  }, [dispatch, successAddCart]);
+
+  React.useEffect(() => {
+    const accessToken = localStorage.getItem("accessToken");
+    accessToken && dispatch(findAllProductCartUserAction());
+  }, [dispatch]);
 
   React.useEffect(() => {
     const accessToken = localStorage.getItem("accessToken");

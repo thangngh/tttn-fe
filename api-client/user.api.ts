@@ -49,5 +49,13 @@ export const UserAPI = {
 
 	editProfile: async () => {
 
+	},
+
+	addReviewProduct: async () => {
+
+	},
+
+	getReviewProduct: async (productId: string) => {
+
 	}
 }

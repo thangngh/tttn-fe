@@ -2,8 +2,10 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import React from "react";
 import Image from "next/image";
-import { useAppSelector } from "@/redux/hook";
+import { useAppDispatch, useAppSelector } from "@/redux/hook";
 import { RootState } from "@/redux/store";
+import { findAllProductCartUserAction } from "@/redux/action/cart.action";
+import { formatter } from "@/pages/shop/product/[id]";
 interface IProps {
   openModal: boolean;
   handleCloseModal: () => void;
@@ -11,7 +13,7 @@ interface IProps {
 
 export default function CartComponent({ openModal, handleCloseModal }: IProps) {
   const router = useRouter();
-
+  const dispatch = useAppDispatch();
   const [data, setData] = React.useState<any[]>([]);
   const [pay, setPay] = React.useState(0);
 
@@ -19,7 +21,25 @@ export default function CartComponent({ openModal, handleCloseModal }: IProps) {
     (state: RootState) => state.cartReducer.cartProduct
   );
 
-  // console.log("getAllProductCartUser", getAllProductCartUser);
+  React.useEffect(() => {
+    const accessToken = localStorage.getItem("accessToken");
+    accessToken && findAllProductCartUserAction();
+  }, [dispatch]);
+
+  React.useEffect(() => {
+    const product: any[] = [];
+    getAllProductCartUser?.map((item: any) => {
+      product.push({
+        id: item.id,
+        total: item.total,
+        price: formatter(item.price) + " đ",
+        image: item.productInventory?.image,
+        productName: item?.product?.name,
+      });
+      setPay((pre) => item.price);
+    });
+    setData(product);
+  }, [getAllProductCartUser]);
 
   return (
     <div
@@ -50,23 +70,22 @@ export default function CartComponent({ openModal, handleCloseModal }: IProps) {
                   <div className="flex gap-1 space-x-2">
                     <div className="w-24 h-24 relative">
                       <Image
-                        src={item.image}
-                        // src={"https://i.pravatar.cc/150?img=32"}
-                        layout="fill"
+                        src={`${process.env.API_URL}/product/get-image/${item?.image}`}
                         alt=""
+                        width={400}
+                        height={400}
                         className="bg-cover bg-no-repeat"
-                        objectFit="cover"
                       />
                     </div>
                     <div className="flex flex-col my-2 space-x-2">
                       <span className="break-normal  text-xs font-medium">
-                        {item.productname}
+                        {item?.productName}
                       </span>
                       <div className="block my-4 space-x-4">
                         {/* <button className="p-2  rounded-full bg-red-500 text-white font-semibold">
 												<span className=" text-sm">+</span>
 											</button> */}
-                        <span>{item.amount}</span>
+                        <span>{item?.total}</span>
                         {/* <button className="p-2 rounded-full bg-red-500 text-white font-semibold">
 												<span className=" text-sm">-</span>
 											</button> */}
@@ -74,7 +93,7 @@ export default function CartComponent({ openModal, handleCloseModal }: IProps) {
                     </div>
                   </div>
                   <div>
-                    <span className="text-sm font-medium">{item.price}</span>
+                    <span className="text-sm font-medium">{item?.price}</span>
                   </div>
                 </div>
               </div>
@@ -84,41 +103,8 @@ export default function CartComponent({ openModal, handleCloseModal }: IProps) {
               <h1>Data not found</h1>
             </>
           )}
-          {/* <div className="border-b my-4 space-y-4 relative before:absolute before:content-['X'] before:right-0 before:top-0">
-					<div className="flex gap-2 space-x-2 space-y-4 items-center justify-between flex-wrap sm:flex-nowrap">
-						<div className="flex gap-1 space-x-2">
-							<div className="w-24 h-24 relative">
-								<Image
-									src={"https://i.pravatar.cc/150?img=32"}
-									layout="fill"
-									alt=""
-									className="bg-cover bg-no-repeat"
-									objectFit="cover"
-								/>
-							</div>
-							<div className="flex flex-col my-2 space-x-2">
-								<span className="break-normal  text-xs font-medium">
-									Bình Giữ Nhiệt Hiển Thị Nhiệt Độ Phong Cách Cổ Trang Chất
-									Liệu Inox 304 Cao Cấp Dung Tích 500ml
-								</span>
-								<div className="block my-4 space-x-4">
-									<button className="p-2  rounded-full bg-red-500 text-white font-semibold">
-										<span className=" text-sm">+</span>
-									</button>
-									<span>1</span>
-									<button className="p-2 rounded-full bg-red-500 text-white font-semibold">
-										<span className=" text-sm">-</span>
-									</button>
-								</div>
-							</div>
-						</div>
-						<div>
-							<span className="text-sm font-medium">1</span>
-						</div>
-					</div>
-				</div> */}
         </div>
-        <div className="p-4">
+        <div className="p-4 space-y-2">
           <div className="flex flex-col">
             <div className="flex items-center justify-between">
               <span>Total</span>
@@ -126,14 +112,15 @@ export default function CartComponent({ openModal, handleCloseModal }: IProps) {
             </div>
             <div className="flex items-center justify-between">
               <span>{data.length}</span>
-              <span>{pay}</span>
+              <span>{formatter(pay) + " đ"}</span>
             </div>
-
-            <Link href="/cart">
-              <span className="text-center px-5 py-3 cursor-pointer hover:underline">
-                View Cart
-              </span>
-            </Link>
+            <div className="text-center ">
+              <Link href="/cart">
+                <span className=" px-5 py-3 cursor-pointer hover:underline">
+                  View Cart
+                </span>
+              </Link>
+            </div>
             <button
               className="px-5 py-3 bg-red-500 text-white"
               onClick={() => router.push("/checkout")}

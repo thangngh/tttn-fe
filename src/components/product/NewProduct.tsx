@@ -46,13 +46,13 @@ export default function NewProduct() {
           {product.map((item: any) => {
             return (
               <div key={item.id}>
-                <div className=" relative">
+                <div className="w-full h-full max-h-80  relative">
                   <Image
                     src={`${process.env.API_URL}/product/get-image/${item.image}`}
                     alt=""
                     width={400}
                     height={400}
-                    className="h-full max-h-80 card lg:card-side bg-base-100 shadow-xl  w-full object-cover rounded-md object-center lg:h-full lg:w-full"
+                    className="bg-cover w-full bg-no-repeat"
                   />
 
                   <div className="stats bg-primary text-primary-content absolute bottom-0 left-0">

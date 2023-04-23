@@ -2,16 +2,33 @@ import SVGLogo from "@/components/svg/Svg-logo";
 import Screen from "@/layouts/Screen";
 import { useRouter } from "next/router";
 import Image from "next/image";
+import { useAppDispatch, useAppSelector } from "@/redux/hook";
+import { RootState } from "@/redux/store";
+import { findAllProductCartUserAction } from "@/redux/action/cart.action";
+import React from "react";
+import AddAddress from "@/components/address/AddAddress";
 export default function Cart() {
   const router = useRouter();
+  const dispatch = useAppDispatch();
+
+  const productCartUser = useAppSelector(
+    (state: RootState) => state.cartReducer.cartProduct
+  );
+
+  React.useEffect(() => {
+    const accessToken = localStorage.getItem("accessToken");
+
+    accessToken && dispatch(findAllProductCartUserAction());
+  });
 
   const handleRouterBack = () => {
     router.back();
   };
+
   return (
     <Screen>
-      <div className="w-full mx-auto mb-5 max-w-7xl ">
-        <div className="w-screen sm:container mx-auto mb-10 px-4 relative ">
+      <div className="w-full mx-auto  max-w-7xl bg-white">
+        <div className="w-full sm:container mx-auto mb-10 px-4 relative ">
           <div className=" flex space-x-2 items-center">
             <SVGLogo />
             <span className="text-xl font-medium">| Cart</span>
@@ -130,7 +147,7 @@ export default function Cart() {
             </div>
           </div>
         </div>
-        <div className="w-screen sm:container mx-auto my-2 bg-[#f5f5f5] p-4 sticky z-20 bottom-0 border-t-2">
+        <div className="w-screen sm:container mx-auto bg-[#f5f5f5] p-4 sticky z-20 bottom-0 border-t-2">
           <div className="block">
             <div className="flex justify-between flex-auto">
               <div className="w-full max-w-1/2">

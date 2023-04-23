@@ -3,12 +3,14 @@ import Rating from "@/components/product/rating";
 import SVGLogo from "@/components/svg/Svg-logo";
 import Screen from "@/layouts/Screen";
 import { formatter } from "@/pages/shop/product/[id]";
+import { addProductToCartAction } from "@/redux/action/cart.action";
 import {
   getOneProductAction,
   getOneProductInventoryAction,
 } from "@/redux/action/product.action";
 import { getProfileAction } from "@/redux/action/user.action";
 import { useAppDispatch, useAppSelector } from "@/redux/hook";
+import { resetSuccess } from "@/redux/reduce/cart.slice";
 import {
   addPrice,
   deCreasePrice,
@@ -70,7 +72,7 @@ export default function ProductItem() {
         throw toast.warning("not quantity");
       }
     },
-    [amount, dispatch, quantity, totalPay]
+    [amount, dispatch, quantity]
   );
 
   const handleAmountChangeDec = useCallback(
@@ -82,7 +84,7 @@ export default function ProductItem() {
         dispatch(deCreasePrice());
       }
     },
-    [amount, totalPay]
+    [amount, dispatch]
   );
 
   React.useEffect(() => {
@@ -90,8 +92,9 @@ export default function ProductItem() {
       dispatch(getOneProductAction(router?.query?.id as string));
     }
   }, [router.isReady]);
+  const [isLoading, setIsLoading] = React.useState(false);
 
-  const handleAddProductToCart = (body: IAddCart) => {
+  const handleAddProductToCart = async (body: IAddCart) => {
     const accessToken = localStorage.getItem("accessToken");
     if (!accessToken) {
       router.push({
@@ -100,9 +103,15 @@ export default function ProductItem() {
           redirect: router.asPath,
         },
       });
-      // return null;
+    } else {
+      setIsLoading(true);
+      dispatch(addProductToCartAction(body));
     }
   };
+
+  const successAddCart = useAppSelector(
+    (state: RootState) => state.cartReducer.isSuccess
+  );
 
   React.useEffect(() => {
     if (product) {
@@ -128,6 +137,17 @@ export default function ProductItem() {
     }
   }, [product]);
 
+  React.useEffect(() => {
+    let loading;
+    if (successAddCart && router.isReady) {
+      loading = setTimeout(() => {
+        setIsLoading(false);
+        dispatch(getOneProductAction(router?.query?.id as string));
+      }, 200);
+    }
+    clearTimeout(loading);
+  }, [dispatch, router.isReady, router?.query?.id, successAddCart]);
+
   const settings: Settings = {
     infinite: true,
     speed: 500,
@@ -137,6 +157,7 @@ export default function ProductItem() {
   };
 
   const sliderRef = React.useRef<any>(null);
+  const [productInventoryId, setProductInventoryId] = React.useState(0);
 
   const handleAfterChange = useCallback(
     (oldIndex: any, newIndex: any) => {
@@ -144,11 +165,14 @@ export default function ProductItem() {
       const quantity = currentSlide.quantity;
       setQuantity(quantity);
       setAmount(1);
+      setProductInventoryId(currentSlide.id);
       dispatch(addPrice(currentSlide.price));
     },
-    [data?.product]
+    [data?.product, dispatch]
   );
+
   const [menu, setMenu] = React.useState(true);
+
   const [menu1, setMenu1] = React.useState(false);
   return (
     <Screen>
@@ -176,15 +200,21 @@ export default function ProductItem() {
           >
             {data?.product?.map((image: any) => (
               <div key={image.id} className="inline-block relative">
-                <Image
-                  src={`${process.env.API_URL}/product/get-image/${image.image}`}
-                  alt=""
-                  width={400}
-                  height={400}
-                  className="h-full card w-full max-w-96  max-h-96  object-scale-down bg-fixed rounded-md object-center bg-center"
-                />
-                <div className="flex items-center justify-around px-4">
-                  {/* <div className="flex items-center space-x-4 my-4">
+                {isLoading ? (
+                  <>
+                    <span className="text-gray-700 card-title">á đù</span>
+                  </>
+                ) : (
+                  <>
+                    <Image
+                      src={`${process.env.API_URL}/product/get-image/${image.image}`}
+                      alt=""
+                      width={400}
+                      height={400}
+                      className="h-full card w-full max-w-96  max-h-96  object-scale-down bg-fixed rounded-md object-center bg-center"
+                    />
+                    <div className="flex items-center justify-around px-4">
+                      {/* <div className="flex items-center space-x-4 my-4">
               <div>
                 <div className="rounded-lg bg-gray-100 flex py-2 px-3">
                   <span className="text-indigo-400 mr-1 mt-1">$</span>
@@ -196,13 +226,15 @@ export default function ProductItem() {
                 <p className="text-gray-400 text-sm">Inclusive of all Taxes.</p>
               </div>
             </div> */}
-                  <p className="text-gray-700 card-title">
-                    price: {image.price}
-                  </p>
-                  <p className="text-gray-700 card-title">
-                    quantity: {image.quantity}
-                  </p>
-                </div>
+                      <p className="text-gray-700 card-title">
+                        price: {image.price}
+                      </p>
+                      <p className="text-gray-700 card-title">
+                        quantity: {image.quantity}
+                      </p>
+                    </div>
+                  </>
+                )}
               </div>
             ))}
           </Slider>
@@ -230,6 +262,11 @@ export default function ProductItem() {
             <div className="text-base font-mono max-w-[100px] w-full">
               <div className="my-4 space-x-4 flex items-center">
                 <button
+                  disabled={
+                    typeof totalPay === "string" && totalPay !== "null"
+                      ? false
+                      : true
+                  }
                   onClick={handleAmountChangeInc}
                   className="p-2  rounded-full bg-indigo-600 text-white font-semibold"
                 >
@@ -237,6 +274,11 @@ export default function ProductItem() {
                 </button>
                 <span>{amount}</span>
                 <button
+                  disabled={
+                    typeof totalPay === "string" && totalPay !== "null"
+                      ? false
+                      : true
+                  }
                   onClick={handleAmountChangeDec}
                   className="p-2 rounded-full bg-indigo-600 text-white font-semibold"
                 >
@@ -246,11 +288,25 @@ export default function ProductItem() {
             </div>
             <button
               type="button"
-              disabled={totalPay !== "null" ? true : false}
-              onClick={() => handleAddProductToCart}
+              disabled={
+                typeof totalPay === "string" && totalPay !== "null"
+                  ? false
+                  : true
+              }
+              onClick={() =>
+                handleAddProductToCart({
+                  price: parseInt(totalPay.split(" ")[0].replace(/,/g, "")),
+                  total: amount,
+                  userId: +userIdRef.current,
+                  productId: data.id,
+                  productInventoryId: productInventoryId,
+                })
+              }
               className="h-14 px-6 py-2 text-center font-semibold rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white"
             >
-              {totalPay !== "null" ? "Add to Cart" : "Not Open"}
+              {typeof totalPay === "string" && totalPay !== "null"
+                ? "Add to Cart"
+                : "Not Open"}
             </button>
           </div>
         </div>

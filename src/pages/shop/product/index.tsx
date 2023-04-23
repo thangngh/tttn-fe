@@ -515,7 +515,7 @@ export default function Product() {
           ]}
         >
           <div>
-            <h1 className="my-4 text-base font-medium">Add New Category</h1>
+            <h1 className="my-4 text-base font-medium">Add New Product</h1>
             <Form
               validateMessages={validateMessages}
               name="form-name"

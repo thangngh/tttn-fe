@@ -91,7 +91,7 @@ const ProductSlice = createSlice({
 		})
 
 		builder.addCase(createProductInventoryAction.fulfilled, (state, action) => {
-			state.productInventory.unshift(action.payload)
+			state.productInventory.unshift(action.payload.data)
 		})
 
 		builder.addCase(getAllProductAction.fulfilled, (state, action) => {

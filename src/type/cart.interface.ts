@@ -3,4 +3,5 @@ export interface IAddCart {
 	userId: number;
 	total: number;
 	price: number;
+	productInventoryId: number;
 }

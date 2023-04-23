@@ -24,7 +24,7 @@ const CartSlice = createSlice({
 	},
 	extraReducers: (builder) => {
 		builder.addCase(addProductToCartAction.fulfilled, (state, action) => {
-			if (action.payload.data?.status === 200) {
+			if (action.payload?.status === 200) {
 				state.isSuccess = true
 				state.cartProduct.push(action.payload.data)
 			}

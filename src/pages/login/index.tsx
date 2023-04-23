@@ -45,9 +45,6 @@ const Login = () => {
             accessToken: (session.user as ISession).accessToken,
           });
       }
-      //  else {
-      //   router.push("/");
-      // }
     })();
   }, []);
 
@@ -118,7 +115,7 @@ const Login = () => {
   };
 
   return (
-    <div className="h-screen w-full">
+    <div className="h-screen w-full bg-white">
       <div className="flex flex-col justify-center items-center h-screen">
         <div className="bg-white w-full max-w-sm mt-6 p-4 rounded-lg shadow-xl">
           <h1 className="text-2xl my-3 font-medium">Login account</h1>

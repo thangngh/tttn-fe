@@ -45,7 +45,7 @@ export default function ResetPassword() {
   });
 
   const handleResetPassword = (data: any) => {
-    dispatch();
+    // dispatch();
   };
 
   return (

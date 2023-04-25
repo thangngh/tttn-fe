@@ -45,7 +45,7 @@ export default function Profile() {
 
   return (
     <Screen>
-      <div className="w-full h-full relative bg-white py-4">
+      <div className="w-full h-full relative bg-white py-4 shadow-xl">
         <div className="w-full sm:container  px-4  relative flex items-center  flex-wrap sm:flex-nowrap justify-end container mx-[15px] sm:mx-auto space-3">
           <div
             onClick={() => router.push("/create-shop")}

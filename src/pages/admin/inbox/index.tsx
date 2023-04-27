@@ -1,5 +1,6 @@
 import { DrawerHeader } from "@/components/mui/CustomSideBar";
 import AdminLayout from "@/layouts/AdminLayout";
+import Link from "next/link";
 
 const Inbox = () => {
   return (
@@ -44,9 +45,11 @@ const Inbox = () => {
                     </svg>
                   </button>
                 </div>
-                <span className="w-56 pr-2 truncate text-black">
-                  William Livingston
-                </span>
+                <Link href={`/admin/inbox/${1}`}>
+                  <span className="w-56 pr-2 truncate text-black">
+                    William Livingston
+                  </span>
+                </Link>
                 <span className="w-64 truncate text-black">
                   Lorem ipsum dolor sit amet
                 </span>

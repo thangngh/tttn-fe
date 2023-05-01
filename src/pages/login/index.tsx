@@ -125,10 +125,10 @@ const Login = () => {
                 placeholder="username"
                 type="text"
                 {...register("username")}
-                className="w-full px-4 py-3 rounded-lg ring-red-200 focus:ring-4 focus:outline-none transition duration-300 border border-gray-300 focus:shadow-xl"
+                className="w-full px-4 py-3 rounded-lg ring-red-200 bg-white focus:ring-4 focus:outline-none transition duration-300 border border-gray-300 focus:shadow-xl"
               />
               {errors.username && (
-                <p className="text-red-500 text-sm">
+                <p className="text-primary text-sm">
                   {errors.username.message}
                 </p>
               )}
@@ -136,22 +136,28 @@ const Login = () => {
                 placeholder="password"
                 type="password"
                 {...register("password")}
-                className="w-full px-4 py-3 rounded-lg ring-red-200 focus:ring-4 focus:outline-none transition duration-300 border border-gray-300 focus:shadow-xl"
+                className="w-full px-4 py-3 rounded-lg ring-red-200 bg-white focus:ring-4 focus:outline-none transition duration-300 border border-gray-300 focus:shadow-xl"
               />
               {errors.password && (
-                <p className="text-red-500 text-sm">
+                <p className="text-primary text-sm">
                   {errors.password.message}
                 </p>
               )}
             </div>
             <button
               type="submit"
-              className="bg-red-500 text-white shadow-card-layout-sm block text-center 3xl:text-xl rounded-lg py-2 px-5 w-full  mt-4 mx-auto"
+              className="bg-primary text-white shadow-card-layout-sm block text-center 3xl:text-xl rounded-lg py-2 px-5 w-full  mt-4 mx-auto"
             >
               Sign in
             </button>
+            <p
+              onClick={() => router.push("/reset-password")}
+              className="text-primary text-right my-2 hover:underline cursor-pointer"
+            >
+              Forgot password
+            </p>
             <div onClick={handleRegister}>
-              <p className="text-base text-red-500 cursor-pointer text-center my-6 hover:underline">
+              <p className="text-base text-primary cursor-pointer text-center my-6 hover:underline">
                 Create new account?
               </p>
             </div>
@@ -162,8 +168,8 @@ const Login = () => {
               onClick={handleRedirectGoogle}
               className="flex items-center space-x-3 shadow-card-layout-sm justify-center  my-2 border border-gray-300 rounded-lg w-full py-3 cursor-pointer hover:bg-gray-100"
             >
-              <GoogleIcon className="w-6 h-6 text-red-500 ml-[-14px]" />
-              <span className=" font-medium text-red-500 ">
+              <GoogleIcon className="w-6 h-6 text-primary ml-[-14px]" />
+              <span className=" font-medium text-primary ">
                 Login with Google
               </span>
             </div>
@@ -172,8 +178,8 @@ const Login = () => {
               // onClick={() => router.push("/login/facebook")}
               className="flex items-center space-x-3 shadow-card-layout-sm justify-center  my-2 border border-gray-300 rounded-lg w-full py-3 cursor-pointer hover:bg-gray-100"
             >
-              <FacebookIcon className="w-6 h-6 text-red-500 " />
-              <span className=" font-medium text-red-500 ">
+              <FacebookIcon className="w-6 h-6 text-primary " />
+              <span className=" font-medium text-primary ">
                 Login with Facebook
               </span>
             </div> */}

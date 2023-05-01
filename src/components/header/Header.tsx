@@ -124,7 +124,7 @@ export default function Header() {
             : "pointer-events-none"
         }`}
       ></div>
-      <div className="w-full relative mx-auto bg-white">
+      <div className="w-full relative mx-auto bg-gray-100">
         <div className="container mx-auto px-6 py-3">
           <div className="flex items-center justify-between">
             <div className="w-auto max-w-full flex items-center space-x-2">

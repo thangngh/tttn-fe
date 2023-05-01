@@ -1,6 +1,10 @@
-export default function Concurrency() {
+interface IProp {
+  concurrency: string;
+}
+
+export default function Concurrency({ concurrency }: IProp) {
   return (
-    <span className="inline-flex items-center justify-center rounded-full bg-purple-100 px-2.5 py-0.5 text-purple-700">
+    <div className="relative flex items-center  rounded-full  badge badge-outline cursor-pointer badge-success px-2.5 py-0.5 ">
       <svg
         xmlns="http://www.w3.org/2000/svg"
         fill="none"
@@ -16,7 +20,7 @@ export default function Concurrency() {
         />
       </svg>
 
-      <p className="whitespace-nowrap text-sm">Euro</p>
-    </span>
+      <span className="whitespace-nowrap text-sm">{concurrency}</span>
+    </div>
   );
 }

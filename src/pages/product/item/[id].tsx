@@ -1,5 +1,6 @@
 import { DrawerHeader } from "@/components/mui/CustomSideBar";
 import Rating from "@/components/product/rating";
+import Review from "@/components/product/review";
 import SVGLogo from "@/components/svg/Svg-logo";
 import Screen from "@/layouts/Screen";
 import { formatter } from "@/pages/shop/product/[id]";
@@ -311,7 +312,7 @@ export default function ProductItem() {
           </div>
         </div>
       </div>
-      <div className="py-12 px-4 md:px-6 bg-white 2xl:px-0 2xl:container 2xl:mx-auto flex justify-center items-center">
+      {/* <div className="py-12 px-4 md:px-6 bg-white 2xl:px-0 2xl:container 2xl:mx-auto flex justify-center items-center">
         <div className="flex flex-col justify-start items-start w-full space-y-8">
           <p className="text-3xl lg:text-4xl font-semibold leading-7 lg:leading-9 text-gray-800">
             Reviews
@@ -425,7 +426,7 @@ export default function ProductItem() {
                 </svg>
               </div>
             </div>
-            {/* className={"md:block " + (menu1 ? "block" : "hidden")} */}
+
             <div className={"md:block " + (menu ? "block" : "hidden")}>
               <p className="mt-3 text-base leading-normal text-gray-600 w-full md:w-9/12 xl:w-5/6">
                 When you want to decorate your home, the idea of choosing a
@@ -685,7 +686,8 @@ export default function ProductItem() {
             </div>
           </div>
         </div>
-      </div>
+      </div> */}
+      <Review />
       <div className="bg-white flex-wrap-reverse mx-full pb-4 px-4 pt-4  sm:px-6 lg:px-8 border-b-2 border-b-gray-400">
         <div className="w-full flex justify-start items-start flex-col bg-gray-50 p-8"></div>
       </div>

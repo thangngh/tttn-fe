@@ -104,12 +104,12 @@ const Register = () => {
                   type="text"
                   placeholder="first name"
                   {...register("firstName")}
-                  className={`w-full px-4 py-3 rounded-lg ${
+                  className={`w-full px-4 py-3 rounded-lg bg-white ${
                     errors.firstName ? "ring-red-200" : "ring-green-200"
                   } focus:ring-4 focus:outline-none transition duration-300 border border-gray-300 focus:shadow-xl`}
                 />
                 {errors.firstName && (
-                  <p className="text-red-500 text-sm mt-0">
+                  <p className="text-primary text-sm mt-0">
                     {errors.firstName.message}
                   </p>
                 )}
@@ -118,12 +118,12 @@ const Register = () => {
                   type="text"
                   placeholder="last name"
                   {...register("lastName")}
-                  className={`w-full px-4 py-3 rounded-lg ${
+                  className={`w-full px-4 py-3 rounded-lg bg-white ${
                     errors.lastName ? "ring-red-200" : "ring-green-200"
                   } focus:ring-4 focus:outline-none transition duration-300 border border-gray-300 focus:shadow-xl`}
                 />
                 {errors.lastName && (
-                  <p className="text-red-500 text-sm mt-0">
+                  <p className="text-primary text-sm mt-0">
                     {errors.lastName.message}
                   </p>
                 )}
@@ -132,12 +132,12 @@ const Register = () => {
                 type="text"
                 placeholder="email"
                 {...register("email")}
-                className={`w-full px-4 py-3 rounded-lg ${
+                className={`w-full px-4 py-3 rounded-lg  bg-white ${
                   errors.email ? "ring-red-200" : "ring-green-200"
                 } focus:ring-4 focus:outline-none transition duration-300 border border-gray-300 focus:shadow-xl`}
               />
               {errors.email && (
-                <p className="text-red-500 text-sm mt-0">
+                <p className="text-primary text-sm mt-0">
                   {errors.email.message}
                 </p>
               )}
@@ -145,12 +145,12 @@ const Register = () => {
                 type="text"
                 placeholder="username"
                 {...register("username")}
-                className={`w-full px-4 py-3 rounded-lg ${
+                className={`w-full px-4 py-3 rounded-lg  bg-white ${
                   errors.username ? "ring-red-200" : "ring-green-200"
                 } focus:ring-4 focus:outline-none transition duration-300 border border-gray-300 focus:shadow-xl`}
               />
               {errors.username && (
-                <p className="text-red-500 text-sm mt-0">
+                <p className="text-primary text-sm mt-0">
                   {errors.username.message}
                 </p>
               )}
@@ -158,12 +158,12 @@ const Register = () => {
                 type="password"
                 placeholder="password"
                 {...register("password")}
-                className={`w-full px-4 py-3 rounded-lg ${
+                className={`w-full px-4 py-3 rounded-lg  bg-white ${
                   errors.password ? "ring-red-200" : "ring-green-200"
                 } focus:ring-4 focus:outline-none transition duration-300 border border-gray-300 focus:shadow-xl`}
               />
               {errors.password && (
-                <p className="text-red-500 text-sm mt-0">
+                <p className="text-primary text-sm mt-0">
                   {errors.password.message}
                 </p>
               )}
@@ -174,19 +174,19 @@ const Register = () => {
               className="w-full px-4 py-3 rounded-lg ring-red-200 focus:ring-4 focus:outline-none transition duration-300 border border-gray-300 focus:shadow-xl"
             />
             {errors.confirmPassword && (
-              <p className="text-red-500 text-sm">
+              <p className="text-primary text-sm">
                 {errors.confirmPassword.message}
               </p>
             )} */}
             </div>
             <button
               type="submit"
-              className="bg-red-500 text-white block text-center 3xl:text-xl rounded-lg py-2 px-5 w-full shadow-lg mt-4 mx-auto"
+              className="bg-primary btn btn-outline text-white block text-center 3xl:text-xl rounded-lg py-2 px-5 w-full shadow-lg mt-4 mx-auto"
             >
               Register
             </button>
             <Link href={"/login"}>
-              <p className="text-base text-red-500 cursor-pointer text-center my-6 hover:underline">
+              <p className="text-base text-primary cursor-pointer text-center my-6 hover:underline">
                 Already have an account? Log in
               </p>
             </Link>
@@ -194,14 +194,14 @@ const Register = () => {
           <div className="border-t border-gray-200 mt-6">
             <p className="text-center text-gray-400 py-4">OR</p>
             <div className="flex shadow-card-layout-sm items-center space-x-3 justify-center my-2 border border-gray-300 rounded-lg w-full py-3 cursor-pointer hover:bg-gray-100">
-              <GoogleIcon className="w-6 h-6 text-red-500 ml-[-14px]" />
-              <span className="font-medium text-red-500">
+              <GoogleIcon className="w-6 h-6 text-primary ml-[-14px]" />
+              <span className="font-medium text-primary">
                 Login with Google
               </span>
             </div>
             {/* <div className="flex shadow-card-layout-sm items-center space-x-3 justify-center  my-2 border border-gray-300 rounded-lg w-full py-3 cursor-pointer hover:bg-gray-100">
-            <FacebookIcon className="w-6 h-6 text-red-500 " />
-            <span className=" font-medium text-red-500 ">
+            <FacebookIcon className="w-6 h-6 text-primary " />
+            <span className=" font-medium text-primary ">
               Đăng nhập với Facebook
             </span>
           </div> */}

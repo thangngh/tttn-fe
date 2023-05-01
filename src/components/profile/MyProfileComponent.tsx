@@ -5,10 +5,14 @@ import { FormControlLabel, Radio, RadioGroup } from "@mui/material";
 import React, { memo } from "react";
 import { Controller, useForm } from "react-hook-form";
 import Image from "next/image";
+import ProfileLayout from "@/layouts/ProfileLayout";
+import MyAddress from "./MyAddress";
+import MyPassword from "./MyPassword";
 enum gender {
   MALE = "MALE",
   FEMALE = "FEMALE",
 }
+
 function MyProfileComponent() {
   const dispatch = useAppDispatch();
   const profile = useAppSelector((state: RootState) => state.userReducer.user);
@@ -36,8 +40,9 @@ function MyProfileComponent() {
     setUser(profile);
   }, [profile]);
   return (
-    <>
+    <div>
       {
+        // user &&
         <form
           // onSubmit={handleSubmit(onSendData)}
           className="space-4 my-4 w-[90%] mx-auto"
@@ -118,7 +123,7 @@ function MyProfileComponent() {
               </div>
               <div className="flex flex-col">
                 <button type="submit">
-                  <span className="text-sm font-normal text-white bg-red-400 rounded-md px-4 py-3 ">
+                  <span className="text-sm font-normal text-white bg-primary rounded-md px-4 py-3 ">
                     Change
                   </span>
                 </button>
@@ -161,7 +166,7 @@ function MyProfileComponent() {
 
                 <label
                   htmlFor="image"
-                  className="text-sm text-center font-normal text-white bg-red-400 rounded-md px-3 py-2 "
+                  className="text-sm text-center font-normal text-white bg-primary rounded-md px-3 py-2 "
                 >
                   Select Image
                 </label>
@@ -174,7 +179,7 @@ function MyProfileComponent() {
           </div>
         </form>
       }
-    </>
+    </div>
   );
 }
 

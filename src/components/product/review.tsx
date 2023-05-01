@@ -1,7 +1,7 @@
 export default function Review() {
   return (
     <>
-      <section>
+      <section className="bg-white">
         <div className="mx-auto max-w-screen-xl px-4 py-8 sm:px-6 lg:px-8">
           <h2 className="text-xl font-bold sm:text-2xl">Customer Reviews</h2>
 

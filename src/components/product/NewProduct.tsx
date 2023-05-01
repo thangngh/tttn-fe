@@ -46,7 +46,7 @@ export default function NewProduct() {
           {product.map((item: any) => {
             return (
               <div key={item.id}>
-                <div className="w-full h-full max-h-80  relative">
+                <div className="w-full h-full max-h-96  relative">
                   <Image
                     src={`${process.env.API_URL}/product/get-image/${item.image}`}
                     alt=""
@@ -60,11 +60,11 @@ export default function NewProduct() {
                       <div className="stat-value">{item.name}</div>
                     </div>
                   </div>
-                  <div className="stats bg-primary text-primary-content absolute bottom-0 right-0">
+                  {/* <div className="stats bg-primary text-primary-content absolute bottom-0 right-0">
                     <div className="stat">
                       <div className="stat-value">{item.description}</div>
                     </div>
-                  </div>
+                  </div> */}
                   <div className="stat-actions text-primary-focus absolute left-0 top-0">
                     <button className="btn btn-sm">
                       <Link href={`/product/item/${item.id}`}>

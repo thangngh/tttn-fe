@@ -18,3 +18,11 @@ export const findAllProductCartUserAction = createAsyncThunk(
 		return response;
 	}
 )
+
+export const deleteProductToCartAction = createAsyncThunk(
+	"cart/delete-cart",
+	async (cartId: string) => {
+		const response = await CartAPI.deleteProductToCart(cartId);
+		return response;
+	}
+)

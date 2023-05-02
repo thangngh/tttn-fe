@@ -1,6 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { createProductAction, createProductInventoryAction, deleteProductAction, getAllProductAction, getAllProductWithShopAction, getOneProductAction, getOneProductInventoryAction, getProductInMonth, getProductWithShopIdAction, updateProductAction } from "../action/product.action";
 import { IProduct } from "@/type/product.interface";
+import { formatter } from "@/pages/shop/product/[id]";
 
 interface initialState {
 	isSuccess: boolean,
@@ -87,6 +88,7 @@ const ProductSlice = createSlice({
 		})
 		builder.addCase(getOneProductAction.fulfilled, (state, action) => {
 			state.product = action.payload
+			state.price = formatter(action.payload.productInventory[0].price)
 			state.productInventory = action.payload?.productInventory
 		})
 

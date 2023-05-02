@@ -123,6 +123,7 @@ export default function ProductItem() {
         product: (product as any).productInventory.map(
           (productInventory: any) => {
             setQuantity(productInventory.quantity);
+            setProductInventoryId(productInventory.id);
             return {
               id: productInventory.id,
               price: formatter(productInventory.price),
@@ -141,6 +142,7 @@ export default function ProductItem() {
   React.useEffect(() => {
     let loading;
     if (successAddCart && router.isReady) {
+      window.location.reload();
       loading = setTimeout(() => {
         setIsLoading(false);
         dispatch(getOneProductAction(router?.query?.id as string));
@@ -201,21 +203,16 @@ export default function ProductItem() {
           >
             {data?.product?.map((image: any) => (
               <div key={image.id} className="inline-block relative">
-                {isLoading ? (
-                  <>
-                    <span className="text-gray-700 card-title">á đù</span>
-                  </>
-                ) : (
-                  <>
-                    <Image
-                      src={`${process.env.API_URL}/product/get-image/${image.image}`}
-                      alt=""
-                      width={400}
-                      height={400}
-                      className="h-full card w-full max-w-96  max-h-96  object-scale-down bg-fixed rounded-md object-center bg-center"
-                    />
-                    <div className="flex items-center justify-around px-4">
-                      {/* <div className="flex items-center space-x-4 my-4">
+                <>
+                  <Image
+                    src={`${process.env.API_URL}/product/get-image/${image.image}`}
+                    alt=""
+                    width={400}
+                    height={400}
+                    className="h-full card w-full max-w-96  max-h-96  object-scale-down bg-fixed rounded-md object-center bg-center"
+                  />
+                  <div className="flex items-center justify-around px-4">
+                    {/* <div className="flex items-center space-x-4 my-4">
               <div>
                 <div className="rounded-lg bg-gray-100 flex py-2 px-3">
                   <span className="text-indigo-400 mr-1 mt-1">$</span>
@@ -227,15 +224,14 @@ export default function ProductItem() {
                 <p className="text-gray-400 text-sm">Inclusive of all Taxes.</p>
               </div>
             </div> */}
-                      <p className="text-gray-700 card-title">
-                        price: {image.price}
-                      </p>
-                      <p className="text-gray-700 card-title">
-                        quantity: {image.quantity}
-                      </p>
-                    </div>
-                  </>
-                )}
+                    <p className="text-gray-700 card-title">
+                      price: {image.price}
+                    </p>
+                    <p className="text-gray-700 card-title">
+                      quantity: {image.quantity}
+                    </p>
+                  </div>
+                </>
               </div>
             ))}
           </Slider>

@@ -27,4 +27,16 @@ export const CartAPI = {
 			return error;
 		}
 	},
+
+	deleteProductToCart: async (cartId: string) => {
+		try {
+			const response = await axiosConfig.delete(`/cart/delete-cart/${cartId}`);
+			toast.success(response.data.message);
+
+			return response.data;
+		} catch (error: any) {
+			toast.error(error.message);
+			return error;
+		}
+	}
 }

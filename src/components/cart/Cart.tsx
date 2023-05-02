@@ -4,7 +4,10 @@ import React from "react";
 import Image from "next/image";
 import { useAppDispatch, useAppSelector } from "@/redux/hook";
 import { RootState } from "@/redux/store";
-import { findAllProductCartUserAction } from "@/redux/action/cart.action";
+import {
+  deleteProductToCartAction,
+  findAllProductCartUserAction,
+} from "@/redux/action/cart.action";
 import { formatter } from "@/pages/shop/product/[id]";
 interface IProps {
   openModal: boolean;
@@ -41,6 +44,11 @@ export default function CartComponent({ openModal, handleCloseModal }: IProps) {
     setData(product);
   }, [getAllProductCartUser]);
 
+  const handleDeleteCart = async (cartId: string) => {
+    const accessToken = localStorage.getItem("accessToken");
+    accessToken && dispatch(deleteProductToCartAction(cartId));
+  };
+
   return (
     <div
       className={`
@@ -62,10 +70,27 @@ export default function CartComponent({ openModal, handleCloseModal }: IProps) {
         <div className="p-4 max-h-full h-[calc(70vh+5px)] overflow-y-auto">
           {data && data.length > 0 ? (
             data.map((item, index) => (
-              <div
-                key={index}
-                className="border-b my-4 space-y-4 relative before:absolute before:content-['X'] before:right-0 before:top-0"
-              >
+              <div key={item.id} className="border-b my-4 space-y-4 relative">
+                <span
+                  onClick={() => handleDeleteCart(item.id)}
+                  className="absolute right-0 top-0 cursor-pointer"
+                >
+                  <svg
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth={1.5}
+                    viewBox="0 0 24 24"
+                    xmlns="http://www.w3.org/2000/svg"
+                    aria-hidden="true"
+                    className="w-6 h-6"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      d="M6 18L18 6M6 6l12 12"
+                    />
+                  </svg>
+                </span>
                 <div className="flex gap-2 space-x-2 space-y-4 items-center justify-between flex-wrap sm:flex-nowrap">
                   <div className="flex gap-1 space-x-2">
                     <div className="w-24 h-24 relative">

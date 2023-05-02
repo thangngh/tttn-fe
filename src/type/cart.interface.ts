@@ -1,4 +1,5 @@
 export interface IAddCart {
+	id?: number,
 	productId: number;
 	userId: number;
 	total: number;

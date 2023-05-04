@@ -1,6 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { getAllUserAction, getProfileAction, getRoleAction } from "../action/user.action";
+import { editProfileAction, getAllUserAction, getProfileAction, getRoleAction, uploadAvatarAction } from "../action/user.action";
 import { IUser } from "@/type/user.interface";
+import { toast } from "react-toastify";
 
 interface initState {
 	role: any;
@@ -57,6 +58,17 @@ const UserSlice = createSlice({
 			})
 			.addCase(getAllUserAction.rejected, (state, action) => {
 				// state.user = action.payload;
+			})
+
+		builder
+			.addCase(uploadAvatarAction.fulfilled, (state, action) => {
+				console.log("upload file", action.payload)
+			})
+
+		builder
+			.addCase(editProfileAction.fulfilled, (state, action) => {
+				console.log("editProfileAction", action.payload)
+				toast.success(action.payload?.status)
 			})
 	}
 

@@ -24,3 +24,19 @@ export const getAllUserAction = createAsyncThunk(
 		return response;
 	}
 )
+
+export const uploadAvatarAction = createAsyncThunk(
+	"user/upload-avatar",
+	async ({ file }: { file: File }) => {
+		const response = await UserAPI.uploadAvatar({ file })
+		return response;
+	}
+)
+
+export const editProfileAction = createAsyncThunk(
+	"user/edit-profile",
+	async (body: any) => {
+		const response = await UserAPI.editProfile(body)
+		return response;
+	}
+)

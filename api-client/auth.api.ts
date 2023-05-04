@@ -52,14 +52,24 @@ export const AuthAPI = {
 	},
 
 	sendMailResetPassword: async ({ email }: { email: string }) => {
-
+		try {
+			const response = await axiosConfig.post("/auth/send-mail-reset-password", { email });
+			return response.data;
+		} catch (error: any) {
+			return error;
+		}
 	},
 
 	resetPasswordWithVerifyToken: async ({
 		password,
 		token
 	}: { password: string, token: string }) => {
-
+		try {
+			const response = await axiosConfig.patch("/auth/change-password-with-verify-token", { password, token });
+			return response.data;
+		} catch (error: any) {
+			return error;
+		}
 	},
 
 	changePassword: async ({
@@ -69,7 +79,12 @@ export const AuthAPI = {
 		oldPassword: string;
 		newPassword: string;
 	}) => {
-
+		try {
+			const response = await axiosConfig.patch("/auth/change-password", { oldPassword, newPassword });
+			return response.data;
+		} catch (error: any) {
+			return error;
+		}
 	},
 
 

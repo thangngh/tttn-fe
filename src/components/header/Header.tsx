@@ -10,13 +10,13 @@ import {
 import { signOut } from "next-auth/react";
 import { useRouter } from "next/router";
 import React from "react";
-import SVGLogo from "../svg/Svg-logo";
 import Link from "next/link";
-import SvgUser from "../svg/Svg-user";
 import Image from "next/image";
-import CartComponent from "../cart/Cart";
 import { findAllProductCartUserAction } from "@/redux/action/cart.action";
 import { resetSuccess } from "@/redux/reduce/cart.slice";
+import SVGLogo from "../svg/Svg-logo";
+import CartComponent from "../cart/Cart";
+import SvgUser from "../svg/Svg-user";
 const theme = createTheme({
   components: {
     MuiAccordionDetails: {
@@ -223,7 +223,7 @@ export default function Header() {
                                     }  animate-slide-in-up hover:visible text-lg rounded-lg `}
                                   >
                                     <div className="text-gray-900">
-                                      <Link href="/profile">
+                                      <Link href="/profile/my-profile">
                                         <div className="p-1 my-1 border-l-2 border-white  cursor-pointer ">
                                           <a>Profile</a>
                                         </div>
@@ -277,7 +277,7 @@ export default function Header() {
                                     }  animate-slide-in-up hover:visible text-lg`}
                                   >
                                     <div className="text-gray-900">
-                                      <Link href="/profile">
+                                      <Link href="/profile/my-profile">
                                         <div className="p-1 my-1 border-l-2 border-white hover:border-[#848ABD] hover:text-[#848ABD] cursor-pointer ">
                                           <a>Profile</a>
                                         </div>

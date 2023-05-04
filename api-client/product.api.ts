@@ -111,8 +111,8 @@ export const ProductAPI = {
 				}
 			})
 			return response.data;
-		} catch (error) {
-
+		} catch (error: any) {
+			return error;
 		}
 	},
 

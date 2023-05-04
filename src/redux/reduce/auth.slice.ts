@@ -1,4 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit"
+import { sendMailResetPasswordAction } from "../action/auth.action"
 
 interface initState {
 	error: any,
@@ -18,7 +19,10 @@ const authSlice = createSlice({
 	reducers: {
 	},
 	extraReducers: (builder) => {
-
+		builder
+			.addCase(sendMailResetPasswordAction.fulfilled, (state, action) => {
+				console.log("action send mail", action.payload)
+			})
 	}
 })
 

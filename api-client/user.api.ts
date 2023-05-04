@@ -47,8 +47,30 @@ export const UserAPI = {
 		}
 	},
 
-	editProfile: async () => {
+	editProfile: async (body: any) => {
+		try {
+			const response = await axiosConfig.patch("/user/edit-profile", body);
+			return response.data;
+		} catch (error: any) {
+			return error;
+		}
+	},
 
+	uploadAvatar: async ({ file }: { file: File }) => {
+		if (!file) return null;
+		try {
+			const formData = new FormData();
+			formData.append("image", file);
+			const response = await axiosConfig.post(`/user/upload-avatar`, formData, {
+				headers: {
+					'Content-Type': 'multipart/form-data',
+				}
+			})
+			return response.data;
+		} catch (error: any) {
+			toast.error(error)
+			return error;
+		}
 	},
 
 	addReviewProduct: async () => {

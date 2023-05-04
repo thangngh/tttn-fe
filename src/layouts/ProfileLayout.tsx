@@ -22,7 +22,6 @@ export default function ProfileLayout({ children }: IProps) {
 
   const mainPath = router.pathname.split("/")[1];
   const subPath = router.pathname.split("/")[2];
-  console.log("subpath", subPath);
   return (
     <Screen>
       <div className="w-full h-full relative bg-white py-4 shadow-xl">

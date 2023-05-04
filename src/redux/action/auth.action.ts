@@ -15,3 +15,11 @@ export const loginAction = createAsyncThunk(
 		return response;
 	}
 )
+
+export const sendMailResetPasswordAction = createAsyncThunk(
+	"/auth/sendmail",
+	async ({ email }: { email: string }) => {
+		const response = await AuthAPI.sendMailResetPassword({ email });
+		return response;
+	}
+)

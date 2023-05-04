@@ -4,7 +4,10 @@ import { useRouter } from "next/router";
 import Image from "next/image";
 import { useAppDispatch, useAppSelector } from "@/redux/hook";
 import { RootState } from "@/redux/store";
-import { findAllProductCartUserAction } from "@/redux/action/cart.action";
+import {
+  deleteProductToCartAction,
+  findAllProductCartUserAction,
+} from "@/redux/action/cart.action";
 import React from "react";
 import AddAddress from "@/components/address/AddAddress";
 import GuardLayout from "@/layouts/GuardLayout";
@@ -16,10 +19,15 @@ export default function Cart() {
   const getAllProductCartUser = useAppSelector(
     (state: RootState) => state.cartReducer.cartProduct
   );
-
+  const totalPriceSelector = useAppSelector(
+    (state: RootState) => state.cartReducer.totalPrice
+  );
+  const shopNameRef = React.useRef("");
+  const [totalPrice, setTotalPrice] = React.useState(0);
   React.useEffect(() => {
     const product: any[] = [];
-    getAllProductCartUser?.map((item: any) => {
+    getAllProductCartUser?.map((item: any, index) => {
+      shopNameRef.current = item.product.category.shop.name;
       product.push({
         id: item.id,
         total: item.total,
@@ -27,20 +35,37 @@ export default function Cart() {
         image: item.productInventory?.image,
         productName: item?.product?.name,
         productDes: item?.product?.description,
+        productPrice: formatter(item?.productInventory?.price),
+        shopName: item.product.category.shop.name,
       });
-      // setPay((pre) => item.price);
     });
     setData(product);
   }, [getAllProductCartUser]);
 
-  console.log("getAllProductCartUser", getAllProductCartUser);
+  React.useEffect(() => {
+    setTotalPrice(totalPriceSelector);
+  }, [totalPriceSelector]);
+
   React.useEffect(() => {
     const accessToken = localStorage.getItem("accessToken");
     accessToken && dispatch(findAllProductCartUserAction());
   }, [dispatch]);
 
   const handleRouterBack = () => {
-    router.back();
+    router.push("/");
+  };
+
+  const handleDeleteCart = async (cartId: string) => {
+    const accessToken = localStorage.getItem("accessToken");
+    accessToken && dispatch(deleteProductToCartAction(cartId));
+  };
+
+  const handleRedirectToCheckout = () => {
+    if (data.length > 0) {
+      router.push({
+        pathname: "/checkout",
+      });
+    }
   };
 
   return (
@@ -48,14 +73,14 @@ export default function Cart() {
       <GuardLayout>
         <div className="w-full mx-auto  max-w-7xl bg-white">
           <div className="w-full sm:container mx-auto mb-10 px-4 relative ">
-            <div className=" flex space-x-2 items-center">
+            <div className=" flex space-x-2 items-center text-black">
               <SVGLogo />
               <span className="text-xl font-medium">| Cart</span>
             </div>
             <div className="mt-4 cursor-pointer">
-              <div className="text-sm breadcrumbs">
+              <div className="text-sm breadcrumbs text-black">
                 <ul>
-                  <li onClick={() => router.push("/")}>
+                  <li onClick={handleRouterBack}>
                     <a>Home</a>
                   </li>
                   <li>
@@ -71,29 +96,23 @@ export default function Cart() {
               <div className="flex justify-between flex-auto">
                 <div className="w-full max-w-1/2">
                   <div className="space-x-3 flex items-center">
-                    <input
-                      type="checkbox"
-                      name=""
-                      id=""
-                      className="checkbox checkbox-error"
-                    />
-                    <span className="max-w-[100px] w-full font-mono">
+                    <span className="text-black max-w-[100px] w-full font-mono">
                       Product
                     </span>
                   </div>
                 </div>
                 <div className="w-full max-w-1/2">
                   <div className="flex items-center justify-between">
-                    <span className="text-base font-mono max-w-[100px] w-full">
+                    <span className="text-black text-base font-mono max-w-[100px] w-full">
                       Checkout
                     </span>
-                    <span className="text-base font-mono max-w-[100px] w-full">
+                    <span className="text-black text-base font-mono max-w-[100px] w-full">
                       amount
                     </span>
-                    <span className="text-base font-mono max-w-[100px] w-full">
+                    <span className="text-black text-base font-mono max-w-[100px] w-full">
                       pay
                     </span>
-                    <span className="text-base font-mono max-w-[100px] w-full">
+                    <span className="text-black text-base font-mono max-w-[100px] w-full">
                       action
                     </span>
                   </div>
@@ -106,14 +125,8 @@ export default function Cart() {
               <div className="flex justify-between flex-auto">
                 <div className="w-full max-w-1/2">
                   <div className="space-x-3 my-2 flex items-center">
-                    <input
-                      type="checkbox"
-                      name=""
-                      id=""
-                      className="checkbox checkbox-error"
-                    />
-                    <span className="max-w-[100px] w-full font-mono">
-                      Shop name
+                    <span className="text-black max-w-[100px] w-full font-mono">
+                      {shopNameRef.current}
                     </span>
                   </div>
                 </div>
@@ -123,12 +136,6 @@ export default function Cart() {
                   <div key={item.id} className="flex justify-between flex-auto">
                     <div className="w-full max-w-1/2">
                       <div className="space-x-3 my-2 flex items-center">
-                        <input
-                          type="checkbox"
-                          name=""
-                          id=""
-                          className="checkbox checkbox-error"
-                        />
                         <div className="flex justify-between space-x-2">
                           <div className="relative w-20 h-20">
                             <Image
@@ -140,9 +147,8 @@ export default function Cart() {
                             />
                           </div>
                           <div className="flex flex-col max-w-sm space-y-2 justify-start">
-                            <span className="sm:truncate break-inside-auto text-sm font-medium">
-                              Bình Giữ Nhiệt Hiển Thị Nhiệt Độ Phong Cách Cổ
-                              Trang Chất Liệu Inox 304 Cao Cấp Dung Tích 500ml
+                            <span className="sm:truncate break-inside-auto text-sm font-medium text-black">
+                              {item.productDes}
                             </span>
                           </div>
                         </div>
@@ -150,24 +156,21 @@ export default function Cart() {
                     </div>
                     <div className="w-full max-w-1/2">
                       <div className="flex items-center justify-between">
-                        <span className="text-base font-mono max-w-[100px] w-full">
-                          ₫2.568.000
+                        <span className="text-base font-mono max-w-[100px] w-full text-black">
+                          {item.productPrice}
                         </span>
                         <span className="text-base font-mono max-w-[100px] w-full">
-                          <div className="my-4 space-x-4 flex items-center">
-                            <button className="p-2  rounded-full bg-red-500 text-white font-semibold">
-                              <span className=" text-sm">+</span>
-                            </button>
-                            <span>1</span>
-                            <button className="p-2 rounded-full bg-red-500 text-white font-semibold">
-                              <span className=" text-sm">-</span>
-                            </button>
+                          <div className="my-4 space-x-4 flex items-center text-black">
+                            <span>{item.total}</span>
                           </div>
                         </span>
-                        <span className="text-base font-mono max-w-[100px] w-full">
-                          ₫2.568.000
+                        <span className="text-base font-mono max-w-[100px] w-full text-black">
+                          {item.price}
                         </span>
-                        <span className="text-base font-mono max-w-[100px] w-full hover:underline">
+                        <span
+                          onClick={() => handleDeleteCart(item.id)}
+                          className="text-black text-base cursor-pointer font-mono max-w-[100px] w-full hover:underline"
+                        >
                           delete
                         </span>
                       </div>
@@ -185,27 +188,27 @@ export default function Cart() {
             <div className="block">
               <div className="flex justify-between flex-auto">
                 <div className="w-full max-w-1/2">
-                  <div className="space-x-3 flex items-center">
-                    <input
-                      type="checkbox"
-                      name=""
-                      id=""
-                      className="checkbox checkbox-error"
-                    />
-                    <span className="max-w-[100px] w-full font-mono">
-                      Select all
-                    </span>
-                  </div>
+                  <div className="space-x-3 flex items-center"></div>
                 </div>
                 <div className="w-full max-w-1/2">
                   <div className="flex items-center justify-end space-x-4">
                     <div className="flex items-center justify-between ">
-                      <span className="text-base font-mono  ">
-                        Total pay (1 sản phẩm):
+                      <span className="text-base font-mono  text-primary">
+                        Total pay ({data?.length} product):
                       </span>{" "}
-                      <span className="text-base font-mono ">price</span>
+                      <span className="text-base font-mono text-primary">
+                        {formatter(totalPrice) + " đ"}
+                      </span>
                     </div>
-                    <button className="bg-red-500 px-6 py-3 rounded-md text-white">
+                    <button
+                      disabled={data.length > 0 ? false : true}
+                      className={`bg-primary px-6 py-3 rounded-md text-white ${
+                        data.length > 0
+                          ? "cursor-pointer"
+                          : "cursor-not-allowed"
+                      }`}
+                      onClick={handleRedirectToCheckout}
+                    >
                       <span>Buy</span>
                     </button>
                   </div>

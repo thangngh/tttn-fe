@@ -89,7 +89,6 @@ export default function ProductDetailShop() {
     });
     setProductInventory(dataList);
   }, [productInventoryDetail]);
-  console.log("productInventory", productInventory);
 
   React.useEffect(() => {
     if (router.isReady) {
@@ -103,8 +102,7 @@ export default function ProductDetailShop() {
 
   const onCreateProductInventory = async () => {
     const values = await forms.validateFields();
-    console.log(values);
-    console.log(formatter(values.price));
+
     try {
       const data = {
         productId: id as string,

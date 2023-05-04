@@ -79,11 +79,13 @@ export default function CreateShopComponent({ onNext }: StepOneProps) {
         <form onSubmit={onCreateShop}>
           <div className="flex flex-col space-y-3">
             <div className="flex flex-col space-y-3">
-              <label htmlFor="name">Shop Name</label>
+              <label htmlFor="name" className="text-black">
+                Shop Name
+              </label>
               <input
                 className={`w-full px-4 py-3 rounded-lg ${
                   errors.name ? "ring-red-200" : "ring-green-200"
-                } focus:ring-4 focus:outline-none transition duration-300 border border-gray-300 focus:shadow-xl`}
+                } focus:ring-4 focus:outline-none transition duration-300 border border-gray-300 bg-white focus:shadow-xl`}
                 type="text"
                 id="name"
                 {...register("name")}
@@ -95,11 +97,13 @@ export default function CreateShopComponent({ onNext }: StepOneProps) {
               )}
             </div>
             <div className="flex flex-col space-y-3">
-              <label htmlFor="description">Description</label>
+              <label htmlFor="description" className="text-black">
+                Description
+              </label>
               <textarea
                 className={`w-full px-4 py-3 rounded-lg ${
                   errors.description ? "ring-red-200" : "ring-green-200"
-                } focus:ring-4 focus:outline-none transition duration-300 border border-gray-300 focus:shadow-xl`}
+                } focus:ring-4 focus:outline-none transition duration-300 border border-gray-300 bg-white focus:shadow-xl`}
                 {...register("description")}
               />
               {errors.description && (
@@ -109,11 +113,13 @@ export default function CreateShopComponent({ onNext }: StepOneProps) {
               )}
             </div>
             <div className="flex flex-col space-y-3">
-              <label htmlFor="phone">Phone</label>
+              <label htmlFor="phone" className="text-black">
+                Phone
+              </label>
               <input
                 className={`w-full px-4 py-3 rounded-lg ${
                   errors.phone ? "ring-red-200" : "ring-green-200"
-                } focus:ring-4 focus:outline-none transition duration-300 border border-gray-300 focus:shadow-xl`}
+                } focus:ring-4 focus:outline-none transition duration-300 border border-gray-300 bg-white focus:shadow-xl`}
                 type="text"
                 {...register("phone")}
                 id="phone"
@@ -126,11 +132,11 @@ export default function CreateShopComponent({ onNext }: StepOneProps) {
             </div>
 
             <div className="flex flex-col space-y-3">
-              <label>Address</label>
+              <label className="text-black">Address</label>
               <input
                 className={`w-full px-4 py-3 rounded-lg ${
                   errors.address?.city ? "ring-red-200" : "ring-green-200"
-                } focus:ring-4 focus:outline-none transition duration-300 border border-gray-300 focus:shadow-xl`}
+                } focus:ring-4 focus:outline-none transition duration-300 border border-gray-300 bg-white focus:shadow-xl`}
                 type="text"
                 placeholder="city"
                 {...register("address.city")}
@@ -143,7 +149,7 @@ export default function CreateShopComponent({ onNext }: StepOneProps) {
               <input
                 className={`w-full px-4 py-3 rounded-lg ${
                   errors.address?.district ? "ring-red-200" : "ring-green-200"
-                } focus:ring-4 focus:outline-none transition duration-300 border border-gray-300 focus:shadow-xl`}
+                } focus:ring-4 focus:outline-none transition duration-300 border border-gray-300 bg-white focus:shadow-xl`}
                 type="text"
                 placeholder="district"
                 {...register("address.district")}
@@ -156,7 +162,7 @@ export default function CreateShopComponent({ onNext }: StepOneProps) {
               <input
                 className={`w-full px-4 py-3 rounded-lg ${
                   errors.address?.street ? "ring-red-200" : "ring-green-200"
-                } focus:ring-4 focus:outline-none transition duration-300 border border-gray-300 focus:shadow-xl`}
+                } focus:ring-4 focus:outline-none transition duration-300 border border-gray-300 bg-white focus:shadow-xl`}
                 type="text"
                 placeholder="street"
                 {...register("address.street")}
@@ -169,7 +175,7 @@ export default function CreateShopComponent({ onNext }: StepOneProps) {
               <input
                 className={`w-full px-4 py-3 rounded-lg ${
                   errors.address?.country ? "ring-red-200" : "ring-green-200"
-                } focus:ring-4 focus:outline-none transition duration-300 border border-gray-300 focus:shadow-xl`}
+                } focus:ring-4 focus:outline-none transition duration-300 border border-gray-300 bg-white focus:shadow-xl`}
                 type="text"
                 placeholder="country"
                 {...register("address.country")}

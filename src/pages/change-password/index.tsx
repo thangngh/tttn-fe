@@ -30,6 +30,7 @@ const schemaValidation = Yup.object({
 
 export default function ResetPassword() {
   const router = useRouter();
+  console.log(router);
   const token = router.query.token;
   const dispatch = useAppDispatch();
   // const success = useAppSelector(

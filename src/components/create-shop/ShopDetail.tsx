@@ -42,27 +42,33 @@ export default function ShopDetailComponent({ onNext, onBack }: StepTwoProps) {
         <form>
           <div className="flex flex-col space-y-3">
             <div className="flex flex-col space-y-3">
-              <label htmlFor="name">Shop Name</label>
+              <label htmlFor="name" className="text-black">
+                Shop Name
+              </label>
               <input
-                className={`w-full px-4 py-3 rounded-lg focus:ring-4 focus:outline-none transition duration-300 border border-gray-300 focus:shadow-xl`}
+                className={`w-full px-4 py-3 rounded-lg focus:ring-4 focus:outline-none transition duration-300 border bg-white border-gray-300 focus:shadow-xl`}
                 type="text"
                 id="name"
                 value={shop?.name}
               />
             </div>
             <div className="flex flex-col space-y-3">
-              <label htmlFor="description">Description</label>
+              <label htmlFor="description" className="text-black">
+                Description
+              </label>
               <textarea
                 readOnly
                 value={shop?.description}
-                className={`w-full px-4 py-3 rounded-lg  focus:ring-4 focus:outline-none transition duration-300 border border-gray-300 focus:shadow-xl`}
+                className={`w-full px-4 py-3 rounded-lg  focus:ring-4 focus:outline-none transition duration-300 border bg-white border-gray-300 focus:shadow-xl`}
               />
             </div>
             <div className="flex flex-col space-y-3">
-              <label htmlFor="phone">Phone</label>
+              <label htmlFor="phone" className="text-black">
+                Phone
+              </label>
               <input
                 className={`w-full px-4 py-3 rounded-lg 
-              focus:ring-4 focus:outline-none transition duration-300 border border-gray-300 focus:shadow-xl`}
+              focus:ring-4 focus:outline-none transition duration-300 border bg-white border-gray-300 focus:shadow-xl`}
                 type="text"
                 id="phone"
                 readOnly
@@ -71,10 +77,10 @@ export default function ShopDetailComponent({ onNext, onBack }: StepTwoProps) {
             </div>
 
             <div className="flex flex-col space-y-3">
-              <label>Address</label>
+              <label className="text-black">Address</label>
               <input
                 className={`w-full px-4 py-3 rounded-lg 
-              } focus:ring-4 focus:outline-none transition duration-300 border border-gray-300 focus:shadow-xl`}
+              } focus:ring-4 focus:outline-none transition duration-300 border bg-white border-gray-300 focus:shadow-xl`}
                 type="text"
                 placeholder="city"
                 readOnly
@@ -82,7 +88,7 @@ export default function ShopDetailComponent({ onNext, onBack }: StepTwoProps) {
               />
               <input
                 className={`w-full px-4 py-3 rounded-lg 
-              } focus:ring-4 focus:outline-none transition duration-300 border border-gray-300 focus:shadow-xl`}
+              } focus:ring-4 focus:outline-none transition duration-300 border bg-white border-gray-300 focus:shadow-xl`}
                 type="text"
                 placeholder="district"
                 readOnly
@@ -91,7 +97,7 @@ export default function ShopDetailComponent({ onNext, onBack }: StepTwoProps) {
 
               <input
                 className={`w-full px-4 py-3 rounded-lg
-              } focus:ring-4 focus:outline-none transition duration-300 border border-gray-300 focus:shadow-xl`}
+              } focus:ring-4 focus:outline-none transition duration-300 border bg-white border-gray-300 focus:shadow-xl`}
                 type="text"
                 placeholder="street"
                 readOnly
@@ -100,7 +106,7 @@ export default function ShopDetailComponent({ onNext, onBack }: StepTwoProps) {
 
               <input
                 className={`w-full px-4 py-3 rounded-lg
-              } focus:ring-4 focus:outline-none transition duration-300 border border-gray-300 focus:shadow-xl`}
+              } focus:ring-4 focus:outline-none transition duration-300 border bg-white border-gray-300 focus:shadow-xl`}
                 type="text"
                 readOnly
                 placeholder="country"

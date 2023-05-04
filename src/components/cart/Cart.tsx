@@ -24,10 +24,18 @@ export default function CartComponent({ openModal, handleCloseModal }: IProps) {
     (state: RootState) => state.cartReducer.cartProduct
   );
 
+  const totalPriceSelector = useAppSelector(
+    (state: RootState) => state.cartReducer.totalPrice
+  );
+
   React.useEffect(() => {
     const accessToken = localStorage.getItem("accessToken");
     accessToken && findAllProductCartUserAction();
   }, [dispatch]);
+
+  React.useEffect(() => {
+    setPay(totalPriceSelector);
+  }, [totalPriceSelector]);
 
   React.useEffect(() => {
     const product: any[] = [];
@@ -39,7 +47,6 @@ export default function CartComponent({ openModal, handleCloseModal }: IProps) {
         image: item.productInventory?.image,
         productName: item?.product?.name,
       });
-      setPay((pre) => item.price);
     });
     setData(product);
   }, [getAllProductCartUser]);
@@ -47,6 +54,14 @@ export default function CartComponent({ openModal, handleCloseModal }: IProps) {
   const handleDeleteCart = async (cartId: string) => {
     const accessToken = localStorage.getItem("accessToken");
     accessToken && dispatch(deleteProductToCartAction(cartId));
+  };
+
+  const handleRedirectToCheckout = () => {
+    if (data.length > 0) {
+      router.push({
+        pathname: "/checkout",
+      });
+    }
   };
 
   return (
@@ -147,8 +162,11 @@ export default function CartComponent({ openModal, handleCloseModal }: IProps) {
               </Link>
             </div>
             <button
-              className="px-5 py-3 bg-red-500 text-white"
-              onClick={() => router.push("/checkout")}
+              disabled={data.length > 0 ? false : true}
+              className={`px-5 py-3 bg-red-500 text-white ${
+                data.length > 0 ? "cursor-pointer" : "cursor-not-allowed"
+              }`}
+              onClick={handleRedirectToCheckout}
             >
               <span>Checkout</span>
             </button>

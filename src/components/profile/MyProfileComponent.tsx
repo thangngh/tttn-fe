@@ -1,14 +1,17 @@
-import { getProfileAction } from "@/redux/action/user.action";
+import {
+  editProfileAction,
+  getProfileAction,
+  uploadAvatarAction,
+} from "@/redux/action/user.action";
 import { useAppDispatch, useAppSelector } from "@/redux/hook";
 import { RootState } from "@/redux/store";
-import { FormControlLabel, Radio, RadioGroup } from "@mui/material";
+import { FormControlLabel, RadioGroup } from "@mui/material";
 import React, { memo } from "react";
 import { Controller, useForm } from "react-hook-form";
 import Image from "next/image";
-import ProfileLayout from "@/layouts/ProfileLayout";
-import MyAddress from "./MyAddress";
-import MyPassword from "./MyPassword";
-enum gender {
+import { toast } from "react-toastify";
+import { Radio } from "antd";
+enum genderEnum {
   MALE = "MALE",
   FEMALE = "FEMALE",
 }
@@ -17,6 +20,9 @@ function MyProfileComponent() {
   const dispatch = useAppDispatch();
   const profile = useAppSelector((state: RootState) => state.userReducer.user);
   const [user, setUser] = React.useState<any>();
+  const [imageUrl, setImageUrl] = React.useState<string>("");
+  const [image, setImage] = React.useState<File>();
+  const [valueGender, setValueGender] = React.useState("");
   const {
     register,
     handleSubmit,
@@ -26,25 +32,66 @@ function MyProfileComponent() {
     watch,
     formState: { errors },
   } = useForm<any>({
-    // defaultValues: {
-    //   gender: user?.gender,
-    // },
+    defaultValues: {
+      gender: profile?.gender?.toString(),
+    },
   });
+
+  React.useEffect(() => {
+    setValue("firstName", user?.firstName);
+    setValue("lastName", user?.lastName);
+    setValue("phone", user?.phone);
+    setValue("gender", user?.gender?.toString());
+    setValue("email", user?.email);
+    setValue("username", user?.username);
+    setValueGender(user?.gender?.toString());
+  }, [getValues, setValue, user]);
 
   React.useEffect(() => {
     const accessToken = localStorage.getItem("accessToken");
     accessToken && dispatch(getProfileAction());
   }, []);
 
+  const onSendData = async (data: any) => {
+    const { firstName, lastName, phone } = data;
+    try {
+      await dispatch(
+        editProfileAction({ firstName, lastName, gender: valueGender, phone })
+      );
+    } catch (error: any) {
+      toast.error(error);
+    }
+  };
+
+  React.useEffect(() => {
+    if (user?.avatar) {
+      setImageUrl(` ${process.env.API_URL}/user/get-image/${user?.avatar}`);
+    }
+  }, [user]);
+
+  const handleFileChange = (e: any) => {
+    setImageUrl(URL.createObjectURL(e.target.files[0]));
+    setImage(e.target.files[0]);
+  };
+
+  React.useEffect(() => {
+    if (image) {
+      dispatch(
+        uploadAvatarAction({
+          file: image,
+        })
+      );
+    }
+  }, [dispatch, image, user]);
+
   React.useEffect(() => {
     setUser(profile);
   }, [profile]);
   return (
     <div>
-      {
-        // user &&
+      {user && (
         <form
-          // onSubmit={handleSubmit(onSendData)}
+          onSubmit={handleSubmit(onSendData)}
           className="space-4 my-4 w-[90%] mx-auto"
         >
           <div className="flex space-x-4 w-full flex-wrap-reverse sm:flex-nowrap">
@@ -74,22 +121,30 @@ function MyProfileComponent() {
                 <div className="flex items-center gap-x-4 justify-start">
                   <Controller
                     render={({ field }) => (
-                      <RadioGroup
+                      <Radio.Group
                         className="flex items-center !flex-row"
                         aria-label="gender"
                         {...field}
+                        onChange={(e) => {
+                          setValueGender(e.target.value);
+                        }}
+                        value={valueGender}
                       >
-                        <FormControlLabel
-                          value={gender.FEMALE}
-                          control={<Radio />}
-                          label="Nữ"
-                        />
-                        <FormControlLabel
-                          value={gender.MALE}
-                          control={<Radio />}
-                          label="Nam"
-                        />
-                      </RadioGroup>
+                        <Radio
+                          value={genderEnum.FEMALE}
+                          // control={<Radio />}
+                          // label="FEMALE"
+                        >
+                          FEMALE
+                        </Radio>
+                        <Radio
+                          value={genderEnum.MALE}
+                          // control={<Radio />}
+                          // label="MALE"
+                        >
+                          MALE
+                        </Radio>
+                      </Radio.Group>
                     )}
                     name="gender"
                     control={control}
@@ -106,16 +161,9 @@ function MyProfileComponent() {
                   className="border border-gray-300 rounded-md px-2 py-1  bg-white"
                 />
               </div>
-              <div className="flex flex-col">
-                <label htmlFor="email">Email</label>
-                <input
-                  type="text"
-                  {...register("email")}
-                  name="email"
-                  readOnly
-                  defaultValue={user?.email}
-                  className="border border-gray-300 rounded-md px-2 py-1  bg-white text-gray-300"
-                />
+              <div className="flex  space-x-2">
+                <label htmlFor="email">Email: </label>
+                <span>{user?.email}</span>
               </div>
               <div className="flex space-x-2">
                 <label htmlFor="username">Username:</label>
@@ -135,25 +183,26 @@ function MyProfileComponent() {
                   htmlFor="image"
                   className="h-24 w-24 my-4 block relative"
                 >
-                  {/* {user ? (
-                            <Image
-                              // src={imageUrl}
-                              layout="fill"
-                              alt=""
-                              className=" rounded-full peer"
-                              objectFit="cover"
-                              draggable={true}
-                            />
-                          ) : ( */}
-                  <Image
-                    src={"https://i.pravatar.cc/150?img=32"}
-                    layout="fill"
-                    alt=""
-                    className=" rounded-full peer"
-                    objectFit="cover"
-                    draggable={true}
-                  />
-                  {/* )} */}
+                  {user ? (
+                    <Image
+                      src={imageUrl}
+                      width={400}
+                      height={400}
+                      alt=""
+                      className=" rounded-full  bg-cover h-full w-full bg-no-repeat"
+                      draggable={true}
+                      priority={false}
+                    />
+                  ) : (
+                    <Image
+                      src={"https://i.pravatar.cc/150?img=32"}
+                      layout="fill"
+                      alt=""
+                      className=" rounded-full peer"
+                      objectFit="cover"
+                      draggable={true}
+                    />
+                  )}
                 </label>
                 <input
                   id="image"
@@ -161,7 +210,7 @@ function MyProfileComponent() {
                   autoComplete="off"
                   accept="image/*"
                   className="h-0 w-0 peer"
-                  // onChange={handleFileChange}
+                  onChange={handleFileChange}
                 />
 
                 <label
@@ -178,7 +227,7 @@ function MyProfileComponent() {
             </div>
           </div>
         </form>
-      }
+      )}
     </div>
   );
 }

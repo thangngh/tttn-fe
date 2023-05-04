@@ -6,6 +6,7 @@ interface initialState {
 	isSuccess: boolean,
 	isError: boolean,
 	isDelete: boolean,
+	totalPrice: number,
 	cartProduct: IAddCart[]
 }
 
@@ -13,6 +14,7 @@ const initialState: initialState = {
 	cartProduct: [],
 	isSuccess: false,
 	isDelete: false,
+	totalPrice: 0,
 	isError: false
 }
 
@@ -33,11 +35,15 @@ const CartSlice = createSlice({
 		})
 		builder.addCase(findAllProductCartUserAction.fulfilled, (state, action) => {
 			state.cartProduct = action.payload
+			let total = 0;
+			for (const { price } of action.payload) {
+				total = total + price;
+			}
+			state.totalPrice = total
 		})
 		builder.addCase(deleteProductToCartAction.fulfilled, (state, action) => {
-			console.log("delete cart", action.payload)
 			if (action.payload?.status === 200) {
-				// state.isDelete = true
+				state.totalPrice = state.totalPrice - action.payload.data.price;
 				state.cartProduct = state.cartProduct.filter((item) => item.id !== action.payload.data.id)
 			}
 		})

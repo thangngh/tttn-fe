@@ -34,29 +34,34 @@ export default function FinishedCreateShopComponent({
   }, [profile?.id]);
 
   const handleCreateShop = async () => {
-    const newShop = {
-      name: shop?.name,
-      description: shop?.description,
-      userId: userIdRef.current,
-      phone: shop?.phone,
-      address: {
-        city: shop?.["address.city"],
-        district: shop?.["address.district"],
-        street: shop?.["address.street"],
-        country: shop?.["address.country"],
-      },
-    };
+    if (!shop) {
+      toast.error("some thing went wrong data not exits");
+      return;
+    } else {
+      const newShop = {
+        name: shop?.name,
+        description: shop?.description,
+        userId: userIdRef.current,
+        phone: shop?.phone,
+        address: {
+          city: shop?.["address.city"],
+          district: shop?.["address.district"],
+          street: shop?.["address.street"],
+          country: shop?.["address.country"],
+        },
+      };
 
-    dispatch(createShopAction(newShop))
-      .then(() => {
-        localStorage.removeItem("shop");
-        const redirect = setTimeout(() => router.push("/shop/dashboard"));
+      dispatch(createShopAction(newShop))
+        .then(() => {
+          localStorage.removeItem("shop");
+          const redirect = setTimeout(() => router.push("/shop/dashboard"));
 
-        clearTimeout(redirect);
-      })
-      .catch(() => {
-        toast.error("Some thing went wrong!");
-      });
+          clearTimeout(redirect);
+        })
+        .catch(() => {
+          toast.error("Some thing went wrong!");
+        });
+    }
   };
 
   const handleBack = () => {

@@ -39,39 +39,60 @@ export default function NewProduct() {
   };
 
   return (
-    <div className="container w-full h-full bg-white">
-      <span className="stat-value stat ">New Product</span>
+    <div className="w-full h-full bg-gray-800">
       {
         <Slider {...settings}>
           {product.map((item: any) => {
             return (
-              <div key={item.id}>
-                <div className="w-full h-full max-h-96  relative">
-                  <Image
-                    src={`${process.env.API_URL}/product/get-image/${item.image}`}
-                    alt=""
-                    width={400}
-                    height={400}
-                    className="bg-cover w-full bg-no-repeat"
-                  />
-
-                  <div className="stats bg-primary text-primary-content absolute bottom-0 left-0">
-                    <div className="stat">
-                      <div className="stat-value">{item.name}</div>
+              <div key={item.id} className="!flex">
+                <div className="w-full relative">
+                  <div className="flex items-start w-4/5 justify-center">
+                    <div className="w-2/3">
+                      <Image
+                        src={`${process.env.API_URL}/product/get-image/${item.image}`}
+                        alt=""
+                        width={400}
+                        height={400}
+                        className="bg-cover w-80 max-w-full mx-auto  h-80 bg-no-repeat"
+                      />
+                    </div>
+                    <div className="w-1/3 flex flex-col">
+                      <div className="p-3 w-full relative block">
+                        <h1 className="text-primary font-medium text-2xl md:text-5xl">
+                          {item.name}
+                        </h1>
+                      </div>
+                      <div className="p-3">
+                        <div className="text-primary font-medium text-base">
+                          {item.description}
+                        </div>
+                      </div>
+                      <div className=" p-3">
+                        <button className="btn btn-sm btn-outline">
+                          <Link href={`/product/item/${item.id}`}>
+                            <span className="text-primary">Read more</span>
+                          </Link>
+                        </button>
+                      </div>
                     </div>
                   </div>
-                  {/* <div className="stats bg-primary text-primary-content absolute bottom-0 right-0">
-                    <div className="stat">
-                      <div className="stat-value">{item.description}</div>
+                  {/* <div className=" text-primary-content">
+                    <div className="">
+                      <div className="text-primary">{item.name}</div>
                     </div>
-                  </div> */}
-                  <div className="stat-actions text-primary-focus absolute left-0 top-0">
+                  </div>
+                  <div className=" text-primary-content ">
+                    <div className="">
+                      <div className="text-primary">{item.description}</div>
+                    </div>
+                  </div>
+                  <div className=" text-primary-focus 0">
                     <button className="btn btn-sm">
                       <Link href={`/product/item/${item.id}`}>
-                        <span>View</span>
+                        <span className="text-primary">View</span>
                       </Link>
                     </button>
-                  </div>
+                  </div> */}
                 </div>
               </div>
             );

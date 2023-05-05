@@ -52,7 +52,7 @@ export default function Home() {
               </div>
             </div>
           </div> */}
-          <div className="pb-16">
+          {/* <div className="pb-16">
             <div className="flex justify-center items-center">
               <div className="2xl:mx-auto 2xl:container p-4 sm:px-6 xl:px-20 2xl:px-0 w-full">
                 <div className="flex flex-col justify-center items-center space-y-10">
@@ -144,7 +144,7 @@ export default function Home() {
                 </div>
               </div>
             </div>
-          </div>
+          </div> */}
           <ProductFilter />
         </main>
 

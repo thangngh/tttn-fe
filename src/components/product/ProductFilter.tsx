@@ -14,11 +14,11 @@ export default function ProductFilter() {
   };
 
   return (
-    <div className="w-full py-20 px-6 bg-gray-100 mt-10" id="products-feed">
-      <h1 className="font-medium text-xl text-center text-gray-700  my-5">
+    <div className="w-full px-6 bg-gray-100">
+      <h1 className="font-medium text-2xl text-center text-gray-700  my-5">
         Product for you
       </h1>
-      <div className="flex items-center w-full max-w-screen-xl sm:mb-20 mb-16 gap-4  mx-auto overflow-x-auto hideScrollBar capitalize text-sm font-medium">
+      <div className="flex items-center w-full max-w-screen-xl sm:mb-20 mb-4 gap-4  mx-auto overflow-x-auto hideScrollBar capitalize text-sm font-medium">
         <div>
           <svg
             className="w-6 h-5 text-gray-700"
@@ -48,7 +48,7 @@ export default function ProductFilter() {
         <ProductItem categoryName={category} />
       </div>
       <div className="text-center bg-base-content rounded-md">
-        <h1 className="font-medium text-xl text-center text-gray-700  my-5">
+        <h1 className="font-medium text-xl text-center text-gray-700  my-5 cursor-pointer">
           Load More
         </h1>
       </div>

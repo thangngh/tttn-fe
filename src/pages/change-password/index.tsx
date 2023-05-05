@@ -10,6 +10,9 @@ import { useAppDispatch, useAppSelector } from "@/redux/hook";
 import { RootState } from "@/redux/store";
 import Screen from "@/layouts/Screen";
 import SVGLogo from "@/components/svg/Svg-logo";
+import { resetPasswordWithVerifyTokenAction } from "@/redux/action/auth.action";
+import { toast } from "react-toastify";
+import jwtDecode from "jwt-decode";
 const schemaValidation = Yup.object({
   passwordCurrent: Yup.string()
     .required("Password is requested")
@@ -30,12 +33,9 @@ const schemaValidation = Yup.object({
 
 export default function ResetPassword() {
   const router = useRouter();
-  console.log(router);
   const token = router.query.token;
   const dispatch = useAppDispatch();
-  // const success = useAppSelector(
-  //   (state: RootState) => state.userReducer.success
-  // );
+
   const {
     register,
     handleSubmit,
@@ -45,75 +45,106 @@ export default function ResetPassword() {
     resolver: yupResolver(schemaValidation),
   });
 
+  React.useEffect(() => {
+    if (router.isReady) {
+      if (token) {
+        if (customsCheckExpiredJwtToken(token as string)) {
+          toast.error("Token expired!");
+          router.push("/login");
+        }
+      }
+    }
+  }, [router.isReady]);
+
   const handleResetPassword = (data: any) => {
-    // dispatch();
+    const { passwordCurrent } = data;
+
+    if (!token) {
+      toast.error("Some thing went wrong!");
+      return;
+    }
+    try {
+      dispatch(
+        resetPasswordWithVerifyTokenAction({
+          password: passwordCurrent,
+          token: token as string,
+        })
+      );
+      toast.success("update password success!");
+
+      let redirect = setTimeout(() => {
+        localStorage.removeItem("accessToken");
+        router.push("/login");
+      });
+
+      return () => {
+        clearTimeout(redirect);
+      };
+    } catch (error) {}
   };
 
   return (
-    <Screen>
-      <div className="container mx-auto max-w-7xl bg-white">
-        <div className="container mx-auto mb-10 px-4 relative ">
-          <div className=" flex space-x-2  items-center">
-            <SVGLogo />
-            <span className="text-xl font-medium">| Change password</span>
-          </div>
-          <div className="mt-4 cursor-pointer">
-            <span
-              className="text-md font-semibold"
-              onClick={() => router.back()}
-            >
-              {"< back"}
-            </span>
-          </div>
-        </div>
-        <div className="container mx-auto px-4 relative">
-          <form
-            onSubmit={handleSubmit(handleResetPassword)}
-            className="space-4 py-3 mt-4 w-[90%] mx-auto"
-          >
-            <div className="flex space-x-4 justify-center ">
-              <div className="space-y-5">
-                <div className="flex flex-col">
-                  <label htmlFor="passwordCurrent">New password</label>
-                  <input
-                    type="password"
-                    {...register("passwordCurrent")}
-                    id="passwordCurrent"
-                    className="border border-gray-300 bg-white rounded-md px-2 py-1"
-                  />
-                  {errors.passwordCurrent && (
-                    <p className="text-red-500 text-sm">
-                      {errors.passwordCurrent.message as any}
-                    </p>
-                  )}
-                </div>
-                <div className="flex flex-col">
-                  <label htmlFor="rePassword">New password again</label>
-                  <input
-                    type="password"
-                    {...register("rePassword")}
-                    id="rePassword"
-                    className="border border-gray-300 bg-white rounded-md px-2 py-1"
-                  />
-                  {errors.rePassword && (
-                    <p className="text-red-500 text-sm">
-                      {errors.rePassword.message as any}
-                    </p>
-                  )}
-                </div>
+    <div className="h-screen w-full bg-white">
+      <div className="container mx-auto px-4 relative">
+        <div className="flex flex-col justify-center items-center h-screen">
+          <div className="bg-white w-full max-w-sm mt-6 p-4 rounded-lg shadow-xl">
+            <h1 className="text-2xl my-3 font-medium">Change Password</h1>
+            <form onSubmit={handleSubmit(handleResetPassword)}>
+              <div className="flex space-x-4 justify-center ">
+                <div className="space-y-5">
+                  <div className="flex flex-col text-black">
+                    <label htmlFor="passwordCurrent" className="">
+                      New password
+                    </label>
+                    <input
+                      type="password"
+                      {...register("passwordCurrent")}
+                      id="passwordCurrent"
+                      className="border border-gray-300 bg-white rounded-md px-2 py-1"
+                    />
+                    {errors.passwordCurrent && (
+                      <p className="text-red-500 text-sm">
+                        {errors.passwordCurrent.message as any}
+                      </p>
+                    )}
+                  </div>
+                  <div className="flex flex-col text-black">
+                    <label htmlFor="rePassword">Confirm password</label>
+                    <input
+                      type="password"
+                      {...register("rePassword")}
+                      id="rePassword"
+                      className="border border-gray-300 bg-white rounded-md px-2 py-1"
+                    />
+                    {errors.rePassword && (
+                      <p className="text-red-500 text-sm">
+                        {errors.rePassword.message as any}
+                      </p>
+                    )}
+                  </div>
 
-                <div className="flex flex-col">
-                  <button type="submit">
-                    <span className="text-sm font-normal text-white bg-red-400 rounded-md px-4 py-3 ">
-                      Change password
-                    </span>
-                  </button>
+                  <div className="flex flex-col">
+                    <button type="submit">
+                      <span className="text-sm font-normal text-white bg-primary rounded-md px-4 py-3 ">
+                        Change password
+                      </span>
+                    </button>
+                  </div>
                 </div>
               </div>
-            </div>
-          </form>
+            </form>
+          </div>
         </div>
       </div>
-    </Screen>
+    </div>
   );
 }
+
+const customsCheckExpiredJwtToken = (token: string) => {
+  const decoded: any = jwtDecode(token);
+
+  if (Date.now() >= decoded.exp * 1000) {
+    return true;
+  }
+  return false;
+};

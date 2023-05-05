@@ -1,5 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { createProductAction, createProductInventoryAction, deleteProductAction, getAllProductAction, getAllProductWithShopAction, getOneProductAction, getOneProductInventoryAction, getProductInMonth, getProductWithShopIdAction, updateProductAction } from "../action/product.action";
+import { createProductAction, createProductInventoryAction, deleteProductAction, getAllProductAction, getAllProductWithShopAction, getOneProductAction, getOneProductInventoryAction, getProductByCategoryAction, getProductInMonth, getProductWithShopIdAction, updateProductAction } from "../action/product.action";
 import { IProduct } from "@/type/product.interface";
 import { formatter } from "@/pages/shop/product/[id]";
 
@@ -23,6 +23,7 @@ interface initialState {
 	productInMonth: any[],
 	price: string;
 	prePrice: string;
+	productByCategory: any[];
 }
 
 const initialState: initialState = {
@@ -44,7 +45,8 @@ const initialState: initialState = {
 	shop: null,
 	productInMonth: [],
 	price: '',
-	prePrice: ''
+	prePrice: '',
+	productByCategory: []
 }
 
 const ProductSlice = createSlice({
@@ -110,6 +112,11 @@ const ProductSlice = createSlice({
 
 		builder.addCase(getProductInMonth.fulfilled, (state, action) => {
 			state.productInMonth = action.payload;
+		})
+
+		builder.addCase(getProductByCategoryAction.fulfilled, (state, action) => {
+			console.log("action.payload", action.payload)
+			state.productByCategory = action.payload;
 		})
 
 	}

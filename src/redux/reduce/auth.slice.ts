@@ -1,5 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit"
-import { sendMailResetPasswordAction } from "../action/auth.action"
+import { changePasswordAction, resetPasswordWithVerifyTokenAction, sendMailResetPasswordAction } from "../action/auth.action"
 
 interface initState {
 	error: any,
@@ -22,6 +22,14 @@ const authSlice = createSlice({
 		builder
 			.addCase(sendMailResetPasswordAction.fulfilled, (state, action) => {
 				console.log("action send mail", action.payload)
+			})
+		builder
+			.addCase(resetPasswordWithVerifyTokenAction.fulfilled, (state, action) => {
+				console.log("action resetPasswordWithVerifyTokenAction", action.payload)
+			})
+		builder
+			.addCase(changePasswordAction.fulfilled, (state, action) => {
+				console.log("action changePasswordAction", action.payload)
 			})
 	}
 })

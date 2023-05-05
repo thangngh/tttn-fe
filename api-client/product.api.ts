@@ -29,13 +29,14 @@ export const ProductAPI = {
 		}
 	},
 
-	getAllProduct: async ({ page, limit, search }: { page: number, limit: number, search?: string }) => {
+	getAllProduct: async ({ page, limit, search, category }: { page: number, limit: number, search?: string, category?: string }) => {
 		try {
 			const response = await axiosConfig.get(`/product/get-all-product`, {
 				params: {
 					page,
 					limit,
-					search
+					search,
+					category
 				}
 			});
 			return response.data;
@@ -80,17 +81,6 @@ export const ProductAPI = {
 			toast.error(error.message);
 			return error;
 		}
-	},
-
-	getImageProduct: async (imgpath: string) => {
-		if (!imgpath) {
-			return "";
-		}
-		if (imgpath.includes("http")) {
-			return imgpath;
-		}
-		return `${process.env.API_URL}/product/get-image/` + imgpath;
-
 	},
 
 	addProductInventory: async ({ productId, quantity, price, file }: { productId: string, quantity: string, price: string, file: File }) => {
@@ -144,5 +134,17 @@ export const ProductAPI = {
 			toast.error(error.message);
 			return error;
 		}
-	}
+	},
+
+	getProductByCategory: async (payload: { categoryName: string }) => {
+		try {
+			const response = await axiosConfig.get(`/product/product-with-category`, {
+				params: payload
+			});
+			return response.data;
+		} catch (error: any) {
+			toast.error(error.message);
+			return error;
+		}
+	},
 }

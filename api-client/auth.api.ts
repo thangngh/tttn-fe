@@ -65,9 +65,10 @@ export const AuthAPI = {
 		token
 	}: { password: string, token: string }) => {
 		try {
-			const response = await axiosConfig.patch("/auth/change-password-with-verify-token", { password, token });
+			const response = await axiosConfig.patch("/auth/change-password-verify-token", { password, token });
 			return response.data;
 		} catch (error: any) {
+			toast.error(error)
 			return error;
 		}
 	},

@@ -23,3 +23,25 @@ export const sendMailResetPasswordAction = createAsyncThunk(
 		return response;
 	}
 )
+
+export const resetPasswordWithVerifyTokenAction = createAsyncThunk(
+	"/auth/reset-password-token",
+	async ({
+		password,
+		token
+	}: { password: string, token: string }) => {
+		const response = await AuthAPI.resetPasswordWithVerifyToken({ password, token });
+		return response;
+	}
+)
+
+export const changePasswordAction = createAsyncThunk(
+	"/auth/change-password",
+	async ({
+		oldPassword,
+		newPassword
+	}: { oldPassword: string, newPassword: string }) => {
+		const response = await AuthAPI.changePassword({ oldPassword, newPassword });
+		return response;
+	}
+)

@@ -64,6 +64,12 @@ export default function Header() {
   );
 
   React.useEffect(() => {
+    if (user) {
+      setImage(` ${process.env.API_URL}/user/get-image/${user?.avatar}`);
+    }
+  }, [user]);
+
+  React.useEffect(() => {
     if (successAddCart) {
       dispatch(findAllProductCartUserAction());
       dispatch(resetSuccess());

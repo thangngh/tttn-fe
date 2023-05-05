@@ -20,8 +20,8 @@ export const getAllProductWithShopAction = createAsyncThunk(
 
 export const getAllProductAction = createAsyncThunk(
 	"/product/get-all",
-	async ({ page, limit, search }: { page: number, limit: number, search?: string }) => {
-		const response = await ProductAPI.getAllProduct({ page, limit, search })
+	async ({ page, limit, search, category }: { page: number, limit: number, search?: string, category?: string }) => {
+		const response = await ProductAPI.getAllProduct({ page, limit, search, category })
 		return response;
 	}
 )
@@ -79,6 +79,14 @@ export const getProductInMonth = createAsyncThunk(
 	"/product-in-month",
 	async () => {
 		const response = await ProductAPI.productInMonth();
+		return response;
+	}
+)
+
+export const getProductByCategoryAction = createAsyncThunk(
+	"/product/get-product-category",
+	async (payload: { categoryName: string }) => {
+		const response = await ProductAPI.getProductByCategory(payload);
 		return response;
 	}
 )

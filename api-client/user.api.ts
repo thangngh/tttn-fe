@@ -1,5 +1,6 @@
 import { toast } from "react-toastify";
 import axiosConfig from "./axios.config";
+import { IUserAddress } from "@/type/user.interface";
 
 export const UserAPI = {
 	getProfile: async () => {
@@ -50,6 +51,7 @@ export const UserAPI = {
 	editProfile: async (body: any) => {
 		try {
 			const response = await axiosConfig.patch("/user/edit-profile", body);
+			toast.success(response.data.message)
 			return response.data;
 		} catch (error: any) {
 			return error;
@@ -79,5 +81,26 @@ export const UserAPI = {
 
 	getReviewProduct: async (productId: string) => {
 
+	},
+
+	addAddressUser: async (body: IUserAddress) => {
+		try {
+			const response = await axiosConfig.post("/user-address/add-address-user", body);
+			toast.success(response.data.message)
+			return response.data;
+		} catch (error: any) {
+			toast.error(error)
+			return error;
+		}
+	},
+
+	getAddressUser: async () => {
+		try {
+			const response = await axiosConfig.get("/user-address/get-address-user");
+			return response.data;
+		} catch (error: any) {
+			toast.error(error)
+			return error;
+		}
 	}
 }

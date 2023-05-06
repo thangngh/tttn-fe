@@ -6,7 +6,15 @@ import { IRole } from "@/type/auth.interface";
 import { useRouter } from "next/router";
 import React, { useRef } from "react";
 import GuardLayout from "./GuardLayout";
-
+import PeopleAltIcon from "@mui/icons-material/PeopleAlt";
+import {
+  Dashboard,
+  Message,
+  Person,
+  Shop,
+  ShoppingBagOutlined,
+  PermIdentity,
+} from "@mui/icons-material";
 interface IProp {
   children: React.ReactNode;
 }
@@ -16,84 +24,24 @@ export const AdminMenu = [
     id: 1,
     title: "dashboard",
     path: "/dashboard",
-    icon: (
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        className="h-6 w-6"
-        fill="none"
-        viewBox="0 0 24 24"
-        stroke="currentColor"
-      >
-        <path
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          strokeWidth={2}
-          d="M3 9l2-2m0 0l7-7 7 7M5 19v-8a2 2 0 012-2h10a2 2 0 012 2v8m-2 0a2 2 0 01-2 2H7a2 2 0 01-2-2m10 0h2m-2 0v2"
-        />
-      </svg>
-    ),
+    icon: <Dashboard />,
   },
   {
     id: 2,
     title: "user",
-    icon: (
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        className="h-6 w-6"
-        fill="none"
-        viewBox="0 0 24 24"
-        stroke="currentColor"
-      >
-        <path
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          strokeWidth={2}
-          d="M9 21v-2a3 3 0 016 0v2m-3-8a3 3 0 11-6 0 3 3 0 016 0z"
-        />
-      </svg>
-    ),
+    icon: <Person />,
     subItem: [
       {
         id: 1,
         title: "user-list",
         path: "/user/list",
-        icon: (
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            className="h-6 w-6"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2}
-              d="M3 9l2-2m0 0l7-7 7 7M5 19v-8a2 2 0 012-2h10a2 2 0 012 2v8m-2 0a2 2 0 01-2 2H7a2 2 0 01-2-2m10 0h2m-2 0v2"
-            />
-          </svg>
-        ),
+        icon: <PermIdentity />,
       },
       {
         id: 2,
         title: "group",
         path: "/user/group",
-        icon: (
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            className="h-6 w-6"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2}
-              d="M3 9l2-2m0 0l7-7 7 7M5 19v-8a2 2 0 012-2h10a2 2 0 012 2v8m-2 0a2 2 0 01-2 2H7a2 2 0 01-2-2m10 0h2m-2 0v2"
-            />
-          </svg>
-        ),
+        icon: <PeopleAltIcon />,
       },
     ],
   },
@@ -101,23 +49,13 @@ export const AdminMenu = [
     id: 3,
     title: "inbox",
     path: "/inbox",
-    icon: (
-      <svg
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="1.5"
-        className="h-6 w-6"
-        viewBox="0 0 24 24"
-        xmlns="http://www.w3.org/2000/svg"
-        aria-hidden="true"
-      >
-        <path
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z"
-        ></path>
-      </svg>
-    ),
+    icon: <Message />,
+  },
+  {
+    id: 4,
+    title: "order",
+    path: "/order",
+    icon: <ShoppingBagOutlined />,
   },
 ];
 

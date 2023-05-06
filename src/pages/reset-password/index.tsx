@@ -51,10 +51,13 @@ export default function ResetPassword() {
     }
   };
   return (
-    <body className="antialiased bg-slate-200">
-      <div className="max-w-lg mx-auto my-10 bg-white p-8 rounded-xl shadow shadow-slate-300">
+    <body className="antialiased bg-white h-screen flex flex-col justify-center items-center ">
+      <div className="max-w-xl w-full  mx-auto my-10 bg-white p-8 rounded-xl shadow shadow-slate-300">
         <h1 className="text-4xl font-medium">Reset password</h1>
-        <form className="my-10" onSubmit={handleSubmit(handleSendMail as any)}>
+        <form
+          className="my-10 w-full "
+          onSubmit={handleSubmit(handleSendMail as any)}
+        >
           <div className="flex flex-col space-y-5">
             <p className="font-medium text-slate-700 pb-2">Email address</p>
             <input

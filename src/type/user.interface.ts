@@ -11,3 +11,15 @@ export interface IUser {
 	role: any;
 	username: string;
 }
+
+export interface IUserAddress {
+	id?: string;
+	city?: string;
+	district?: string;
+	street?: string;
+	country?: string;
+	telephone?: string;
+	isDefault?: boolean;
+	userId?: string;
+	user?: string
+}

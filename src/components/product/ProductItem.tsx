@@ -13,25 +13,24 @@ import Link from "next/link";
 import InfoIcon from "@mui/icons-material/Info";
 import { formatter } from "@/pages/shop/product/[id]";
 import Concurrency from "./concurrency";
+import { IAddCart } from "@/type/cart.interface";
+import { addProductToCartAction } from "@/redux/action/cart.action";
+import StorageIcon from "@mui/icons-material/Storage";
+
 interface IProp {
   categoryName: string;
+  currentPage?: number;
 }
 
 const PAGE_SIZE = 10;
 
-export default function ProductItem({ categoryName }: IProp) {
+export default function ProductItem({ categoryName, currentPage }: IProp) {
   const dispatch = useAppDispatch();
   const router = useRouter();
-  const [productCategoryData, setProductCategoryData] = React.useState<any[]>(
-    []
-  );
-  const [currentPage, setCurrentPage] = React.useState(1);
   const profile = useAppSelector((state: RootState) => state.userReducer.user);
   const [dataSource, setDataSource] = React.useState<any[]>([]);
 
-  const productCategory = useAppSelector(
-    (state: RootState) => state.categoryReducer.productWithShop
-  );
+  const [user, setUser] = React.useState<any>();
 
   const product = useAppSelector(
     (state: RootState) => state.productReducer.getAllProduct
@@ -59,14 +58,47 @@ export default function ProductItem({ categoryName }: IProp) {
     arrows: false,
   };
 
+  const handleAddProductToCart = async (body: IAddCart) => {
+    const accessToken = localStorage.getItem("accessToken");
+    if (!accessToken) {
+      router.push({
+        pathname: "/login",
+        query: {
+          redirect: router.asPath,
+        },
+      });
+    } else {
+      dispatch(addProductToCartAction(body));
+    }
+  };
+
   React.useEffect(() => {
-    dispatch(
-      getAllProductAction({
-        page: currentPage,
-        limit: PAGE_SIZE,
-        category: categoryName,
-      })
-    );
+    if (profile) {
+      setUser(profile);
+    }
+  }, [profile]);
+
+  const handleFormat = React.useCallback((nu: number) => {
+    const wrapNumber = +nu;
+    if (typeof wrapNumber !== "number" || wrapNumber < 0) {
+      return false;
+    }
+    return true;
+  }, []);
+
+  React.useEffect(() => {
+    const checkFormatPage = handleFormat(currentPage as number);
+    console.log(checkFormatPage, currentPage);
+
+    if (checkFormatPage) {
+      dispatch(
+        getAllProductAction({
+          page: (currentPage as number) || 1,
+          limit: PAGE_SIZE,
+          category: categoryName,
+        })
+      );
+    }
   }, [dispatch, currentPage, categoryName]);
 
   React.useEffect(() => {
@@ -90,15 +122,12 @@ export default function ProductItem({ categoryName }: IProp) {
     setDataSource(listData);
   }, [product]);
   return (
-    <>
+    <div className="block relative w-full">
       {dataSource.length > 0 ? (
-        dataSource.map((item) => {
-          return (
-            <>
-              <div
-                className="card w-full h-90 max-h-full  bg-base-100 shadow-md  space-y-4 rounded-md"
-                key={item.id}
-              >
+        <div className="grid grid-flow-row-dense sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 grid-cols-1 mx-auto max-w-screen-xl gap-x-6 gap-y-8">
+          {dataSource.map((item) => (
+            <div key={item.id}>
+              <div className="card w-full h-90 max-h-full  bg-base-100 shadow-md  space-y-4 rounded-md">
                 <div className="card-actions px-3 pt-3 flex flex-col h-full">
                   <h2
                     className={`${
@@ -163,6 +192,19 @@ export default function ProductItem({ categoryName }: IProp) {
                                     xmlns="http://www.w3.org/2000/svg"
                                     aria-hidden="true"
                                     className="h-6 w-6"
+                                    onClick={() =>
+                                      handleAddProductToCart({
+                                        price: parseInt(
+                                          image.price
+                                            .split(" ")[0]
+                                            .replace(/,/g, "")
+                                        ),
+                                        total: image.quantity,
+                                        userId: user?.id,
+                                        productId: item.id,
+                                        productInventoryId: image.id,
+                                      })
+                                    }
                                   >
                                     <path
                                       strokeLinecap="round"
@@ -173,7 +215,7 @@ export default function ProductItem({ categoryName }: IProp) {
                                 )}
                               </button>
                             </div>
-                            <div className="flex items-center space-x-4 px-4">
+                            <div className="flex items-center justify-between space-x-4 px-4">
                               <div
                                 className={` ${
                                   image.price === 0 ? "invisible" : "visible"
@@ -184,11 +226,11 @@ export default function ProductItem({ categoryName }: IProp) {
                                 />
                               </div>
                               <div
-                                className={`badge badge-outline cursor-pointer badge-success ${
+                                className={`badge badge-outline cursor-pointer badge-success  ${
                                   image.quantity === 0 ? "invisible" : "visible"
                                 }`}
                               >
-                                {`quantity: ${image.quantity}`}
+                                {`${image.quantity}`}
                               </div>
                             </div>
                             <Image
@@ -275,14 +317,24 @@ export default function ProductItem({ categoryName }: IProp) {
                   }
                 </div>
               </div>
-            </>
-          );
-        })
+            </div>
+          ))}
+        </div>
       ) : (
-        <>
-          <h1>data not found</h1>
-        </>
+        <div className="flex flex-col justify-center items-center w-full">
+          <svg
+            className="w-10 h-10"
+            fill="currentColor"
+            viewBox="0 0 20 20"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path d="M3 12v3c0 1.657 3.134 3 7 3s7-1.343 7-3v-3c0 1.657-3.134 3-7 3s-7-1.343-7-3z" />
+            <path d="M3 7v3c0 1.657 3.134 3 7 3s7-1.343 7-3V7c0 1.657-3.134 3-7 3S3 8.657 3 7z" />
+            <path d="M17 5c0 1.657-3.134 3-7 3S3 6.657 3 5s3.134-3 7-3 7 1.343 7 3z" />
+          </svg>
+          <h1>Not Found</h1>
+        </div>
       )}
-    </>
+    </div>
   );
 }

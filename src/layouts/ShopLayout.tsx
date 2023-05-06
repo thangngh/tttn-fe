@@ -78,8 +78,8 @@ export const ShopMenu = [
   },
   {
     id: 3,
-    title: "profile",
-    path: "/profile",
+    title: "order",
+    path: "/order",
     icon: (
       <svg
         xmlns="http://www.w3.org/2000/svg"
@@ -101,6 +101,27 @@ export const ShopMenu = [
     id: 4,
     title: "discount",
     path: "/discount",
+    icon: (
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        className="h-6 w-6"
+        fill="none"
+        viewBox="0 0 24 24"
+        stroke="currentColor"
+      >
+        <path
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          strokeWidth={2}
+          d="M3 9l2-2m0 0l7-7 7 7M5 19v-8a2 2 0 012-2h10a2 2 0 012 2v8m-2 0a2 2 0 01-2 2H7a2 2 0 01-2-2m10 0h2m-2 0v2"
+        />
+      </svg>
+    ),
+  },
+  {
+    id: 5,
+    title: "message",
+    path: "/message",
     icon: (
       <svg
         xmlns="http://www.w3.org/2000/svg"

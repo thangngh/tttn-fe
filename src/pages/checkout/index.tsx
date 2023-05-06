@@ -29,8 +29,6 @@ export default function Checkout() {
     accessToken && dispatch(getProfileAction());
   }, [dispatch]);
 
-  console.log("profile", profile);
-
   const shopNameRef = React.useRef("");
   const [totalPrice, setTotalPrice] = React.useState(0);
   React.useEffect(() => {

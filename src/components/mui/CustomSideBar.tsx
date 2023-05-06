@@ -169,7 +169,6 @@ const CustomSideBar = ({ data, title, username }: IProp) => {
             </Typography>
           </div>
           <div className="relative flex space-x-3 items-center">
-            {/* notification icon */}
             <div className="relative">
               <IconButton aria-label="show  new notifications" color="inherit">
                 <Badge badgeContent={17} color="error">
@@ -180,69 +179,7 @@ const CustomSideBar = ({ data, title, username }: IProp) => {
                 <span className="animate-ping absolute inline-flex h-3 w-3 rounded-full bg-red-400 opacity-75"></span>
                 <span className="relative inline-flex rounded-full h-3 w-3 bg-red-500"></span>
               </div>
-              {/* <div className="absolute top-[50px] left-[-280px]">
-                <div className="max-w-full text-sm rounded border shadow-sm pointer-events-auto bg-clip-padding w-80">
-                  <div className="flex items-center px-3 py-2 text-gray-500 bg-gray-100 border-b-2 rounded-t bg-clip-padding">
-                    <svg
-                      className="mr-2 text-lg rounded select-none"
-                      width="20"
-                      height="20"
-                      xmlns="http://www.w3.org/2000/svg"
-                      fill="none"
-                      viewBox="0 0 54 33"
-                    >
-                      <path
-                        fill="#06B6D4"
-                        fill-rule="evenodd"
-                        d="M27 0c-7.2 0-11.7 3.6-13.5 10.8 2.7-3.6 5.85-4.95 9.45-4.05 2.054.513 3.522 2.004 5.147 3.653C30.744 13.09 33.808 16.2 40.5 16.2c7.2 0 11.7-3.6 13.5-10.8-2.7 3.6-5.85 4.95-9.45 4.05-2.054-.513-3.522-2.004-5.147-3.653C36.756 3.11 33.692 0 27 0zM13.5 16.2C6.3 16.2 1.8 19.8 0 27c2.7-3.6 5.85-4.95 9.45-4.05 2.054.514 3.522 2.004 5.147 3.653C17.244 29.29 20.308 32.4 27 32.4c7.2 0 11.7-3.6 13.5-10.8-2.7 3.6-5.85 4.95-9.45 4.05-2.054-.513-3.522-2.004-5.147-3.653C23.256 19.31 20.192 16.2 13.5 16.2z"
-                        clip-rule="evenodd"
-                      />
-                    </svg>
-                    <strong className="mr-auto">Tailwind</strong>
-                    <small>11 mins ago</small>
-                    <button
-                      type="button"
-                      className="box-content p-1 ml-3 -mr-1 text-black rounded opacity-50 hover:opacity-100"
-                    >
-                      <svg
-                        className="w-5 h-5"
-                        xmlns="http://www.w3.org/2000/svg"
-                        width="192"
-                        height="192"
-                        fill="#000000"
-                        viewBox="0 0 256 256"
-                      >
-                        <rect width="256" height="256" fill="none"></rect>
-                        <line
-                          x1="200"
-                          y1="56"
-                          x2="56"
-                          y2="200"
-                          stroke="#000000"
-                          stroke-linecap="round"
-                          stroke-linejoin="round"
-                          stroke-width="24"
-                          fill="none"
-                        ></line>
-                        <line
-                          x1="200"
-                          y1="200"
-                          x2="56"
-                          y2="56"
-                          stroke="#000000"
-                          stroke-linecap="round"
-                          stroke-linejoin="round"
-                          stroke-width="24"
-                          fill="none"
-                        ></line>
-                      </svg>
-                    </button>
-                  </div>
-                  <div className="p-3 bg-white text-black">
-                    Hello, Tailwind! Bye Bye Boostrap.
-                  </div>
-                </div>
-              </div> */}
+              {/* notify component here */}
             </div>
             <Image
               src={"https://i.pravatar.cc/150?img=32"}
@@ -305,9 +242,9 @@ const CustomSideBar = ({ data, title, username }: IProp) => {
                     sx={{ opacity: open ? 1 : 0 }}
                   />
                   {openSubMenu ? (
-                    <ExpandLess className={`${open ? "" : "hidden"}`} />
+                    <ExpandLess className={`${open ? "" : "!hidden"}`} />
                   ) : (
-                    <ExpandMore className={`${open ? "" : "hidden"}`} />
+                    <ExpandMore className={`${open ? "" : "!hidden"}`} />
                   )}
                 </ListItemButton>
                 <Collapse
@@ -409,6 +346,38 @@ const CustomSideBar = ({ data, title, username }: IProp) => {
           </List>
         ))}
       </Drawer>
+      <div className="w-max -mb-3 absolute bottom-1 z-[9999]">
+        <div
+          onClick={() => {
+            localStorage.removeItem("accessToken");
+            router.push("/login");
+          }}
+          className="group flex items-center space-x-4 rounded-md px-5 py-3 text-gray-600 cursor-pointer"
+        >
+          <svg
+            className="group-hover:text-gray-700 h-6 w-6"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth={1.5}
+            viewBox="0 0 24 24"
+            xmlns="http://www.w3.org/2000/svg"
+            aria-hidden="true"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              d="M15.75 9V5.25A2.25 2.25 0 0013.5 3h-6a2.25 2.25 0 00-2.25 2.25v13.5A2.25 2.25 0 007.5 21h6a2.25 2.25 0 002.25-2.25V15M12 9l-3 3m0 0l3 3m-3-3h12.75"
+            />
+          </svg>
+          <span
+            className={`group-hover:text-gray-700 ${
+              open ? "opacity-100" : "opacity-0"
+            }`}
+          >
+            LOGOUT
+          </span>
+        </div>
+      </div>
     </div>
   );
 };

@@ -53,7 +53,7 @@ export default function NewProduct() {
                         alt=""
                         width={400}
                         height={400}
-                        className="bg-cover w-80 max-w-full mx-auto  h-80 bg-no-repeat"
+                        className="bg-cover w-96 max-w-full mx-auto  h-96 bg-no-repeat"
                       />
                     </div>
                     <div className="w-1/3 flex flex-col">

@@ -1,15 +1,24 @@
 import { useRouter } from "next/router";
 import Menu from "./Menu";
 import ProductItem from "./ProductItem";
-import React from "react";
+import React, { useState } from "react";
 export default function ProductFilter() {
   const router = useRouter();
   const [category, setCategory] = React.useState<string>("");
-
+  const [currentPage, setCurrentPage] = useState(1);
   const getCategory = (categoryName: string) => {
     router.push({
       pathname: "/product",
       query: { category: categoryName },
+    });
+  };
+
+  const handleLoadMore = () => {
+    router.push({
+      pathname: "/product",
+      query: {
+        page: 2,
+      },
     });
   };
 
@@ -44,10 +53,18 @@ export default function ProductFilter() {
         </div>
         <Menu categoryName={getCategory} />
       </div>
-      <div className="grid grid-flow-row-dense sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 grid-cols-1 mx-auto max-w-screen-xl gap-x-6 gap-y-8">
-        <ProductItem categoryName={category} />
-      </div>
-      <div className="text-center bg-base-content rounded-md">
+      <ProductItem categoryName={category} currentPage={1} />
+      <div
+        onClick={() => {
+          router.push({
+            pathname: "/product",
+            query: {
+              page: 2,
+            },
+          });
+        }}
+        className="text-center bg-base-content rounded-md"
+      >
         <h1 className="font-medium text-xl text-center text-gray-700  my-5 cursor-pointer">
           Load More
         </h1>

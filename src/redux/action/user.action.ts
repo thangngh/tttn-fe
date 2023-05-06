@@ -1,5 +1,6 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import { UserAPI } from "../../../api-client/user.api";
+import { IUserAddress } from "@/type/user.interface";
 
 export const getRoleAction = createAsyncThunk(
 	"user/get-role",
@@ -37,6 +38,22 @@ export const editProfileAction = createAsyncThunk(
 	"user/edit-profile",
 	async (body: any) => {
 		const response = await UserAPI.editProfile(body)
+		return response;
+	}
+)
+
+export const addAddressUserAction = createAsyncThunk(
+	"/user-address/add-user-address",
+	async (body: IUserAddress) => {
+		const response = await UserAPI.addAddressUser(body)
+		return response;
+	}
+)
+
+export const getAddressUserAction = createAsyncThunk(
+	"/user-address/get-address",
+	async () => {
+		const response = await UserAPI.getAddressUser()
 		return response;
 	}
 )

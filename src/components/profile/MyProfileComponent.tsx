@@ -11,6 +11,9 @@ import { Controller, useForm } from "react-hook-form";
 import Image from "next/image";
 import { toast } from "react-toastify";
 import { Radio } from "antd";
+import { yupResolver } from "@hookform/resolvers/yup";
+import * as Yup from "yup";
+
 enum genderEnum {
   MALE = "MALE",
   FEMALE = "FEMALE",

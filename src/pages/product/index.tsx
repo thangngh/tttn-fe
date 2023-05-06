@@ -13,13 +13,21 @@ import React from "react";
 export default function Product() {
   const router = useRouter();
   const dispatch = useAppDispatch();
-  const productByCategory = useAppSelector(
-    (state: RootState) => state.productReducer.productByCategory
-  );
+
+  const [currentPage, setCurrentPage] = React.useState(0);
+  // const productByCategory = useAppSelector(
+  //   (state: RootState) => state.productReducer.productByCategory
+  // );
   const [data, setData] = React.useState<any[]>([]);
   const allCategory = useAppSelector(
     (state: RootState) => state.categoryReducer.listCategory
   );
+
+  React.useEffect(() => {
+    if (router.isReady) {
+      setCurrentPage(router.query?.page as unknown as number);
+    }
+  }, [router.isReady, router.query?.page]);
 
   React.useEffect(() => {
     const datas: any[] = [];
@@ -35,21 +43,21 @@ export default function Product() {
     dispatch(getAllCategoryAction());
   }, []);
 
-  React.useEffect(() => {
-    if (router.isReady) {
-      const getProduct = setTimeout(() => {
-        dispatch(
-          getProductByCategoryAction({
-            categoryName: router.query.category as string,
-          })
-        );
-      });
+  // React.useEffect(() => {
+  //   if (router.isReady) {
+  //     const getProduct = setTimeout(() => {
+  //       dispatch(
+  //         getProductByCategoryAction({
+  //           categoryName: router.query.category as string,
+  //         })
+  //       );
+  //     });
 
-      return () => {
-        clearTimeout(getProduct);
-      };
-    }
-  }, [router.isReady, dispatch]);
+  //     return () => {
+  //       clearTimeout(getProduct);
+  //     };
+  //   }
+  // }, [router.isReady, dispatch]);
 
   const handleSelectCategoryChange = (value: string) => {
     router.push({
@@ -96,9 +104,10 @@ export default function Product() {
         </div> */}
         </div>
         <div className="w-full sm:container mx-auto px-4">
-          <div className="grid grid-flow-row-dense sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 grid-cols-1 mx-auto max-w-screen-xl gap-x-6 gap-y-8">
-            <ProductItem categoryName={router.query.category as string} />
-          </div>
+          <ProductItem
+            categoryName={router.query?.category as string}
+            currentPage={currentPage}
+          />
         </div>
       </div>
     </Screen>

@@ -26,7 +26,7 @@ export default function FeedBack() {
                           Have a suggestion?
                         </h4>
                         <form id="feedbackForm" action="" method="">
-                          <div className="relative w-full mb-3">
+                          {/* <div className="relative w-full mb-3">
                             <label
                               className="block uppercase text-gray-700 text-xs font-bold mb-2"
                               htmlFor="email"
@@ -45,7 +45,7 @@ export default function FeedBack() {
                               }}
                               required
                             />
-                          </div>
+                          </div> */}
                           <div className="relative w-full mb-3">
                             <label
                               className="block uppercase text-gray-700 text-xs font-bold mb-2"

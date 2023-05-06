@@ -1,5 +1,6 @@
 import { Button, Form, Input, Modal } from "antd";
 import React from "react";
+import AddNewAddress from "./newAddress/AddNewAddress";
 
 interface IProp {
   [key: string]: any;
@@ -17,6 +18,21 @@ export default function AddAddress({
       email: "${label} is not validate email!",
       number: "${label} is not a validate number!",
     },
+  };
+
+  const [openAddAddressModal, setOpenAddAddressModal] = React.useState(false);
+  const handleOpenAddAddressModal = () => {
+    if (typeof window != "undefined" && window.document) {
+      document.body.style.overflow = "hidden";
+      document.body.style.pointerEvents = "none";
+    }
+    setOpenAddAddressModal(true);
+  };
+
+  const handleCloseAddAddressModal = () => {
+    document.body.style.overflow = "unset";
+    document.body.style.pointerEvents = "auto";
+    setOpenAddAddressModal(false);
   };
 
   const onCreateAddressUser = async () => {};
@@ -43,21 +59,6 @@ export default function AddAddress({
       ]}
       className="overflow-auto"
     >
-      {/* <Form
-        validateMessages={validateMessages}
-        name="form-name"
-        form={forms}
-        onFinish={onCreateAddressUser}
-      >
-        <div className="flex flex-col gap-4">
-          <div className="flex flex-col gap-2">
-            <label htmlFor="name">Name</label>
-            <Form.Item name={"name"} rules={[{ required: true }]}>
-              <Input className="w-full px-4 py-3 rounded-lg ring-red-200 focus:ring-4 focus:outline-none transition duration-300 border border-gray-300 focus:shadow-xl" />
-            </Form.Item>
-          </div>
-        </div>
-      </Form> */}
       <div className="relative p-4 border-b-2 border-primary py-2">
         <div className="card-body my-3 shadow-lg bg-slate-100">
           <div className="flex -mx-6 space-x-2">
@@ -89,8 +90,17 @@ export default function AddAddress({
           </div>
         </div>
         <div className="cart ">
-          <button className="btn btn-outline btn-success">+ Add new </button>
+          <button
+            onClick={handleOpenAddAddressModal}
+            className="btn btn-outline btn-success"
+          >
+            + Add new{" "}
+          </button>
         </div>
+        <AddNewAddress
+          openModal={openAddAddressModal}
+          handleCloseModal={handleCloseAddAddressModal}
+        />
       </div>
     </Modal>
   );

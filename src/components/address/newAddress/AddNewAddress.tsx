@@ -35,7 +35,7 @@ const schemaValidation = Yup.object({
 export default function AddNewAddress({
   openModal,
   handleCloseModal,
-  handleOpenModal,
+  handleUpdateData,
 }: IProp) {
   const {
     register,

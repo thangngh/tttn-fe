@@ -57,3 +57,35 @@ export const getAddressUserAction = createAsyncThunk(
 		return response;
 	}
 )
+
+export const getOneAddressUserAction = createAsyncThunk(
+	"/user-address/get-one",
+	async (id: string) => {
+		const response = await UserAPI.getOneAddressUser(id)
+		return response;
+	}
+)
+
+export const setDefaultUserAddressAction = createAsyncThunk(
+	"/user-address/set-default-address",
+	async (id: string) => {
+		const response = await UserAPI.setDefaultUserAddress(id)
+		return response;
+	}
+)
+
+export const deleteAddressUserAction = createAsyncThunk(
+	"/user-address/delete-address",
+	async (id: string) => {
+		const response = await UserAPI.deleteUserAddress(id)
+		return response;
+	}
+)
+
+export const getUserAddressDefaultAction = createAsyncThunk(
+	"/user-address/get-user-address-default",
+	async () => {
+		const response = await UserAPI.getUserAddressDefault()
+		return response;
+	}
+)

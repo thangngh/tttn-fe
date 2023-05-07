@@ -1,5 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { addAddressUserAction, editProfileAction, getAddressUserAction, getAllUserAction, getProfileAction, getRoleAction, uploadAvatarAction } from "../action/user.action";
+import { addAddressUserAction, deleteAddressUserAction, editProfileAction, getAddressUserAction, getAllUserAction, getOneAddressUserAction, getProfileAction, getRoleAction, uploadAvatarAction } from "../action/user.action";
 import { IUser, IUserAddress } from "@/type/user.interface";
 import { toast } from "react-toastify";
 
@@ -12,7 +12,8 @@ interface initState {
 		pageTotal: number;
 		total: number;
 	},
-	userAddress: IUserAddress[]
+	userAddress: IUserAddress[],
+	getOneUserAddress: IUserAddress | null
 }
 
 const initState: initState = {
@@ -24,7 +25,8 @@ const initState: initState = {
 		pageTotal: 0,
 		total: 0
 	},
-	userAddress: []
+	userAddress: [],
+	getOneUserAddress: null
 }
 
 const UserSlice = createSlice({
@@ -80,7 +82,19 @@ const UserSlice = createSlice({
 
 		builder
 			.addCase(addAddressUserAction.fulfilled, (state, action) => {
-				state.userAddress.push(action.payload)
+				state.userAddress.push(action.payload.data)
+			})
+
+		builder
+			.addCase(getOneAddressUserAction.fulfilled, (state, action) => {
+				state.getOneUserAddress = action.payload.data
+			})
+
+		builder
+			.addCase(deleteAddressUserAction.fulfilled, (state, action) => {
+				state.userAddress.filter(
+					(item) => item.id !== action.payload.data.id
+				)
 			})
 	}
 

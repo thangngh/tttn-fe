@@ -102,5 +102,47 @@ export const UserAPI = {
 			toast.error(error)
 			return error;
 		}
+	},
+
+	getOneAddressUser: async (userAddressId: string) => {
+		try {
+			const response = await axiosConfig.get(`/user-address/get-one-address-user/${userAddressId}`);
+			return response.data;
+		} catch (error: any) {
+			toast.error(error)
+			return error;
+		}
+	},
+
+	setDefaultUserAddress: async (userAddressId: string) => {
+		try {
+			const response = await axiosConfig.patch(`/user-address/select-default-address/${userAddressId}`);
+			toast.success(response.data.message)
+			return response.data;
+		} catch (error: any) {
+			toast.error(error)
+			return error;
+		}
+	},
+
+	deleteUserAddress: async (userAddressId: string) => {
+		try {
+			const response = await axiosConfig.delete(`/user-address/delete-user-address/${userAddressId}`);
+			toast.success(response.data.message)
+			return response.data;
+		} catch (error: any) {
+			toast.error(error)
+			return error;
+		}
+	},
+
+	getUserAddressDefault: async () => {
+		try {
+			const response = await axiosConfig.get("/user-address/user-address-default");
+			return response.data;
+		} catch (error: any) {
+			toast.error(error)
+			return error;
+		}
 	}
 }

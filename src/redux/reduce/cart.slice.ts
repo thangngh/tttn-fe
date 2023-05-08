@@ -1,6 +1,6 @@
 import { IAddCart } from "@/type/cart.interface";
 import { createSlice } from "@reduxjs/toolkit";
-import { addProductToCartAction, deleteProductToCartAction, findAllProductCartUserAction, getOrderShopAction, getOrderUserAction, totalFinanceShopAction, totalOderShopAction, totalParticipantVisitShopAction } from "../action/cart.action";
+import { addProductToCartAction, deleteProductToCartAction, findAllProductCartUserAction, getOrderShopAction, getOrderUserAction, getUserNewOrderAction, totalFinanceShopAction, totalOderShopAction, totalParticipantVisitShopAction } from "../action/cart.action";
 import { getUserAddressDefaultAction } from "../action/user.action";
 
 interface initialState {
@@ -14,7 +14,8 @@ interface initialState {
 	getOrderShop: any[],
 	totalOrder: number,
 	totalFinance: number,
-	totalParticipant: number
+	totalParticipant: number,
+	userNewOrder: any[]
 }
 
 const initialState: initialState = {
@@ -28,7 +29,8 @@ const initialState: initialState = {
 	getOrderShop: [],
 	totalOrder: 0,
 	totalFinance: 0,
-	totalParticipant: 0
+	totalParticipant: 0,
+	userNewOrder: []
 }
 
 const CartSlice = createSlice({
@@ -70,7 +72,7 @@ const CartSlice = createSlice({
 		})
 
 		builder.addCase(getOrderShopAction.fulfilled, (state, action) => {
-			state.getOrderShop = action.payload.data
+			state.getOrderShop = action.payload
 		})
 		builder.addCase(totalOderShopAction.fulfilled, (state, action) => {
 			state.totalOrder = action.payload.data
@@ -80,6 +82,10 @@ const CartSlice = createSlice({
 		})
 		builder.addCase(totalParticipantVisitShopAction.fulfilled, (state, action) => {
 			state.totalParticipant = action.payload.total
+		})
+
+		builder.addCase(getUserNewOrderAction.fulfilled, (state, action) => {
+			state.userNewOrder = action.payload
 		})
 	}
 })

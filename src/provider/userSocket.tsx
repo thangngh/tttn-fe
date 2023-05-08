@@ -1,28 +1,27 @@
 import { createContext, useEffect, useState } from "react";
 import io, { Socket } from "socket.io-client";
 
-export const SocketContext = createContext<Socket | undefined>(undefined);
+const SocketContext = createContext<Socket | undefined>(undefined);
 
 interface IChildren {
   children: React.ReactNode;
 }
 
-export default function UserSocketProvider({ children }: IChildren) {
+const newSocket = io("", {
+  transports: ["web-socket"],
+  withCredentials: true,
+});
+
+function UserSocketProvider({ children }: any) {
   const [socket, setSocket] = useState<Socket>();
 
-  // useEffect(() => {
-  //   const newSocket = io("localhost:3001", {
-  //     transports: ["web-socket"],
-  //     withCredentials: true,
-  //   });
-  //   setSocket(newSocket);
-
-  //   return () => {
-  //     newSocket.disconnect();
-  //   };
-  // }, []);
+  useEffect(() => {
+    setSocket(newSocket);
+  }, []);
 
   return (
     <SocketContext.Provider value={socket}>{children}</SocketContext.Provider>
   );
 }
+
+export { newSocket, SocketContext, UserSocketProvider };

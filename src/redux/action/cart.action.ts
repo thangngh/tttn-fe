@@ -93,3 +93,12 @@ export const totalParticipantVisitShopAction = createAsyncThunk(
 		return response
 	}
 )
+
+export const getUserNewOrderAction = createAsyncThunk(
+	"/order/user-order-product-in-shop",
+	async () => {
+		const response = await CartAPI.getUserNewOrder()
+
+		return response
+	}
+)

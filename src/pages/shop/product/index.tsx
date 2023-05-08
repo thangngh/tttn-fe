@@ -433,7 +433,7 @@ export default function Product() {
     <ShopLayout>
       <div className="h-full w-full min-w-[1200px] overflow-x-auto  my-4 p-4 space-y-4">
         <DrawerHeader />
-        <div className="flex items-baseline container justify-between border-b border-gray-200">
+        <div className="flex items-baseline container w-4/5 mx-auto justify-between border-b border-gray-200">
           <h1 className="text-xl font-bold tracking-tight text-gray-900">
             Product
           </h1>

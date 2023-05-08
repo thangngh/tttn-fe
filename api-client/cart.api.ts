@@ -134,5 +134,17 @@ export const CartAPI = {
 			toast.error(error.message);
 			return error;
 		}
+	},
+
+	getUserNewOrder: async () => {
+		try {
+			const response = await axiosConfig.get("/order/user-order-product-in-shop");
+			toast.success(response.data.message);
+
+			return response.data;
+		} catch (error: any) {
+			toast.error(error.message);
+			return error;
+		}
 	}
 }

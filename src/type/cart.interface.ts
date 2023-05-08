@@ -6,3 +6,11 @@ export interface IAddCart {
 	price: number;
 	productInventoryId: number;
 }
+
+export interface IOrder {
+	id?: number;
+	cartId: number;
+	userAddressId: number;
+	status?: string;
+	userId?: number;
+}

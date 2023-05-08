@@ -43,6 +43,22 @@ export default function Product() {
     dispatch(getAllCategoryAction());
   }, []);
 
+  const handleNextPage = () => {
+    setCurrentPage((prev) => +prev + 1);
+    router.push({
+      pathname: "/product",
+      query: { category: router.query.category, page: +currentPage + 1 },
+    });
+  };
+
+  const handlePrevPage = () => {
+    setCurrentPage((prev) => +prev - 1);
+    router.push({
+      pathname: "/product",
+      query: { category: router.query.category, page: +currentPage - 1 },
+    });
+  };
+
   // React.useEffect(() => {
   //   if (router.isReady) {
   //     const getProduct = setTimeout(() => {
@@ -108,6 +124,16 @@ export default function Product() {
             categoryName={router.query?.category as string}
             currentPage={currentPage}
           />
+        </div>
+        <div className="mx-auto w-2/3 mt-10">
+          <div className="btn-group grid grid-cols-2">
+            <button onClick={handlePrevPage} className="btn btn-outline">
+              Previous page
+            </button>
+            <button onClick={handleNextPage} className="btn btn-outline">
+              Next
+            </button>
+          </div>
         </div>
       </div>
     </Screen>

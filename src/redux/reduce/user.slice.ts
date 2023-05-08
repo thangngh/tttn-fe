@@ -1,5 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { addAddressUserAction, deleteAddressUserAction, editProfileAction, getAddressUserAction, getAllUserAction, getOneAddressUserAction, getProfileAction, getRoleAction, uploadAvatarAction } from "../action/user.action";
+import { addAddressUserAction, deleteAddressUserAction, editProfileAction, getAddressUserAction, getAllUserAction, getOneAddressUserAction, getProfileAction, getRoleAction, updateUserAddressAction, uploadAvatarAction } from "../action/user.action";
 import { IUser, IUserAddress } from "@/type/user.interface";
 import { toast } from "react-toastify";
 
@@ -13,7 +13,8 @@ interface initState {
 		total: number;
 	},
 	userAddress: IUserAddress[],
-	getOneUserAddress: IUserAddress | null
+	getOneUserAddress: IUserAddress | null,
+	default: boolean
 }
 
 const initState: initState = {
@@ -26,7 +27,8 @@ const initState: initState = {
 		total: 0
 	},
 	userAddress: [],
-	getOneUserAddress: null
+	getOneUserAddress: null,
+	default: false
 }
 
 const UserSlice = createSlice({
@@ -35,6 +37,9 @@ const UserSlice = createSlice({
 	reducers: {
 		setRole: (state, action) => {
 			state.role = action.payload;
+		},
+		changeDefault: (state, action) => {
+			state.default = action.payload?.data?.isDefault;
 		}
 	},
 	extraReducers: (builder) => {
@@ -82,7 +87,9 @@ const UserSlice = createSlice({
 
 		builder
 			.addCase(addAddressUserAction.fulfilled, (state, action) => {
-				state.userAddress.push(action.payload.data)
+
+				state.userAddress.push(action.payload.data
+				)
 			})
 
 		builder
@@ -92,12 +99,30 @@ const UserSlice = createSlice({
 
 		builder
 			.addCase(deleteAddressUserAction.fulfilled, (state, action) => {
-				state.userAddress.filter(
+				state.userAddress = state.userAddress.filter(
 					(item) => item.id !== action.payload.data.id
 				)
+			})
+
+		builder
+			.addCase(updateUserAddressAction.fulfilled, (state, action) => {
+
+				const address = state.userAddress.find((address) =>
+					address.id === action.payload.data.id)
+				if (address) {
+					address.city = action.payload.data.city
+					address.country = action.payload.data.country
+					address.isDefault = action.payload.data.default
+					address.district = action.payload.data.district
+					address.street = action.payload.data.street
+					address.telephone = action.payload.data.telephone
+				}
 			})
 	}
 
 })
+
+export const { changeDefault } = UserSlice.actions
+
 
 export default UserSlice.reducer;

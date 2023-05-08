@@ -33,7 +33,7 @@ export default function Home() {
     <Screen>
       <div className="bg-white ">
         <main className={styles.main}>
-          <NewProduct />
+          {/* <NewProduct /> */}
           {/* <div className="h-full my-10 w-full block">
             <div className="flex flex-col items-center justify-center h-full">
               <h1 className="text-center text-3xl md:text-4xl lg:text-5xl poppins font-semibold text-gray-700">
@@ -148,7 +148,7 @@ export default function Home() {
           <ProductFilter />
         </main>
 
-        {!isShowChat ? (
+        {/* {!isShowChat ? (
           <div className="absolute bottom-0 z-50 w-10 h-10 shadow-lg right-5 bg-primary">
             <svg
               fill="none"
@@ -278,7 +278,7 @@ export default function Home() {
               </div>
             </div>
           </div>
-        )}
+        )} */}
       </div>
     </Screen>
   );

@@ -53,7 +53,6 @@ export default function ProductItem() {
       dispatch(getProfileAction());
     }
   }, []);
-
   React.useEffect(() => {
     if (profile) {
       userIdRef.current = profile.id;
@@ -98,18 +97,19 @@ export default function ProductItem() {
   const [isLoading, setIsLoading] = React.useState(false);
 
   const handleAddProductToCart = async (body: IAddCart) => {
-    const accessToken = localStorage.getItem("accessToken");
-    if (!accessToken) {
-      router.push({
-        pathname: "/login",
-        query: {
-          redirect: router.asPath,
-        },
-      });
-    } else {
-      setIsLoading(true);
-      dispatch(addProductToCartAction(body));
-    }
+    console.log("handleAddProductToCart", body);
+    // const accessToken = localStorage.getItem("accessToken");
+    // if (!accessToken) {
+    //   router.push({
+    //     pathname: "/login",
+    //     query: {
+    //       redirect: router.asPath,
+    //     },
+    //   });
+    // } else {
+    //   setIsLoading(true);
+    //   dispatch(addProductToCartAction(body));
+    // }
   };
 
   const successAddCart = useAppSelector(
@@ -140,6 +140,7 @@ export default function ProductItem() {
       });
     }
   }, [product]);
+  console.log("dataaaa", data);
 
   React.useEffect(() => {
     let loading;
@@ -181,7 +182,7 @@ export default function ProductItem() {
   const [menu1, setMenu1] = React.useState(false);
   return (
     <Screen>
-      <div className=" bg-white flex-wrap-reverse mx-full pb-4 px-4 pt-4  sm:px-6 lg:px-8 border-b-2 border-b-gray-400">
+      <div className="container mx-auto bg-white flex-wrap-reverse mx-full pb-4 px-4 pt-4  sm:px-6 lg:px-8 border-b-2 border-b-gray-400">
         <div className="container mx-auto mb-10 px-4 relative ">
           <div className=" flex space-x-2  items-center">
             <SVGLogo />
@@ -338,7 +339,7 @@ export default function ProductItem() {
           </div>
         </div>
       </div>
-      <div className="py-12 px-4 md:px-6 bg-white 2xl:px-0 container 2xl:mx-auto flex justify-center items-center">
+      <div className="py-12 px-4 md:px-6 bg-white 2xl:px-0  2xl:mx-auto flex justify-center items-center">
         <div className="flex flex-col justify-start items-start w-full space-y-8">
           <p className="text-3xl lg:text-4xl font-semibold leading-7 lg:leading-9 text-gray-800">
             Reviews

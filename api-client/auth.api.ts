@@ -82,8 +82,10 @@ export const AuthAPI = {
 	}) => {
 		try {
 			const response = await axiosConfig.patch("/auth/change-password", { oldPassword, newPassword });
+			toast.success(response.data.message)
 			return response.data;
 		} catch (error: any) {
+			toast.error(error.message)
 			return error;
 		}
 	},

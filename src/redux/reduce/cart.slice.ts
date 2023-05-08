@@ -1,13 +1,16 @@
 import { IAddCart } from "@/type/cart.interface";
 import { createSlice } from "@reduxjs/toolkit";
-import { addProductToCartAction, deleteProductToCartAction, findAllProductCartUserAction } from "../action/cart.action";
+import { addProductToCartAction, deleteProductToCartAction, findAllProductCartUserAction, getOrderUserAction } from "../action/cart.action";
+import { getUserAddressDefaultAction } from "../action/user.action";
 
 interface initialState {
 	isSuccess: boolean,
 	isError: boolean,
 	isDelete: boolean,
 	totalPrice: number,
-	cartProduct: IAddCart[]
+	cartProduct: IAddCart[],
+	getOrder: any[],
+	userAddressDefault: any
 }
 
 const initialState: initialState = {
@@ -15,7 +18,9 @@ const initialState: initialState = {
 	isSuccess: false,
 	isDelete: false,
 	totalPrice: 0,
-	isError: false
+	isError: false,
+	getOrder: [],
+	userAddressDefault: null
 }
 
 const CartSlice = createSlice({
@@ -46,6 +51,16 @@ const CartSlice = createSlice({
 				state.totalPrice = state.totalPrice - action.payload.data.price;
 				state.cartProduct = state.cartProduct.filter((item) => item.id !== action.payload.data.id)
 			}
+		})
+
+		builder.addCase(getOrderUserAction.fulfilled, (state, action) => {
+			console.log("order action", action.payload)
+			state.getOrder = action.payload
+		})
+
+		builder.addCase(getUserAddressDefaultAction.fulfilled, (state, action) => {
+			console.log("getUserAddressDefaultAction", action.payload)
+			state.userAddressDefault = action.payload.data
 		})
 	}
 })

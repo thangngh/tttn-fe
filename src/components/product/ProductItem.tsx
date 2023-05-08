@@ -137,7 +137,9 @@ export default function ProductItem({ categoryName, currentPage }: IProp) {
                     {item.name}
                   </h2>
                   <p
-                    className={`${!item.description ? "invisible" : "visible"}`}
+                    className={`${
+                      !item.description ? "invisible" : "visible"
+                    } text-lg max-w-full truncate `}
                   >
                     {item.description}
                   </p>

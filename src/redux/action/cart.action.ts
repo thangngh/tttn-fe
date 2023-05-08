@@ -1,4 +1,4 @@
-import { IAddCart } from "@/type/cart.interface";
+import { IAddCart, IOrder } from "@/type/cart.interface";
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import { CartAPI } from "../../../api-client/cart.api";
 
@@ -23,6 +23,38 @@ export const deleteProductToCartAction = createAsyncThunk(
 	"cart/delete-cart",
 	async (cartId: string) => {
 		const response = await CartAPI.deleteProductToCart(cartId);
+		return response;
+	}
+)
+
+export const createOrderAction = createAsyncThunk(
+	"cart/order-create",
+	async (body: IOrder) => {
+		const response = await CartAPI.createOrder(body);
+		return response;
+	}
+)
+
+export const getOrderUserAction = createAsyncThunk(
+	"cart/get-order-user",
+	async () => {
+		const response = await CartAPI.getOrderUser();
+		return response;
+	}
+)
+
+export const approvedOrderAction = createAsyncThunk(
+	"cart/approved-order",
+	async (orderId: string) => {
+		const response = await CartAPI.approvedOrder(orderId);
+		return response;
+	}
+)
+
+export const rejectOrderAction = createAsyncThunk(
+	"cart/reject-order",
+	async (orderId: string) => {
+		const response = await CartAPI.rejectOrder(orderId);
 		return response;
 	}
 )

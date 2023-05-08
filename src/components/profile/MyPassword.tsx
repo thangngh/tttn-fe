@@ -1,26 +1,84 @@
-import ProfileLayout from "@/layouts/ProfileLayout";
 import { useRouter } from "next/router";
+import { yupResolver } from "@hookform/resolvers/yup";
+import * as Yup from "yup";
+import { useForm } from "react-hook-form";
+import { useAppDispatch } from "@/redux/hook";
+import { toast } from "react-toastify";
+import { changePasswordAction } from "@/redux/action/auth.action";
+
+const schemaValidation = Yup.object({
+  passwordCurrent: Yup.string()
+    .required("Password is requested")
+    .trim("Password is requested"),
+  newPassword: Yup.string()
+    .required("Password is requested")
+    .trim("Password is requested")
+    .max(20, " to long")
+    .matches(
+      /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$/g,
+      {
+        message:
+          "Password must contain at least 1 uppercase, 1 lowercase, 1 number and 1 special character",
+      }
+    ),
+  rePassword: Yup.string()
+    .required("re-Password is requested")
+    .trim("re-Password  is requested")
+    .oneOf([Yup.ref("newPassword")], "Passwords not match"),
+});
 
 export default function MyPassword() {
   const router = useRouter();
+
+  const dispatch = useAppDispatch();
+
+  const {
+    register,
+    handleSubmit,
+    watch,
+    formState: { errors },
+  } = useForm<any>({
+    resolver: yupResolver(schemaValidation),
+  });
+
+  const onchangePassword = async (data: any) => {
+    const { passwordCurrent, newPassword } = data;
+    try {
+      dispatch(
+        changePasswordAction({
+          oldPassword: passwordCurrent,
+          newPassword: newPassword,
+        })
+      );
+    } catch (error: any) {
+      toast.error(error);
+    }
+  };
   return (
     <div>
-      <form action="">
+      <form onSubmit={handleSubmit(onchangePassword)}>
         <div className="flex flex-col space-y-5">
           <label
             htmlFor="Current-password"
-            className="flex items-center space-x-2 space-y-2 gap-2"
+            className="flex items-baseline space-x-2 space-y-2 gap-2"
           >
             <span className="font-medium text-slate-700 w-1/4 ">
               Current password
             </span>
-            <input
-              id="Current-password"
-              name="Current-password"
-              type="password"
-              className="w-2/4 py-3 border border-slate-200 bg-white rounded-lg px-3 focus:outline-none focus:border-slate-500 hover:shadow"
-              placeholder="Enter current password"
-            />
+            <div className="flex flex-col w-2/4">
+              <input
+                id="Current-password"
+                {...register("passwordCurrent")}
+                type="password"
+                className="w-full py-3 border border-slate-200 bg-white rounded-lg px-3 focus:outline-none focus:border-slate-500 hover:shadow"
+                placeholder="Enter current password"
+              />
+              {errors.passwordCurrent && (
+                <p className="text-red-500 text-sm">
+                  {errors.passwordCurrent.message as any}
+                </p>
+              )}
+            </div>
             <span
               onClick={() => router.push("/reset-password")}
               className="hover:underline text-primary font-medium cursor-pointer"
@@ -30,33 +88,47 @@ export default function MyPassword() {
           </label>
           <label
             htmlFor="new-password"
-            className="flex items-center space-x-2 space-y-2 gap-2"
+            className="flex items-baseline space-x-2 space-y-2 gap-2"
           >
             <span className="font-medium text-slate-700 w-1/4  ">
               New password
             </span>
-            <input
-              id="new-password"
-              name="new-password"
-              type="password"
-              className="w-2/4 py-3 border border-slate-200 bg-white rounded-lg px-3 focus:outline-none focus:border-slate-500 hover:shadow"
-              placeholder="Enter new password"
-            />
+            <div className="flex flex-col w-2/4">
+              <input
+                id="new-password"
+                {...register("newPassword")}
+                type="password"
+                className="w-full py-3 border border-slate-200 bg-white rounded-lg px-3 focus:outline-none focus:border-slate-500 hover:shadow"
+                placeholder="Enter new password"
+              />
+              {errors.newPassword && (
+                <p className="text-red-500 text-sm">
+                  {errors.newPassword.message as any}
+                </p>
+              )}
+            </div>
           </label>
           <label
             htmlFor="confirm-password"
-            className="flex items-center space-x-2 space-y-2 gap-2"
+            className="flex items-baseline space-x-2 space-y-2 gap-2"
           >
             <span className="font-medium text-slate-700  w-1/4 ">
               Confirm password
             </span>
-            <input
-              id="confirm-password"
-              name="confirm-password"
-              type="password"
-              className="w-2/4 py-3 border border-slate-200 bg-white rounded-lg px-3 focus:outline-none focus:border-slate-500 hover:shadow"
-              placeholder="Enter confirm password"
-            />
+            <div className="flex flex-col w-2/4">
+              <input
+                id="confirm-password"
+                {...register("rePassword")}
+                type="password"
+                className="w-full py-3 border border-slate-200 bg-white rounded-lg px-3 focus:outline-none focus:border-slate-500 hover:shadow"
+                placeholder="Enter confirm password"
+              />
+              {errors.rePassword && (
+                <p className="text-red-500 text-sm">
+                  {errors.rePassword.message as any}
+                </p>
+              )}
+            </div>
           </label>
 
           <button className="w-full py-3 font-medium text-white btn bg-primary-focus btn-outline  inline-flex space-x-2 items-center justify-center">

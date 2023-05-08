@@ -89,3 +89,11 @@ export const getUserAddressDefaultAction = createAsyncThunk(
 		return response;
 	}
 )
+
+export const updateUserAddressAction = createAsyncThunk(
+	"/user-address/update-address/user",
+	async (body: IUserAddress) => {
+		const response = await UserAPI.updateUserAddress(body)
+		return response;
+	}
+)

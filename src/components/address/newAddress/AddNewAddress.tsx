@@ -8,7 +8,9 @@ import { useAppDispatch, useAppSelector } from "@/redux/hook";
 import { RootState } from "@/redux/store";
 import {
   addAddressUserAction,
+  getOneAddressUserAction,
   getProfileAction,
+  updateUserAddressAction,
 } from "@/redux/action/user.action";
 import { AsyncThunkAction, Dispatch, AnyAction } from "@reduxjs/toolkit";
 
@@ -35,18 +37,27 @@ const schemaValidation = Yup.object({
 export default function AddNewAddress({
   openModal,
   handleCloseModal,
-  handleUpdateData,
+  UseAddressId,
 }: IProp) {
   const {
     register,
     handleSubmit,
+    getValues,
+    setValue,
+    reset,
     formState: { errors },
   } = useForm<IUserAddress>({
     resolver: yupResolver(schemaValidation),
   });
   const dispatch = useAppDispatch();
-  const profile = useAppSelector((state: RootState) => state.userReducer.user);
+
   const [user, setUser] = React.useState<string>("");
+
+  const profile = useAppSelector((state: RootState) => state.userReducer.user);
+  const getOneUserAddress = useAppSelector(
+    (state: RootState) => state.userReducer.getOneUserAddress
+  );
+
   React.useEffect(() => {
     const accessToken = localStorage.getItem("accessToken");
     accessToken && dispatch(getProfileAction());
@@ -58,15 +69,42 @@ export default function AddNewAddress({
     }
   }, [profile]);
 
+  React.useEffect(() => {
+    if (UseAddressId) {
+      dispatch(getOneAddressUserAction(UseAddressId as string));
+    }
+  }, [UseAddressId, dispatch]);
+
+  React.useEffect(() => {
+    if (UseAddressId) {
+      setValue("city", getOneUserAddress?.city);
+      setValue("district", getOneUserAddress?.district);
+      setValue("street", getOneUserAddress?.street);
+      setValue("country", getOneUserAddress?.country);
+      setValue("telephone", getOneUserAddress?.telephone);
+    }
+  }, [getValues, UseAddressId, getOneUserAddress, setValue]);
+
   const onCreateAddressUser = async (data: IUserAddress) => {
     try {
-      dispatch(
-        addAddressUserAction({
-          ...data,
-          userId: user,
-        })
-      );
+      if (UseAddressId) {
+        dispatch(
+          updateUserAddressAction({
+            ...data,
+            userId: user,
+            id: UseAddressId,
+          })
+        );
+      } else {
+        dispatch(
+          addAddressUserAction({
+            ...data,
+            userId: user,
+          })
+        );
+      }
       handleCloseModal();
+      // reset();
     } catch (error) {}
   };
 
@@ -166,7 +204,9 @@ export default function AddNewAddress({
               </label>
             </div>
             <div className="py-2">
-              <button className="btn btn-outline btn-primary">Create</button>
+              <button className="btn btn-outline btn-primary">
+                {UseAddressId ? "Update" : "Create"}
+              </button>
             </div>
           </div>
         </div>

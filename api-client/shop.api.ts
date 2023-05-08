@@ -6,9 +6,10 @@ export const ShopAPI = {
 	createShop: async (payload: ICreateShop) => {
 		try {
 			const response = await axiosConfig.post("/shop/create-shop", payload);
+			toast.success(response.data.message)
 			return response.data;
 		} catch (error: any) {
-			toast.error(error.message);
+			toast.error(error.data.message);
 			return error;
 		}
 	},

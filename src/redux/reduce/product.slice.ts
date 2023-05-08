@@ -54,13 +54,15 @@ const ProductSlice = createSlice({
 	initialState: initialState,
 	reducers: {
 		increasePrice: (state) => {
+
 			const parseValue = parseInt(state.price.split(" ")[0].replace(/,/g, ""))
-			const prePriceValue = parseInt(state.prePrice.split(" ")[0].replace(/,/g, ""))
-			state.price = (parseValue + prePriceValue).toLocaleString() + "₫";
+			const prePriceValue = parseValue
+			state.price = formatter(+(parseValue + prePriceValue)) + " ₫";
 		},
 		deCreasePrice: (state) => {
 			const parseValue = parseInt(state.price.split(" ")[0].replace(/,/g, ""))
 			const prePriceValue = parseInt(state.prePrice.split(" ")[0].replace(/,/g, ""))
+			console.log(parseValue, prePriceValue)
 			state.price = (parseValue - prePriceValue).toLocaleString() + "₫";
 		},
 		addPrice: (state, action) => {

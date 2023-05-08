@@ -8,7 +8,7 @@ const TabData = [
   {
     id: 1,
     label: "All",
-    component: <h1>All</h1>,
+    component: <OrderDetail />,
   },
   {
     id: 2,

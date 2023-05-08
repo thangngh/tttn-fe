@@ -144,5 +144,17 @@ export const UserAPI = {
 			toast.error(error)
 			return error;
 		}
+	},
+
+	updateUserAddress: async (body: IUserAddress) => {
+		const { id } = body;
+		try {
+			const response = await axiosConfig.put(`/user-address/update-address/${id}`, body);
+			toast.success(response.data.message)
+			return response.data;
+		} catch (error: any) {
+			toast.error(error)
+			return error;
+		}
 	}
 }

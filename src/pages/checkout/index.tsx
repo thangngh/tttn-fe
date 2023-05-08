@@ -8,8 +8,14 @@ import GuardLayout from "@/layouts/GuardLayout";
 import { useAppDispatch, useAppSelector } from "@/redux/hook";
 import { RootState } from "@/redux/store";
 import { formatter } from "../shop/product/[id]";
-import { findAllProductCartUserAction } from "@/redux/action/cart.action";
-import { getProfileAction } from "@/redux/action/user.action";
+import {
+  createOrderAction,
+  findAllProductCartUserAction,
+} from "@/redux/action/cart.action";
+import {
+  getProfileAction,
+  getUserAddressDefaultAction,
+} from "@/redux/action/user.action";
 export default function Checkout() {
   const router = useRouter();
   const [openAddAddressModal, setOpenAddAddressModal] = React.useState(false);
@@ -21,9 +27,27 @@ export default function Checkout() {
   const totalPriceSelector = useAppSelector(
     (state: RootState) => state.cartReducer.totalPrice
   );
-
+  const [userAddress, setUserAddress] = React.useState<any>();
   const profile = useAppSelector((state: RootState) => state.userReducer.user);
+  const getUserAddressDefault = useAppSelector(
+    (state: RootState) => state.cartReducer.userAddressDefault
+  );
 
+  React.useEffect(() => {
+    dispatch(getUserAddressDefaultAction());
+  }, []);
+
+  React.useEffect(() => {
+    setUserAddress({
+      id: getUserAddressDefault?.id,
+      name: `${getUserAddressDefault?.user?.firstName} ${getUserAddressDefault?.user?.lastName}`,
+      phone: getUserAddressDefault?.telephone,
+      city: getUserAddressDefault?.city,
+      country: getUserAddressDefault?.country,
+      district: getUserAddressDefault?.district,
+      street: getUserAddressDefault?.street,
+    });
+  }, [getUserAddressDefault]);
   React.useEffect(() => {
     const accessToken = localStorage.getItem("accessToken");
     accessToken && dispatch(getProfileAction());
@@ -48,6 +72,16 @@ export default function Checkout() {
     });
     setData(product);
   }, [getAllProductCartUser]);
+
+  const handleAddOrder = (data: any) => {
+    dispatch(
+      createOrderAction({
+        ...data,
+      })
+    ).then(() => {
+      router.push("/profile/order");
+    });
+  };
 
   React.useEffect(() => {
     setTotalPrice(totalPriceSelector);
@@ -75,7 +109,7 @@ export default function Checkout() {
     <Screen>
       <GuardLayout>
         <div className="w-full mx-auto  max-w-7xl bg-white">
-          <div className="w-screen sm:container mx-auto mb-10 px-4 relative ">
+          <div className="w-screen sm:container mx-auto mb-10 p-4 relative ">
             <div className=" flex space-x-2 items-center">
               <SVGLogo />
               <span className="text-xl font-medium">| Checkout</span>
@@ -91,8 +125,11 @@ export default function Checkout() {
                 <span>Address</span>
               </div>
               <div className="flex items-center space-x-2">
-                <h1>Họ Tên (số điện thoại)</h1>
-                <span>Địa chỉ a. xóm b, làng c</span>
+                <h1>
+                  {userAddress?.name}
+                  {` (${userAddress?.phone})`}
+                </h1>
+                <span>{`${userAddress?.street}, ${userAddress?.city}, ${userAddress?.country}, ${userAddress?.district}`}</span>
                 <span className="border border-primary cursor-pointer px-2 text-primary">
                   default
                 </span>
@@ -203,7 +240,7 @@ export default function Checkout() {
               </div>
             </div>
           </div>
-          <div className="w-screen sm:container mx-auto my-2 bg-[#f5f5f5] p-4  bottom-0 border-t-2 text-black">
+          {/* <div className="w-screen sm:container mx-auto my-2 bg-[#f5f5f5] p-4  bottom-0 border-t-2 text-black">
             <div className="block">
               <div className="flex justify-between flex-auto">
                 <div className="w-full max-w-1/2">
@@ -223,10 +260,20 @@ export default function Checkout() {
                 </div>
               </div>
             </div>
-          </div>
+          </div> */}
           <div className="w-screen sm:container mx-auto  bg-[#f5f5f5] p-4  bottom-0 border-t-2">
             <div className="flex justify-end">
-              <button className="btn btn-outline btn-primary">Checkout</button>
+              <button
+                onClick={() =>
+                  handleAddOrder({
+                    cartId: data.map((item) => item.id),
+                    userAddressId: userAddress.id,
+                  })
+                }
+                className="btn btn-outline btn-primary"
+              >
+                Checkout
+              </button>
             </div>
           </div>
         </div>

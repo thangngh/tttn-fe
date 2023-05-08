@@ -1,33 +1,37 @@
 import React from "react";
 import { useRouter } from "next/router";
 import { useAppDispatch, useAppSelector } from "@/redux/hook";
-import { IUserAddress } from "@/type/user.interface";
+import { IUserAddress, IUser } from "@/type/user.interface";
 import { useForm } from "react-hook-form";
 import { RootState } from "@/redux/store";
 import {
+  deleteAddressUserAction,
   getAddressUserAction,
   getProfileAction,
 } from "@/redux/action/user.action";
 import AddAddress from "../address/AddAddress";
 import AddNewAddress from "../address/newAddress/AddNewAddress";
+import { toast } from "react-toastify";
+import { setDefaultUserAddressAction } from "@/redux/action/user.action";
+import { changeDefault } from "@/redux/reduce/user.slice";
 
 export default function MyAddress() {
   const router = useRouter();
   const dispatch = useAppDispatch();
 
-  const profile = useAppSelector((state: RootState) => state.userReducer.user);
-  const [user, setUser] = React.useState(null);
+  const [user, setUser] = React.useState<IUser>();
   const [data, setData] = React.useState<IUserAddress[]>([]);
-
+  const userAddressRef = React.useRef<string>("");
   React.useEffect(() => {
     const accessToken = localStorage.getItem("accessToken");
     accessToken && dispatch(getProfileAction());
   }, []);
 
+  const profile = useAppSelector((state: RootState) => state.userReducer.user);
   const listAddressUser = useAppSelector(
     (state: RootState) => state.userReducer.userAddress
   );
-  console.log("listAddressUser", listAddressUser);
+
   React.useEffect(() => {
     const accessToken = localStorage.getItem("accessToken");
     accessToken && dispatch(getAddressUserAction());
@@ -44,9 +48,9 @@ export default function MyAddress() {
         street: item.street,
         country: item.country,
         telephone: item.telephone,
-        user: `${(item?.user as any)?.firstName} ${
-          (item?.user as any)?.lastName
-        }`,
+        // user: `${(item?.user as any)?.firstName} ${
+        //   (item?.user as any)?.lastName
+        // }`,
         isDefault: item.isDefault,
       });
     });
@@ -74,6 +78,25 @@ export default function MyAddress() {
     setOpenAddAddressModal(false);
   };
 
+  const handleSetDefaultAddress = (addressId: string) => {
+    try {
+      dispatch(setDefaultUserAddressAction(addressId)).then(() => {
+        dispatch(getAddressUserAction());
+      });
+    } catch (error: any) {
+      toast.error(error);
+    }
+  };
+
+  const handleDeleteAddress = (addressId: string) => {
+    try {
+      dispatch(deleteAddressUserAction(addressId));
+    } catch (error: any) {
+      toast.error(error);
+    }
+  };
+
+  const [isUpdate, setIsUpdate] = React.useState(false);
   return (
     <div>
       <div className="relative p-4 border-b-2 border-primary py-2">
@@ -87,7 +110,9 @@ export default function MyAddress() {
                 <div className="space-y-2">
                   <div>
                     <p>
-                      <span className="text-sm font-medium">{item.user}</span>{" "}
+                      <span className="text-sm font-medium">
+                        {user && `${user.firstName} ${user.lastName}`}
+                      </span>{" "}
                       {/* | <span>(+84) 393271417</span> */}|{" "}
                       <span>{item.telephone}</span>
                     </p>
@@ -106,7 +131,14 @@ export default function MyAddress() {
                 <div className="space-x-2">
                   {item.isDefault === true ? (
                     <>
-                      <span className="text-sm text-primary hover:underline cursor-pointer">
+                      <span
+                        onClick={() => {
+                          handleOpenAddAddressModal();
+                          setIsUpdate(true);
+                          userAddressRef.current = item.id as string;
+                        }}
+                        className="text-sm text-primary hover:underline cursor-pointer"
+                      >
                         Update
                       </span>
                     </>
@@ -114,14 +146,31 @@ export default function MyAddress() {
                     <>
                       <div className="flex flex-col">
                         <div className="flex  space-x-4 py-2">
-                          <span className="text-sm text-primary hover:underline cursor-pointer">
+                          <span
+                            onClick={() => {
+                              handleOpenAddAddressModal();
+                              setIsUpdate(true);
+                              userAddressRef.current = item.id as string;
+                            }}
+                            className="text-sm text-primary hover:underline cursor-pointer"
+                          >
                             Update
                           </span>
-                          <span className="text-sm text-primary hover:underline cursor-pointer">
+                          <span
+                            onClick={() =>
+                              handleDeleteAddress(item.id as string)
+                            }
+                            className="text-sm text-primary hover:underline cursor-pointer"
+                          >
                             Delete
                           </span>
                         </div>
-                        <button className="btn btn-secondary btn-outline btn-sm text-primary">
+                        <button
+                          onClick={() =>
+                            handleSetDefaultAddress(item.id as string)
+                          }
+                          className="btn btn-secondary btn-outline btn-sm text-primary"
+                        >
                           Default
                         </button>
                       </div>
@@ -139,10 +188,19 @@ export default function MyAddress() {
             + Add new{" "}
           </button>
         </div>
-        <AddNewAddress
-          openModal={openAddAddressModal}
-          handleCloseModal={handleCloseAddAddressModal}
-        />
+        {userAddressRef.current && isUpdate ? (
+          <AddNewAddress
+            openModal={openAddAddressModal}
+            handleCloseModal={handleCloseAddAddressModal}
+            UseAddressId={userAddressRef.current}
+          />
+        ) : (
+          <AddNewAddress
+            openModal={openAddAddressModal}
+            handleCloseModal={handleCloseAddAddressModal}
+            // UseAddressId={}
+          />
+        )}
       </div>
     </div>
   );

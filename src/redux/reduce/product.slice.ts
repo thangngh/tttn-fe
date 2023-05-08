@@ -62,7 +62,6 @@ const ProductSlice = createSlice({
 		deCreasePrice: (state) => {
 			const parseValue = parseInt(state.price.split(" ")[0].replace(/,/g, ""))
 			const prePriceValue = parseInt(state.prePrice.split(" ")[0].replace(/,/g, ""))
-			console.log(parseValue, prePriceValue)
 			state.price = (parseValue - prePriceValue).toLocaleString() + "₫";
 		},
 		addPrice: (state, action) => {

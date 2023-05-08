@@ -64,6 +64,18 @@ export const CartAPI = {
 		}
 	},
 
+	getOrderShop: async () => {
+		try {
+			const response = await axiosConfig.get("/order/get-order-shop");
+			toast.success(response.data.message);
+
+			return response.data;
+		} catch (error: any) {
+			toast.error(error.message);
+			return error;
+		}
+	},
+
 	approvedOrder: async (orderId: string) => {
 		try {
 			const response = await axiosConfig.patch(`/order/approved-order/${orderId}`);
@@ -79,6 +91,42 @@ export const CartAPI = {
 	rejectOrder: async (orderId: string) => {
 		try {
 			const response = await axiosConfig.patch(`/order/reject-order/${orderId}`);
+			toast.success(response.data.message);
+
+			return response.data;
+		} catch (error: any) {
+			toast.error(error.message);
+			return error;
+		}
+	},
+
+	totalOderShop: async () => {
+		try {
+			const response = await axiosConfig.get("/order/total-order-shop");
+			toast.success(response.data.message);
+
+			return response.data;
+		} catch (error: any) {
+			toast.error(error.message);
+			return error;
+		}
+	},
+
+	totalFinanceShop: async () => {
+		try {
+			const response = await axiosConfig.get("/order/total-finance-shop");
+			toast.success(response.data.message);
+
+			return response.data;
+		} catch (error: any) {
+			toast.error(error.message);
+			return error;
+		}
+	},
+
+	totalParticipantVisitShop: async () => {
+		try {
+			const response = await axiosConfig.get("/page-visit/participant-total-visit");
 			toast.success(response.data.message);
 
 			return response.data;

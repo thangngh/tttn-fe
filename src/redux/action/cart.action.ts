@@ -43,6 +43,14 @@ export const getOrderUserAction = createAsyncThunk(
 	}
 )
 
+export const getOrderShopAction = createAsyncThunk(
+	"cart/get-order-shop",
+	async () => {
+		const response = await CartAPI.getOrderShop();
+		return response;
+	}
+)
+
 export const approvedOrderAction = createAsyncThunk(
 	"cart/approved-order",
 	async (orderId: string) => {
@@ -56,5 +64,32 @@ export const rejectOrderAction = createAsyncThunk(
 	async (orderId: string) => {
 		const response = await CartAPI.rejectOrder(orderId);
 		return response;
+	}
+)
+
+export const totalOderShopAction = createAsyncThunk(
+	"order/total-order-shop",
+	async () => {
+		const response = await CartAPI.totalOderShop()
+
+		return response
+	}
+)
+
+export const totalFinanceShopAction = createAsyncThunk(
+	"order/total-finance-shop",
+	async () => {
+		const response = await CartAPI.totalFinanceShop()
+
+		return response
+	}
+)
+
+export const totalParticipantVisitShopAction = createAsyncThunk(
+	"page-visit/visit-shop",
+	async () => {
+		const response = await CartAPI.totalParticipantVisitShop()
+
+		return response
 	}
 )

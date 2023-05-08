@@ -90,5 +90,23 @@ export const AuthAPI = {
 		}
 	},
 
+	getTotalOrder: async () => {
+		try {
+			const response = await axiosConfig.get("/order/total-order");
+			return response.data;
+		} catch (error: any) {
+			return error;
+		}
+	},
+
+	getTotalUser: async () => {
+		try {
+			const response = await axiosConfig.get("/user/get-total-user");
+			return response.data;
+		}
+		catch (error: any) {
+			return error;
+		}
+	}
 
 }

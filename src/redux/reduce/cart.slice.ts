@@ -1,6 +1,6 @@
 import { IAddCart } from "@/type/cart.interface";
 import { createSlice } from "@reduxjs/toolkit";
-import { addProductToCartAction, deleteProductToCartAction, findAllProductCartUserAction, getOrderUserAction } from "../action/cart.action";
+import { addProductToCartAction, deleteProductToCartAction, findAllProductCartUserAction, getOrderShopAction, getOrderUserAction, totalFinanceShopAction, totalOderShopAction, totalParticipantVisitShopAction } from "../action/cart.action";
 import { getUserAddressDefaultAction } from "../action/user.action";
 
 interface initialState {
@@ -10,7 +10,11 @@ interface initialState {
 	totalPrice: number,
 	cartProduct: IAddCart[],
 	getOrder: any[],
-	userAddressDefault: any
+	userAddressDefault: any,
+	getOrderShop: any[],
+	totalOrder: number,
+	totalFinance: number,
+	totalParticipant: number
 }
 
 const initialState: initialState = {
@@ -20,7 +24,11 @@ const initialState: initialState = {
 	totalPrice: 0,
 	isError: false,
 	getOrder: [],
-	userAddressDefault: null
+	userAddressDefault: null,
+	getOrderShop: [],
+	totalOrder: 0,
+	totalFinance: 0,
+	totalParticipant: 0
 }
 
 const CartSlice = createSlice({
@@ -54,13 +62,24 @@ const CartSlice = createSlice({
 		})
 
 		builder.addCase(getOrderUserAction.fulfilled, (state, action) => {
-			console.log("order action", action.payload)
 			state.getOrder = action.payload
 		})
 
 		builder.addCase(getUserAddressDefaultAction.fulfilled, (state, action) => {
-			console.log("getUserAddressDefaultAction", action.payload)
 			state.userAddressDefault = action.payload.data
+		})
+
+		builder.addCase(getOrderShopAction.fulfilled, (state, action) => {
+			state.getOrderShop = action.payload.data
+		})
+		builder.addCase(totalOderShopAction.fulfilled, (state, action) => {
+			state.totalOrder = action.payload.data
+		})
+		builder.addCase(totalFinanceShopAction.fulfilled, (state, action) => {
+			state.totalFinance = action.payload
+		})
+		builder.addCase(totalParticipantVisitShopAction.fulfilled, (state, action) => {
+			state.totalParticipant = action.payload.total
 		})
 	}
 })

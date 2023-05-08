@@ -181,7 +181,7 @@ export default function ShopLayout({ children }: IProp) {
 
   return (
     <GuardLayout>
-      <div className="min-h-screen w-full  h-full flex bg-white  text-black dark:text-white">
+      <div className="min-h-screen w-full  h-full  bg-white  text-black dark:text-white">
         <CustomSideBar
           title="Shop Dashboard"
           username={profile?.username}

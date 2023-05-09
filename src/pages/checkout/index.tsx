@@ -16,6 +16,7 @@ import {
   getProfileAction,
   getUserAddressDefaultAction,
 } from "@/redux/action/user.action";
+import { SocketContext } from "@/provider/userSocket";
 export default function Checkout() {
   const router = useRouter();
   const [openAddAddressModal, setOpenAddAddressModal] = React.useState(false);
@@ -27,38 +28,42 @@ export default function Checkout() {
   const totalPriceSelector = useAppSelector(
     (state: RootState) => state.cartReducer.totalPrice
   );
-  const [userAddress, setUserAddress] = React.useState<any>();
+  const [userAddress, setUserAddress] = React.useState<any>(null);
   const profile = useAppSelector((state: RootState) => state.userReducer.user);
   const getUserAddressDefault = useAppSelector(
     (state: RootState) => state.cartReducer.userAddressDefault
   );
-
+  console.log("userAddress", userAddress);
   React.useEffect(() => {
     dispatch(getUserAddressDefaultAction());
   }, []);
 
   React.useEffect(() => {
-    setUserAddress({
-      id: getUserAddressDefault?.id,
-      name: `${getUserAddressDefault?.user?.firstName} ${getUserAddressDefault?.user?.lastName}`,
-      phone: getUserAddressDefault?.telephone,
-      city: getUserAddressDefault?.city,
-      country: getUserAddressDefault?.country,
-      district: getUserAddressDefault?.district,
-      street: getUserAddressDefault?.street,
-    });
+    getUserAddressDefault &&
+      setUserAddress({
+        id: getUserAddressDefault?.id,
+        name: `${getUserAddressDefault?.user?.firstName} ${getUserAddressDefault?.user?.lastName}`,
+        phone: getUserAddressDefault?.telephone,
+        city: getUserAddressDefault?.city,
+        country: getUserAddressDefault?.country,
+        district: getUserAddressDefault?.district,
+        street: getUserAddressDefault?.street,
+      });
   }, [getUserAddressDefault]);
+
   React.useEffect(() => {
     const accessToken = localStorage.getItem("accessToken");
     accessToken && dispatch(getProfileAction());
   }, [dispatch]);
 
   const shopNameRef = React.useRef("");
+  const productIdRef = React.useRef("");
   const [totalPrice, setTotalPrice] = React.useState(0);
   React.useEffect(() => {
     const product: any[] = [];
     getAllProductCartUser?.map((item: any, index) => {
       shopNameRef.current = item.product.category.shop.name;
+
       product.push({
         id: item.id,
         total: item.total,
@@ -72,13 +77,17 @@ export default function Checkout() {
     });
     setData(product);
   }, [getAllProductCartUser]);
-
+  const socket = React.useContext(SocketContext);
   const handleAddOrder = (data: any) => {
     dispatch(
       createOrderAction({
         ...data,
       })
     ).then(() => {
+      socket.emit("user:order", {
+        ...data,
+        userOrderId: profile.id,
+      });
       router.push("/profile/order");
     });
   };
@@ -125,11 +134,20 @@ export default function Checkout() {
                 <span>Address</span>
               </div>
               <div className="flex items-center space-x-2">
-                <h1>
-                  {userAddress?.name}
-                  {` (${userAddress?.phone})`}
-                </h1>
-                <span>{`${userAddress?.street}, ${userAddress?.city}, ${userAddress?.country}, ${userAddress?.district}`}</span>
+                {userAddress != null ? (
+                  <>
+                    <h1>
+                      {userAddress?.name}
+                      {` (${userAddress?.phone})`}
+                    </h1>
+                    <span>{`${userAddress?.street}, ${userAddress?.city}, ${userAddress?.country}, ${userAddress?.district}`}</span>
+                  </>
+                ) : (
+                  <>
+                    <h1>not found</h1>
+                  </>
+                )}
+
                 <span className="border border-primary cursor-pointer px-2 text-primary">
                   default
                 </span>
@@ -229,7 +247,7 @@ export default function Checkout() {
                   <div className="flex items-center justify-end space-x-4">
                     <div className="flex items-center justify-between ">
                       <span className="text-base font-mono  ">
-                        Tổng Thanh Toán (1 sản phẩm):
+                        totalPay ({data?.length} product):
                       </span>{" "}
                       <span className="text-base font-mono text-primary">
                         {formatter(totalPrice) + " đ"}

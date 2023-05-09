@@ -1,5 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { addAddressUserAction, deleteAddressUserAction, editProfileAction, getAddressUserAction, getAllUserAction, getOneAddressUserAction, getProfileAction, getRoleAction, updateUserAddressAction, uploadAvatarAction } from "../action/user.action";
+import { addAddressUserAction, deleteAddressUserAction, editProfileAction, getAddressUserAction, getAllUserAction, getMessageRoomAction, getMessageUserAction, getNotificationShopAction, getOneAddressUserAction, getProfileAction, getRoleAction, updateUserAddressAction, uploadAvatarAction } from "../action/user.action";
 import { IUser, IUserAddress } from "@/type/user.interface";
 import { toast } from "react-toastify";
 
@@ -14,7 +14,10 @@ interface initState {
 	},
 	userAddress: IUserAddress[],
 	getOneUserAddress: IUserAddress | null,
-	default: boolean
+	default: boolean,
+	dataNotification: any[],
+	messageUser: any[],
+	messageRoom: any[]
 }
 
 const initState: initState = {
@@ -28,7 +31,10 @@ const initState: initState = {
 	},
 	userAddress: [],
 	getOneUserAddress: null,
-	default: false
+	default: false,
+	dataNotification: [],
+	messageUser: [],
+	messageRoom: []
 }
 
 const UserSlice = createSlice({
@@ -117,6 +123,21 @@ const UserSlice = createSlice({
 					address.street = action.payload.data.street
 					address.telephone = action.payload.data.telephone
 				}
+			})
+
+		builder
+			.addCase(getNotificationShopAction.fulfilled, (state, action) => {
+				state.dataNotification = action.payload
+			})
+
+		builder
+			.addCase(getMessageUserAction.fulfilled, (state, action) => {
+				state.messageUser = action.payload
+			})
+
+		builder
+			.addCase(getMessageRoomAction.fulfilled, (state, action) => {
+				state.messageRoom = action.payload
 			})
 	}
 

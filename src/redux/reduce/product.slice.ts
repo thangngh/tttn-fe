@@ -91,7 +91,7 @@ const ProductSlice = createSlice({
 		})
 		builder.addCase(getOneProductAction.fulfilled, (state, action) => {
 			state.product = action.payload
-			state.price = formatter(action.payload.productInventory[0].price)
+			state.price = formatter(action.payload?.productInventory[0]?.price)
 			state.productInventory = action.payload?.productInventory
 		})
 

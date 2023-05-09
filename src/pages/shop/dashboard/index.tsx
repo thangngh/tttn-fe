@@ -2,6 +2,7 @@ import StaticCard from "@/components/admin/StaticCard";
 import { DrawerHeader } from "@/components/mui/CustomSideBar";
 import ShopLayout from "@/layouts/ShopLayout";
 import {
+  getTotalRejectAndApprovedInMonthAction,
   getUserNewOrderAction,
   totalFinanceShopAction,
   totalOderShopAction,
@@ -28,6 +29,7 @@ import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import KeyboardArrowUpOutlinedIcon from "@mui/icons-material/KeyboardArrowUpOutlined";
 import { CircularProgressbar } from "react-circular-progressbar";
 import { format } from "date-fns";
+import { ETime } from "@/type/cart.interface";
 export default function Dashboard() {
   const dispatch = useAppDispatch();
 
@@ -43,80 +45,89 @@ export default function Dashboard() {
   const getUserNewOrder = useAppSelector(
     (state: RootState) => state.cartReducer.userNewOrder
   );
-  const data = [
-    {
-      name: "January",
-      reject: 4000,
-      approved: 2400,
-      amt: 2400,
-    },
-    {
-      name: "February",
-      reject: 3000,
-      approved: 1398,
-      amt: 2210,
-    },
-    {
-      name: "March",
-      reject: 2000,
-      approved: 9800,
-      amt: 2290,
-    },
-    {
-      name: "April",
-      reject: 2780,
-      approved: 3908,
-      amt: 2000,
-    },
-    {
-      name: "May",
-      reject: 1890,
-      approved: 4800,
-      amt: 2181,
-    },
-    {
-      name: "June ",
-      reject: 2390,
-      approved: 3800,
-      amt: 2500,
-    },
-    {
-      name: "July",
-      reject: 3490,
-      approved: 4300,
-      amt: 2100,
-    },
-    {
-      name: "August",
-      reject: 3490,
-      approved: 4300,
-      amt: 2100,
-    },
-    {
-      name: "September",
-      reject: 3490,
-      approved: 1000,
-      amt: 2100,
-    },
-    {
-      name: "October",
-      reject: 3490,
-      approved: 4300,
-      amt: 2100,
-    },
-    {
-      name: "November ",
-      reject: 3490,
-      approved: 4300,
-      amt: 2100,
-    },
-    {
-      name: "December",
-      reject: 3490,
-      approved: 4300,
-      amt: 2100,
-    },
-  ];
+  const getRejectAndApproved = useAppSelector(
+    (state: RootState) => state.cartReducer.totalRejectAndApproved
+  );
+  // const data = [
+  //   {
+  //     name: "January",
+  //     reject: 4000,
+  //     approved: 2400,
+  //     amt: 2400,
+  //   },
+  //   {
+  //     name: "February",
+  //     reject: 3000,
+  //     approved: 1398,
+  //     amt: 2210,
+  //   },
+  //   {
+  //     name: "March",
+  //     reject: 2000,
+  //     approved: 9800,
+  //     amt: 2290,
+  //   },
+  //   {
+  //     name: "April",
+  //     reject: 2780,
+  //     approved: 3908,
+  //     amt: 2000,
+  //   },
+  //   {
+  //     name: "May",
+  //     reject: 1890,
+  //     approved: 4800,
+  //     amt: 2181,
+  //   },
+  //   {
+  //     name: "June ",
+  //     reject: 2390,
+  //     approved: 3800,
+  //     amt: 2500,
+  //   },
+  //   {
+  //     name: "July",
+  //     reject: 3490,
+  //     approved: 4300,
+  //     amt: 2100,
+  //   },
+  //   {
+  //     name: "August",
+  //     reject: 3490,
+  //     approved: 4300,
+  //     amt: 2100,
+  //   },
+  //   {
+  //     name: "September",
+  //     reject: 3490,
+  //     approved: 1000,
+  //     amt: 2100,
+  //   },
+  //   {
+  //     name: "October",
+  //     reject: 3490,
+  //     approved: 4300,
+  //     amt: 2100,
+  //   },
+  //   {
+  //     name: "November ",
+  //     reject: 3490,
+  //     approved: 4300,
+  //     amt: 2100,
+  //   },
+  //   {
+  //     name: "December",
+  //     reject: 3490,
+  //     approved: 4300,
+  //     amt: 2100,
+  //   },
+  // ];
+
+  const [data, setData] = React.useState<any[]>([]);
+  console.log("getRejectAndApproved", getRejectAndApproved);
+  React.useEffect(() => {
+    setData(getRejectAndApproved);
+  }, [getRejectAndApproved]);
 
   React.useEffect(() => {
     dispatch(totalOderShopAction());
@@ -125,7 +136,11 @@ export default function Dashboard() {
     const accessToken = localStorage.getItem("accessToken");
     accessToken && dispatch(getUserNewOrderAction());
   }, [dispatch]);
-  console.log(getUserNewOrder);
+
+  React.useEffect(() => {
+    const month = ETime["MONTH"];
+    dispatch(getTotalRejectAndApprovedInMonthAction(month));
+  }, []);
   return (
     <ShopLayout>
       <div className="h-full  my-4 p-4">
@@ -218,7 +233,7 @@ export default function Dashboard() {
                   margin={{ top: 10, right: 30, left: 0, bottom: 0 }}
                 >
                   <CartesianGrid strokeDasharray="3 3" />
-                  <XAxis dataKey="name" padding={{ left: 30, right: 30 }} />
+                  <XAxis dataKey="month" padding={{ left: 30, right: 30 }} />
                   <YAxis />
                   <Tooltip />
                   <Legend />
@@ -228,7 +243,7 @@ export default function Dashboard() {
                     stroke="#8884d8"
                     activeDot={{ r: 8 }}
                   />
-                  <Line type="monotone" dataKey="reject" stroke="#82ca9d" />
+                  <Line type="monotone" dataKey="rejected" stroke="#82ca9d" />
                 </LineChart>
               </ResponsiveContainer>
             </div>
@@ -238,7 +253,7 @@ export default function Dashboard() {
                   New Order
                 </h1>
               </div>
-              <div className="flex flex-col items-center justify-center gap-3.5 font-[Nunito,_sans-serif]">
+              <div className="flex flex-col h-80 overflow-auto items-center justify-center gap-3.5 font-[Nunito,_sans-serif]">
                 {getUserNewOrder &&
                   getUserNewOrder?.map((item, index) => (
                     <div

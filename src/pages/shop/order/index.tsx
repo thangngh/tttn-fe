@@ -1,6 +1,11 @@
 import { DrawerHeader } from "@/components/mui/CustomSideBar";
 import ShopLayout from "@/layouts/ShopLayout";
-import { getOrderShopAction } from "@/redux/action/cart.action";
+import {
+  approvedOrderAction,
+  getOrderShopAction,
+  shopApprovedOrderAction,
+  shopRejectOrderAction,
+} from "@/redux/action/cart.action";
 import { useAppDispatch, useAppSelector } from "@/redux/hook";
 import { RootState } from "@/redux/store";
 import { format } from "date-fns";
@@ -39,6 +44,24 @@ export default function Order() {
     });
     setData(data);
   }, [getOrderShop]);
+
+  const handleApproved = async (orderId: string) => {
+    dispatch(shopApprovedOrderAction(orderId)).then(() => {
+      window.location.reload();
+    });
+  };
+
+  const handleRejected = async (orderId: string) => {
+    dispatch(shopRejectOrderAction(orderId)).then(() => {
+      window.location.reload();
+    });
+  };
+
+  const approvedOder = async (data: string) => {
+    dispatch(approvedOrderAction(data));
+    window.location.reload();
+  };
+
   return (
     <ShopLayout>
       <div className="h-full w-full  overflow-x-auto  my-4 p-4 space-y-4">
@@ -48,7 +71,7 @@ export default function Order() {
             Order
           </h1>
         </div>
-        <div className="overflow-x-auto w-4/5 mx-auto">
+        <div className="overflow-y-auto w-[90%] h-auto max-h-80 mx-auto">
           <table className="table w-full">
             {/* head */}
             <thead>
@@ -60,14 +83,15 @@ export default function Order() {
                 <th>Total</th>
                 <th>Status</th>
                 <th>Create</th>
+                <th>Action</th>
               </tr>
             </thead>
             <tbody>
-              {/* row 1 */}
               {data &&
                 data.map((item) => (
                   <tr key={item.id}>
-                    {item.status === "approved" ? (
+                    {item.status === "approved" ||
+                    item.status === "approved by shop" ? (
                       <td>{item.id}</td>
                     ) : (
                       <td className="cursor-pointer">
@@ -95,6 +119,35 @@ export default function Order() {
                       {format(
                         new Date(item?.createdAt),
                         "dd/MM/yyyy - HH:mm:ss"
+                      )}
+                    </td>
+                    <td>
+                      {item.status === "pending" ? (
+                        <div className="flex items-center space-x-2">
+                          <button
+                            onClick={() => handleApproved(item.id)}
+                            className="btn btn-primary"
+                          >
+                            Approve
+                          </button>
+                          <button
+                            onClick={() => handleRejected(item.id)}
+                            className="btn btn-danger"
+                          >
+                            Reject
+                          </button>
+                        </div>
+                      ) : item.status === "approved by shop" ? (
+                        <div className="flex items-center space-x-2">
+                          <button
+                            onClick={() => approvedOder(item.id)}
+                            className="btn btn-primary"
+                          >
+                            Approve
+                          </button>
+                        </div>
+                      ) : (
+                        <></>
                       )}
                     </td>
                   </tr>

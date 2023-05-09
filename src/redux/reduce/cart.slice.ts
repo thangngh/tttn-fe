@@ -1,6 +1,6 @@
 import { IAddCart } from "@/type/cart.interface";
 import { createSlice } from "@reduxjs/toolkit";
-import { addProductToCartAction, deleteProductToCartAction, findAllProductCartUserAction, getOrderShopAction, getOrderUserAction, getUserNewOrderAction, totalFinanceShopAction, totalOderShopAction, totalParticipantVisitShopAction } from "../action/cart.action";
+import { addProductToCartAction, deleteProductToCartAction, findAllProductCartUserAction, getOrderShopAction, getOrderUserAction, getTotalRejectAndApprovedInMonthAction, getUserNewOrderAction, totalFinanceShopAction, totalOderShopAction, totalParticipantVisitShopAction } from "../action/cart.action";
 import { getUserAddressDefaultAction } from "../action/user.action";
 
 interface initialState {
@@ -15,7 +15,8 @@ interface initialState {
 	totalOrder: number,
 	totalFinance: number,
 	totalParticipant: number,
-	userNewOrder: any[]
+	userNewOrder: any[],
+	totalRejectAndApproved: []
 }
 
 const initialState: initialState = {
@@ -30,7 +31,8 @@ const initialState: initialState = {
 	totalOrder: 0,
 	totalFinance: 0,
 	totalParticipant: 0,
-	userNewOrder: []
+	userNewOrder: [],
+	totalRejectAndApproved: []
 }
 
 const CartSlice = createSlice({
@@ -86,6 +88,10 @@ const CartSlice = createSlice({
 
 		builder.addCase(getUserNewOrderAction.fulfilled, (state, action) => {
 			state.userNewOrder = action.payload
+		})
+
+		builder.addCase(getTotalRejectAndApprovedInMonthAction.fulfilled, (state, action) => {
+			state.totalRejectAndApproved = action.payload
 		})
 	}
 })

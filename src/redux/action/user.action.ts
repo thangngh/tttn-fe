@@ -97,3 +97,27 @@ export const updateUserAddressAction = createAsyncThunk(
 		return response;
 	}
 )
+
+export const getNotificationShopAction = createAsyncThunk(
+	"/notification/notification-shop",
+	async () => {
+		const response = await UserAPI.getNotificationShop()
+		return response;
+	}
+)
+
+export const getMessageUserAction = createAsyncThunk(
+	"/message/message-user",
+	async () => {
+		const response = await UserAPI.getMessageUser()
+		return response;
+	}
+)
+
+export const getMessageRoomAction = createAsyncThunk(
+	"/message/message-room-user",
+	async (roomId: string) => {
+		const response = await UserAPI.getMessageRoom(roomId)
+		return response;
+	}
+)

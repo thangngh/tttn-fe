@@ -1,4 +1,4 @@
-import { IAddCart, IOrder } from "@/type/cart.interface";
+import { ETime, IAddCart, IBody, IOrder } from "@/type/cart.interface";
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import { CartAPI } from "../../../api-client/cart.api";
 
@@ -37,8 +37,8 @@ export const createOrderAction = createAsyncThunk(
 
 export const getOrderUserAction = createAsyncThunk(
 	"cart/get-order-user",
-	async () => {
-		const response = await CartAPI.getOrderUser();
+	async (status?: string) => {
+		const response = await CartAPI.getOrderUser(status);
 		return response;
 	}
 )
@@ -98,6 +98,33 @@ export const getUserNewOrderAction = createAsyncThunk(
 	"/order/user-order-product-in-shop",
 	async () => {
 		const response = await CartAPI.getUserNewOrder()
+
+		return response
+	}
+)
+
+export const getTotalRejectAndApprovedInMonthAction = createAsyncThunk(
+	"/order/total-group-reject-approved",
+	async (body: ETime) => {
+		const response = await CartAPI.getTotalRejectAndApprovedInMonth(body)
+
+		return response
+	}
+)
+
+export const shopApprovedOrderAction = createAsyncThunk(
+	"/order/approved-order-by-shop",
+	async (orderId: string) => {
+		const response = await CartAPI.shopApprovedOrder(orderId)
+
+		return response
+	}
+)
+
+export const shopRejectOrderAction = createAsyncThunk(
+	"/order/reject-order-by-shop/",
+	async (orderId: string) => {
+		const response = await CartAPI.shopRejectOrder(orderId)
 
 		return response
 	}

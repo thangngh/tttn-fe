@@ -131,7 +131,7 @@ export default function ProductDetailShop() {
   };
   return (
     <ShopLayout>
-      <div className="h-full w-full min-w-[1200px] overflow-x-auto  my-4 p-4 space-y-4">
+      <div className="h-full w-4/5 mx-auto overflow-x-auto  my-4 p-4 space-y-4">
         <DrawerHeader />
         <button className="flex space-x-2" onClick={() => handleBack()}>
           <svg

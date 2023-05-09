@@ -156,5 +156,35 @@ export const UserAPI = {
 			toast.error(error)
 			return error;
 		}
-	}
+	},
+
+	getNotificationShop: async () => {
+		try {
+			const response = await axiosConfig.get("/notification/notification-shop");
+			return response.data;
+		} catch (error: any) {
+			toast.error(error)
+			return error;
+		}
+	},
+
+	getMessageUser: async () => {
+		try {
+			const response = await axiosConfig.get("/message/message-user");
+			return response.data;
+		} catch (error: any) {
+			toast.error(error)
+			return error;
+		}
+	},
+
+	getMessageRoom: async (roomId: string) => {
+		try {
+			const response = await axiosConfig.get(`/message/message-room-user/${roomId}`);
+			return response.data;
+		} catch (error: any) {
+			toast.error(error)
+			return error;
+		}
+	},
 }

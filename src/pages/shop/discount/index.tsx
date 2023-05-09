@@ -1,3 +1,5 @@
+import { DrawerHeader } from "@/components/mui/CustomSideBar";
+import ShopLayout from "@/layouts/ShopLayout";
 import React from "react";
 
 export default function Discount() {
@@ -16,4 +18,11 @@ export default function Discount() {
     document.body.style.pointerEvents = "auto";
     setOpenOpenDiscountModal(false);
   };
+
+  return (
+    <ShopLayout>
+      <DrawerHeader />
+      <h1>Discount</h1>
+    </ShopLayout>
+  );
 }

@@ -97,19 +97,18 @@ export default function ProductItem() {
   const [isLoading, setIsLoading] = React.useState(false);
 
   const handleAddProductToCart = async (body: IAddCart) => {
-    console.log("handleAddProductToCart", body);
-    // const accessToken = localStorage.getItem("accessToken");
-    // if (!accessToken) {
-    //   router.push({
-    //     pathname: "/login",
-    //     query: {
-    //       redirect: router.asPath,
-    //     },
-    //   });
-    // } else {
-    //   setIsLoading(true);
-    //   dispatch(addProductToCartAction(body));
-    // }
+    const accessToken = localStorage.getItem("accessToken");
+    if (!accessToken) {
+      router.push({
+        pathname: "/login",
+        query: {
+          redirect: router.asPath,
+        },
+      });
+    } else {
+      setIsLoading(true);
+      dispatch(addProductToCartAction(body));
+    }
   };
 
   const successAddCart = useAppSelector(
@@ -197,7 +196,7 @@ export default function ProductItem() {
             </span>
           </div>
         </div>
-        <div className="flex flex-col md:flex-row justify-center">
+        <div className="flex flex-col md:flex-row w-full  justify-center">
           <Slider
             {...settings}
             className="w-full md:w-1/2"
@@ -311,7 +310,7 @@ export default function ProductItem() {
           </div>
         </div>
       </div>
-      <div className="w-screen bg-gray-50">
+      {/* <div className="w-screen bg-gray-50">
         <div className="my-10 mx-auto max-w-screen-md px-10 py-16">
           <div className="flex w-full flex-col">
             <div className="flex flex-col sm:flex-row">
@@ -492,10 +491,9 @@ export default function ProductItem() {
           </div>
         </div>
       </div>
-      {/* <Review /> */}
       <div className="bg-white flex-wrap-reverse mx-full pb-4 px-4 pt-4  sm:px-6 lg:px-8 border-b-2 border-b-gray-400">
         <div className="w-full flex justify-start items-start flex-col bg-gray-50 p-8"></div>
-      </div>
+      </div> */}
     </Screen>
   );
 }

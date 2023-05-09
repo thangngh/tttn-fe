@@ -7,10 +7,9 @@ import { RootState } from "@/redux/store";
 import { IStatus } from "@/type/cart.interface";
 import Image from "next/image";
 import { useRouter } from "next/router";
-import React from "react";
+import React, { memo } from "react";
 import NoData from "../nodata/Nodata";
-
-export default function OrderDetail() {
+export default function OrderCompleted() {
   const dispatch = useAppDispatch();
   const router = useRouter();
   const getOrder = useAppSelector(
@@ -20,8 +19,8 @@ export default function OrderDetail() {
 
   React.useEffect(() => {
     const accessToken = localStorage.getItem("accessToken");
-    const all = IStatus["ALL"];
-    accessToken && dispatch(getOrderUserAction());
+    const completed = IStatus["APPROVED"];
+    accessToken && dispatch(getOrderUserAction(completed));
   }, []);
 
   React.useEffect(() => {
@@ -60,31 +59,12 @@ export default function OrderDetail() {
             <div key={item.id} className="flex flex-col space-y-3  shadow-md">
               <div className="flex flex-col flex-auto border-b-2 border-gray-200 pt-2 px-2">
                 <div className="w-full relative max-w-1/2 flex items-center justify-between">
-                  <span className="max-w-[100px] w-full font-mono text-primary-focus">
+                  <span className="text-left w-full font-mono text-primary-focus">
                     {item.shopName}
                   </span>
-                  {item.status === "approved" ||
-                  item.status === "rejected" ||
-                  item.status === "rejected by shop" ? (
-                    <span className="max-w-[100px] w-full font-mono text-primary-focus">
-                      {item.status}
-                    </span>
-                  ) : (
-                    <div className="flex items-center space-x-2 ">
-                      <span className="max-w-[100px] w-full font-mono text-primary-focus">
-                        {item.status === "pending" ||
-                        item.status === "approved by shop"
-                          ? item.status
-                          : ""}{" "}
-                      </span>
-                      <button
-                        onClick={() => rejectedOder(item.id)}
-                        className="btn btn-outline btn-primary"
-                      >
-                        {"reject"}
-                      </button>
-                    </div>
-                  )}
+                  <span className="text-right w-full font-mono text-primary-focus">
+                    {item.status}
+                  </span>
                 </div>
                 <div className="w-full relative max-w-1/2  flex justify-between flex-auto text-black">
                   <div className="w-full max-w-1/2">

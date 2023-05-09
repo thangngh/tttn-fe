@@ -24,6 +24,13 @@ import Image from "next/image";
 import { Badge, Collapse } from "@mui/material";
 import NotificationsIcon from "@mui/icons-material/Notifications";
 import { ExpandLess, ExpandMore } from "@mui/icons-material";
+import { SocketContext } from "@/provider/userSocket";
+import { useAppDispatch, useAppSelector } from "@/redux/hook";
+import { RootState } from "@/redux/store";
+import { format } from "date-fns";
+import Notify from "../notify/notify";
+import { getNotificationShopAction } from "@/redux/action/user.action";
+import NoData from "../nodata/Nodata";
 interface data {
   id: number;
   title: string;
@@ -125,8 +132,46 @@ const CustomSideBar = ({ data, title, username }: IProp) => {
   const router = useRouter();
   const [open, setOpen] = React.useState(false);
   const [openSubMenu, setOpenSubMenu] = React.useState(false);
+  const [isNotify, setIsNotify] = React.useState(false);
+  const [isOpenNotify, setIsOpenNotify] = React.useState(false);
+  const useSocket = React.useContext(SocketContext);
+
   const mainPath = router.pathname.split("/")[1];
   const subPath = router.pathname.split("/")[2];
+  const [notifyData, setNotifyData] = React.useState<any[]>([]);
+  const dataNotify = useAppSelector(
+    (state: RootState) => state.userReducer.dataNotification
+  );
+  const dispatch = useAppDispatch();
+  React.useEffect(() => {
+    dispatch(getNotificationShopAction());
+  }, []);
+
+  React.useEffect(() => {
+    if (!Array.isArray(dataNotify)) return;
+    const setDataArr: any[] = [];
+    dataNotify.forEach((item) => {
+      setDataArr.push({
+        id: item.id,
+        content: item.content,
+        createAt: item.createdAt,
+      });
+    });
+    setNotifyData(setDataArr);
+  }, [dataNotify]);
+
+  React.useEffect(() => {
+    useSocket.on("msg:user:order", (data) => {
+      setIsNotify(true);
+      notifyData.push({
+        ...data,
+      });
+    });
+
+    return () => {
+      useSocket.off("msg:user:order");
+    };
+  }, []);
 
   const handleDrawerOpen = () => {
     setOpen(true);
@@ -138,6 +183,15 @@ const CustomSideBar = ({ data, title, username }: IProp) => {
 
   const handleSubMenu = () => {
     setOpenSubMenu(!openSubMenu);
+  };
+
+  const handleCloseNotify = () => {
+    setIsOpenNotify(false);
+  };
+
+  const handleOpenNotify = () => {
+    setIsNotify(false);
+    setIsOpenNotify(true);
   };
 
   return (
@@ -170,15 +224,84 @@ const CustomSideBar = ({ data, title, username }: IProp) => {
           </div>
           <div className="relative flex space-x-3 items-center">
             <div className="relative">
-              <IconButton aria-label="show  new notifications" color="inherit">
-                <Badge badgeContent={17} color="error">
-                  <NotificationsIcon />
+              <IconButton
+                onClick={handleOpenNotify}
+                aria-label="show  new notifications"
+                color="inherit"
+              >
+                <Badge color="error">
+                  <NotificationsIcon className="relative" />
                 </Badge>
               </IconButton>
-              <div className="absolute top-0 right-0 -mt-1 -mr-1">
-                <span className="animate-ping absolute inline-flex h-3 w-3 rounded-full bg-red-400 opacity-75"></span>
-                <span className="relative inline-flex rounded-full h-3 w-3 bg-red-500"></span>
-              </div>
+              {isNotify ? (
+                <div className="absolute top-[10px] right-[10px] -mt-1 -mr-1">
+                  <span className="animate-ping absolute inline-flex h-3 w-3 rounded-full bg-red-400 opacity-75"></span>
+                  <span className="relative inline-flex rounded-full h-3 w-3 bg-red-500"></span>
+                </div>
+              ) : (
+                <></>
+              )}
+              {/* notify component here */}
+              {isOpenNotify ? (
+                <div className="absolute top-[50px] left-[-280px]">
+                  <div className="max-w-full text-sm rounded border shadow-sm pointer-events-auto bg-clip-padding w-80">
+                    <div className="flex items-center justify-end px-3 py-2 text-gray-500 bg-gray-100 border-b-2 rounded-t bg-clip-padding">
+                      <button
+                        onClick={handleCloseNotify}
+                        type="button"
+                        className="box-content p-1 ml-3 -mr-1 text-black rounded opacity-50 hover:opacity-100"
+                      >
+                        <svg
+                          className="w-5 h-5"
+                          xmlns="http://www.w3.org/2000/svg"
+                          width="192"
+                          height="192"
+                          fill="#000000"
+                          viewBox="0 0 256 256"
+                        >
+                          <rect width="256" height="256" fill="none"></rect>
+                          <line
+                            x1="200"
+                            y1="56"
+                            x2="56"
+                            y2="200"
+                            stroke="#000000"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            stroke-width="24"
+                            fill="none"
+                          ></line>
+                          <line
+                            x1="200"
+                            y1="200"
+                            x2="56"
+                            y2="56"
+                            stroke="#000000"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            stroke-width="24"
+                            fill="none"
+                          ></line>
+                        </svg>
+                      </button>
+                    </div>
+                    {notifyData && notifyData.length > 0 ? (
+                      notifyData.map((item) => (
+                        <div key={item.id} className="p-3 bg-white text-black">
+                          {`${item.content}, ${format(
+                            new Date(item.createAt),
+                            "dd/MM/yyyy - HH:mm:ss"
+                          )}`}
+                        </div>
+                      ))
+                    ) : (
+                      <NoData />
+                    )}
+                  </div>
+                </div>
+              ) : (
+                <></>
+              )}
               {/* notify component here */}
             </div>
             <Image

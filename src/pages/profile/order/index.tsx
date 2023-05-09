@@ -1,4 +1,9 @@
+import OrderCompleted from "@/components/order/OderCompleted";
+import OrderApprovedByShop from "@/components/order/OrderApprovedByShop";
 import OrderDetail from "@/components/order/OrderDetail";
+import OrderPending from "@/components/order/OrderPending";
+import OrderRejectByShop from "@/components/order/OrderRejectByShop";
+import OrderRejected from "@/components/order/OrderRejected";
 import ProfileLayout from "@/layouts/ProfileLayout";
 import { AppBar, Box, Tab, Tabs, useTheme } from "@mui/material";
 import React from "react";
@@ -13,17 +18,27 @@ const TabData = [
   {
     id: 2,
     label: "Completed",
-    component: <h1>Completed</h1>,
+    component: <OrderCompleted />,
   },
   {
     id: 3,
     label: "Pending",
-    component: <h1>Pending</h1>,
+    component: <OrderPending />,
   },
   {
     id: 4,
+    label: "Approved By Shop",
+    component: <OrderApprovedByShop />,
+  },
+  {
+    id: 5,
+    label: "Rejected By Shop",
+    component: <OrderRejectByShop />,
+  },
+  {
+    id: 6,
     label: "Reject",
-    component: <h1>Reject</h1>,
+    component: <OrderRejected />,
   },
 ];
 

@@ -1,4 +1,4 @@
-import { IAddCart, IOrder } from "@/type/cart.interface";
+import { ETime, IAddCart, IBody, IOrder, IStatus } from "@/type/cart.interface";
 import axiosConfig from "./axios.config";
 import { toast } from "react-toastify";
 
@@ -52,9 +52,9 @@ export const CartAPI = {
 		}
 	},
 
-	getOrderUser: async () => {
+	getOrderUser: async (status?: string) => {
 		try {
-			const response = await axiosConfig.get("/order/get-order-user");
+			const response = await axiosConfig.get(`/order/get-order-user/${status}`);
 			toast.success(response.data.message);
 
 			return response.data;
@@ -146,5 +146,43 @@ export const CartAPI = {
 			toast.error(error.message);
 			return error;
 		}
-	}
+	},
+
+	getTotalRejectAndApprovedInMonth: async (body: ETime) => {
+		try {
+			const response = await axiosConfig.get(`/order/total-group-reject-approved/${body}`);
+			toast.success(response.data.message);
+
+			return response.data;
+		} catch (error: any) {
+			toast.error(error.message);
+			return error;
+		}
+	},
+
+	shopApprovedOrder: async (orderId: string) => {
+		try {
+			const response = await axiosConfig.post(`/order/approved-order-by-shop/${orderId}`);
+			toast.success(response.data.message);
+
+			return response.data;
+		} catch (error: any) {
+			toast.error(error.message);
+
+			return error;
+		}
+	},
+
+	shopRejectOrder: async (orderId: string) => {
+		try {
+			const response = await axiosConfig.post(`/order/reject-order-by-shop/${orderId}`);
+			toast.success(response.data.message);
+
+			return response.data;
+		} catch (error: any) {
+			toast.error(error.message);
+
+			return error;
+		}
+	},
 }

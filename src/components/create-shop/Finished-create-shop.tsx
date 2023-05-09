@@ -54,8 +54,9 @@ export default function FinishedCreateShopComponent({
       dispatch(createShopAction(newShop))
         .then(() => {
           localStorage.removeItem("shop");
-          const redirect = setTimeout(() => router.push("/shop/dashboard"));
-
+          const redirect = setTimeout(() => {
+            router.push("/shop/dashboard");
+          });
           clearTimeout(redirect);
         })
         .catch(() => {

@@ -1,27 +1,21 @@
-import { createContext, useEffect, useState } from "react";
-import io, { Socket } from "socket.io-client";
+import { createContext, ReactNode } from "react";
+import { io } from "socket.io-client";
 
-const SocketContext = createContext<Socket | undefined>(undefined);
-
-interface IChildren {
-  children: React.ReactNode;
-}
-
-const newSocket = io("", {
-  transports: ["web-socket"],
+const socket = io("http://localhost:3001" || "", {
+  transports: ["websocket"],
   withCredentials: true,
+  // query: {
+  //   token: localStorage.getItem("token"),
+  //   deviceToken: localStorage.getItem("device-token"),
+  //   platform: "BROWSER",
+  // },
 });
+const SocketContext = createContext(socket);
 
-function UserSocketProvider({ children }: any) {
-  const [socket, setSocket] = useState<Socket>();
-
-  useEffect(() => {
-    setSocket(newSocket);
-  }, []);
-
+function SocketProvider({ children }: any): JSX.Element {
   return (
     <SocketContext.Provider value={socket}>{children}</SocketContext.Provider>
   );
 }
 
-export { newSocket, SocketContext, UserSocketProvider };
+export { socket, SocketContext, SocketProvider };

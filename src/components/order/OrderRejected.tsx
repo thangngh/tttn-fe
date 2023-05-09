@@ -1,16 +1,14 @@
 import { formatter } from "@/pages/shop/product/[id]";
-import { rejectOrderAction } from "@/redux/action/cart.action";
-import { approvedOrderAction } from "@/redux/action/cart.action";
-import { getOrderUserAction } from "@/redux/action/cart.action";
-import { useAppDispatch, useAppSelector } from "@/redux/hook";
-import { RootState } from "@/redux/store";
-import { IStatus } from "@/type/cart.interface";
+import { memo } from "react";
 import Image from "next/image";
+import { useAppDispatch, useAppSelector } from "@/redux/hook";
 import { useRouter } from "next/router";
+import { RootState } from "@/redux/store";
 import React from "react";
+import { getOrderUserAction } from "@/redux/action/cart.action";
+import { IStatus } from "@/type/cart.interface";
 import NoData from "../nodata/Nodata";
-
-export default function OrderDetail() {
+function OrderReject() {
   const dispatch = useAppDispatch();
   const router = useRouter();
   const getOrder = useAppSelector(
@@ -20,8 +18,8 @@ export default function OrderDetail() {
 
   React.useEffect(() => {
     const accessToken = localStorage.getItem("accessToken");
-    const all = IStatus["ALL"];
-    accessToken && dispatch(getOrderUserAction());
+    const rejected = IStatus["REJECTED"];
+    accessToken && dispatch(getOrderUserAction(rejected));
   }, []);
 
   React.useEffect(() => {
@@ -42,16 +40,6 @@ export default function OrderDetail() {
     setData(orderArr);
   }, [getOrder]);
 
-  const approvedOder = async (data: string) => {
-    dispatch(approvedOrderAction(data));
-    window.location.reload();
-  };
-
-  const rejectedOder = async (data: string) => {
-    dispatch(rejectOrderAction(data));
-    window.location.reload();
-  };
-
   return (
     <>
       <div className="w-screen sm:container mx-auto mb-10 px-4 relative bg-[#f5f5f5]">
@@ -63,28 +51,9 @@ export default function OrderDetail() {
                   <span className="max-w-[100px] w-full font-mono text-primary-focus">
                     {item.shopName}
                   </span>
-                  {item.status === "approved" ||
-                  item.status === "rejected" ||
-                  item.status === "rejected by shop" ? (
-                    <span className="max-w-[100px] w-full font-mono text-primary-focus">
-                      {item.status}
-                    </span>
-                  ) : (
-                    <div className="flex items-center space-x-2 ">
-                      <span className="max-w-[100px] w-full font-mono text-primary-focus">
-                        {item.status === "pending" ||
-                        item.status === "approved by shop"
-                          ? item.status
-                          : ""}{" "}
-                      </span>
-                      <button
-                        onClick={() => rejectedOder(item.id)}
-                        className="btn btn-outline btn-primary"
-                      >
-                        {"reject"}
-                      </button>
-                    </div>
-                  )}
+                  <span className="max-w-[100px] w-full font-mono text-primary-focus">
+                    {item.status}
+                  </span>
                 </div>
                 <div className="w-full relative max-w-1/2  flex justify-between flex-auto text-black">
                   <div className="w-full max-w-1/2">
@@ -124,3 +93,5 @@ export default function OrderDetail() {
     </>
   );
 }
+
+export default memo(OrderReject);

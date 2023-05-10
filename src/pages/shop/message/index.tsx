@@ -32,6 +32,14 @@ export default function Message({ children }: IProp) {
       dispatch(getMessageUserAction());
     }
   }, [dispatch]);
+  const filterData = [...new Set(data.map((item) => item.roomId))].map(
+    (roomId) => {
+      return data.find((item) => item.roomId === roomId);
+    }
+  );
+
+  const [showUnique, setShowUnique] = React.useState(false);
+  console.log(filterData);
   return (
     <ShopLayout>
       <div className="h-full w-[90%] mx-auto  overflow-x-auto  my-4 p-4 space-y-4">
@@ -60,7 +68,7 @@ export default function Message({ children }: IProp) {
             <div className="flex flex-row justify-between bg-white">
               <div className="flex flex-col w-2/5 border-r-2 overflow-x-auto h-96">
                 {data &&
-                  data.map((item) => (
+                  filterData.map((item) => (
                     <div key={item.roomId}>
                       {item.fromId !== user?.id ||
                         (item.toId !== user?.id && (

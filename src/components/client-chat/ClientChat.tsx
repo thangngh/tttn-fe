@@ -11,21 +11,22 @@ import { toast } from "react-toastify";
 
 interface IProp {
   roomId: string;
+  userId: string;
+  messageData: any;
 }
 
-function ClientChat({ roomId }: IProp) {
-  console.log(roomId);
+function ClientChat({ roomId, userId, messageData }: IProp) {
+  console.log(roomId, userId, messageData);
   const router = useRouter();
   const dispatch = useAppDispatch();
   const messageRoom = useAppSelector(
     (state: RootState) => state.userReducer.messageRoom
   );
   const [data, setData] = React.useState<any[]>([]);
-  const [user, setUser] = React.useState<any>(null);
+  const [user, setUser] = React.useState<string>("");
 
   const [message, setMessage] = React.useState("");
   const useSocket = React.useContext(SocketContext);
-  const profile = useAppSelector((state: RootState) => state.userReducer.user);
   const toIdRef = React.useRef("");
   React.useEffect(() => {
     if (!Array.isArray(messageRoom)) return;
@@ -37,18 +38,36 @@ function ClientChat({ roomId }: IProp) {
         toId: item.toId,
         id: item.id,
       });
-      toIdRef.current = item.toId !== user?.id ? item.toId : item.fromId;
+      toIdRef.current = item.toId !== user ? item.toId : item.fromId;
     });
     setData(messageArr);
-  }, [messageRoom, user?.id]);
+  }, [messageRoom, user]);
 
   React.useEffect(() => {
-    profile && setUser(profile);
-  }, [profile]);
+    setUser(userId);
+  }, [userId]);
+
+  React.useEffect(() => {
+    useSocket.on("msg:send-message", (data: any) => {
+      const { fromId, toId } = data;
+      if (fromId === user || toId === user) {
+        setData((prev) => {
+          // Check if message already exists in data array
+          if (!prev.some((item) => item.id === data.id)) {
+            return [...prev, data];
+          }
+          return prev;
+        });
+      }
+    });
+
+    return () => {
+      useSocket.off("msg:send-message");
+    };
+  }, [useSocket, user]);
   React.useEffect(() => {
     const accessToken = localStorage.getItem("accessToken");
     if (accessToken) {
-      dispatch(getProfileAction());
       dispatch(getMessageRoomAction(roomId));
     }
   }, [dispatch, roomId]);
@@ -57,13 +76,13 @@ function ClientChat({ roomId }: IProp) {
     setMessage("");
     if (message.trim() !== "") {
       const dataSend = {
-        roomId: router.query.roomId,
+        roomId: roomId,
         content: message.trim(),
-        fromId: user?.id,
+        fromId: user,
         toId: toIdRef.current,
       };
       useSocket.emit("send-message", dataSend);
-      setData((prev) => [...prev, dataSend]);
+      // setData((prev) => [...prev, dataSend]);
     } else {
       toast.error("please insert message!");
     }
@@ -76,20 +95,20 @@ function ClientChat({ roomId }: IProp) {
     <div className="container mx-auto rounded-lg">
       <div className="flex flex-row justify-between bg-white">
         <div className="w-full px-5 flex flex-col justify-between">
-          <div className="flex flex-col mt-5">
+          <div className="flex  h-80 overflow-auto flex-col mt-5">
             {data &&
               data.map((item, index) => (
                 <div key={item.id}>
-                  {item.fromId === user?.id && (
+                  {item.fromId === user && (
                     <div className="flex justify-end mb-4">
-                      <div className="mr-2 py-3 px-4 bg-blue-400 rounded-bl-3xl rounded-tl-3xl rounded-tr-xl text-white">
+                      <div className="ml-2 py-3 px-4 bg-blue-400 rounded-br-3xl rounded-tr-3xl rounded-tl-xl text-white">
                         {item.content}
                       </div>
                     </div>
                   )}
-                  {item.toId === user?.id && (
+                  {item.toId === user && (
                     <div className="flex justify-start mb-4">
-                      <div className="ml-2 py-3 px-4 bg-gray-400 rounded-br-3xl rounded-tr-3xl rounded-tl-xl text-white">
+                      <div className="mr-2 py-3 px-4 bg-gray-400 rounded-bl-3xl rounded-tl-3xl rounded-tr-xl text-white">
                         {item.content}
                       </div>
                     </div>

@@ -26,7 +26,6 @@ export default function Home() {
   const [user, setUser] = React.useState<any>(null);
   const [listRoom, setListRoom] = React.useState<any[]>([]);
   const toIdRef = React.useRef("");
-  const roomRef = React.useRef("");
   const useSocket = React.useContext(SocketContext);
 
   const listRoomId = useAppSelector(
@@ -55,22 +54,29 @@ export default function Home() {
     setIsShowChat(true);
     setIsChat(false);
   };
-
+  const [messageData, setMessageData] = React.useState<any>(null);
   const handleCloseChat = () => {
     setIsShowChat(false);
-    roomRef.current = "";
+    setRoomId("");
+    setMessageData(null);
   };
 
   React.useEffect(() => {
     useSocket.on("msg:send-message", (data) => {
-      console.log(data);
+      setMessageData(data);
       setIsChat(true);
     });
 
     return () => {
       useSocket.off("msg:send-message");
     };
-  }, []);
+  }, [useSocket]);
+  const [roomId, setRoomId] = React.useState("");
+  const handleOpenRoom = (id: string) => {
+    setRoomId(id);
+  };
+
+  const MemoizedClientChat = React.memo(ClientChat);
 
   return (
     <Screen>
@@ -140,9 +146,7 @@ export default function Home() {
                           (item.toId !== user?.id && (
                             <div
                               className="cursor-pointer"
-                              onClick={() => {
-                                roomRef.current = item.roomId;
-                              }}
+                              onClick={() => handleOpenRoom(item.roomId)}
                             >
                               <div className="border-b-2 py-4 px-2"></div>
                               <div className="flex flex-row py-4 px-2 justify-center items-center border-b-2 border-l-4 border-blue-400 relative">
@@ -156,8 +160,12 @@ export default function Home() {
                       </div>
                     ))}
                 </div>
-                {roomRef.current ? (
-                  <ClientChat roomId={roomRef.current} />
+                {roomId !== "" ? (
+                  <MemoizedClientChat
+                    messageData={messageData}
+                    roomId={roomId}
+                    userId={user?.id}
+                  />
                 ) : (
                   <div className="flex flex-col items-center mx-auto my-auto">
                     <NoData />

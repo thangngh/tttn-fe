@@ -40,6 +40,25 @@ export default function MessageRoom() {
   React.useEffect(() => {
     profile && setUser(profile);
   }, [profile]);
+
+  React.useEffect(() => {
+    useSocket.on("msg:send-message", (data: any) => {
+      const { fromId, toId } = data;
+      if (fromId === user?.id || toId === user?.id) {
+        setData((prev) => {
+          if (!prev.some((item) => item.id === data.id)) {
+            return [...prev, data];
+          }
+          return prev;
+        });
+      }
+    });
+
+    return () => {
+      useSocket.off("msg:send-message");
+    };
+  }, [useSocket, user?.id]);
+
   React.useEffect(() => {
     const accessToken = localStorage.getItem("accessToken");
     if (router.isReady || accessToken) {
@@ -58,7 +77,14 @@ export default function MessageRoom() {
         toId: toIdRef.current,
       };
       useSocket.emit("send-message", dataSend);
-      setData((prev) => [...prev, dataSend]);
+      // setData((prev) => {
+      //   if (
+      //     !prev.some((item) => item.content.trim() === dataSend.content.trim())
+      //   ) {
+      //     return [...prev, dataSend];
+      //   }
+      //   return prev;
+      // });
     } else {
       toast.error("please insert message!");
     }
@@ -70,9 +96,9 @@ export default function MessageRoom() {
   return (
     <Message>
       <div className="container mx-auto rounded-lg">
-        <div className="flex flex-row justify-between bg-white">
+        <div className="flex  flex-row justify-between bg-white">
           <div className="w-full px-5 flex flex-col justify-between">
-            <div className="flex flex-col mt-5">
+            <div className="flex flex-col mt-5 h-80 overflow-auto">
               {data &&
                 data.map((item, index) => (
                   <div key={item.id}>

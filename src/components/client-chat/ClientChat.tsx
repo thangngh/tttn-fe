@@ -16,7 +16,6 @@ interface IProp {
 }
 
 function ClientChat({ roomId, userId, messageData }: IProp) {
-  console.log(roomId, userId, messageData);
   const router = useRouter();
   const dispatch = useAppDispatch();
   const messageRoom = useAppSelector(
@@ -49,11 +48,14 @@ function ClientChat({ roomId, userId, messageData }: IProp) {
 
   React.useEffect(() => {
     useSocket.on("msg:send-message", (data: any) => {
-      const { fromId, toId } = data;
+      const { fromId, toId, roomId } = data;
+      const ROOM = roomId;
       if (fromId === user || toId === user) {
         setData((prev) => {
-          // Check if message already exists in data array
           if (!prev.some((item) => item.id === data.id)) {
+            if (ROOM !== roomId) {
+              return [...prev];
+            }
             return [...prev, data];
           }
           return prev;

@@ -90,3 +90,11 @@ export const getProductByCategoryAction = createAsyncThunk(
 		return response;
 	}
 )
+
+export const ownerShopProductAction = createAsyncThunk(
+	"/product/owner-shop",
+	async (productId: string) => {
+		const response = await ProductAPI.ownerShopProduct(productId);
+		return response;
+	}
+)

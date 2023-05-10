@@ -1,6 +1,6 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import { UserAPI } from "../../../api-client/user.api";
-import { IUserAddress } from "@/type/user.interface";
+import { IAddReview, IComment, IUserAddress } from "@/type/user.interface";
 
 export const getRoleAction = createAsyncThunk(
 	"user/get-role",
@@ -118,6 +118,22 @@ export const getMessageRoomAction = createAsyncThunk(
 	"/message/message-room-user",
 	async (roomId: string) => {
 		const response = await UserAPI.getMessageRoom(roomId)
+		return response;
+	}
+)
+
+export const addReviewProductAction = createAsyncThunk(
+	"/review/add-review",
+	async ({ body, file }: { body: IAddReview, file: IComment }) => {
+		const response = await UserAPI.addReviewProduct({ body, file })
+		return response;
+	}
+)
+
+export const getReviewProductAction = createAsyncThunk(
+	'/review/get-product-review',
+	async (id: string) => {
+		const response = await UserAPI.getReviewProduct(id)
 		return response;
 	}
 )

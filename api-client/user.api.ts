@@ -1,6 +1,6 @@
 import { toast } from "react-toastify";
 import axiosConfig from "./axios.config";
-import { IUserAddress } from "@/type/user.interface";
+import { IAddReview, IComment, IUserAddress } from "@/type/user.interface";
 
 export const UserAPI = {
 	getProfile: async () => {
@@ -75,12 +75,38 @@ export const UserAPI = {
 		}
 	},
 
-	addReviewProduct: async () => {
-
+	addReviewProduct: async ({ body, file }: { body: IAddReview, file: IComment }) => {
+		const { lists } = file;
+		const { productId, userId, rating, content } = body
+		if (!lists) return null;
+		try {
+			const formData = new FormData();
+			lists.forEach((file: any) => formData.append("image", file.originFileObj));
+			formData.append("productId", productId as string)
+			formData.append("userId", userId as unknown as string)
+			formData.append("rating", rating as unknown as string)
+			formData.append("content", content)
+			const response = await axiosConfig.post("/review/add-review", formData, {
+				headers: {
+					'Content-Type': 'multipart/form-data',
+				},
+			});
+			toast.success(response.data.message)
+			return response.data;
+		} catch (error: any) {
+			toast.error(error)
+			return error;
+		}
 	},
 
 	getReviewProduct: async (productId: string) => {
-
+		try {
+			const response = await axiosConfig.get(`/review/get-review-product/${productId}`);
+			return response.data;
+		} catch (error: any) {
+			toast.error(error)
+			return error;
+		}
 	},
 
 	addAddressUser: async (body: IUserAddress) => {

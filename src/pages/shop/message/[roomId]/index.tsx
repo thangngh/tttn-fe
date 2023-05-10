@@ -43,12 +43,16 @@ export default function MessageRoom() {
 
   React.useEffect(() => {
     useSocket.on("msg:send-message", (data: any) => {
-      const { fromId, toId } = data;
+      const { fromId, toId, roomId } = data;
       if (fromId === user?.id || toId === user?.id) {
         setData((prev) => {
           if (!prev.some((item) => item.id === data.id)) {
+            if (router.query.roomId !== roomId) {
+              return [...prev];
+            }
             return [...prev, data];
           }
+
           return prev;
         });
       }

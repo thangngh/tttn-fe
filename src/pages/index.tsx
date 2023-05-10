@@ -33,12 +33,18 @@ export default function Home() {
   );
 
   React.useEffect(() => {
-    profile && setUser(profile);
+    setUser(profile);
   }, [profile]);
 
   React.useEffect(() => {
     setListRoom(listRoomId);
   }, [listRoomId]);
+
+  const filterData = [...new Set(listRoom.map((item) => item.roomId))].map(
+    (roomId) => {
+      return listRoom.find((item) => item.roomId === roomId);
+    }
+  );
 
   React.useEffect(() => {
     const accessToken = localStorage.getItem("accessToken");
@@ -48,6 +54,7 @@ export default function Home() {
       setIsUser(true);
     }
   }, [dispatch]);
+  console.log("user", user);
   const [isShowChat, setIsShowChat] = React.useState(false);
 
   const handleShowChat = () => {
@@ -71,6 +78,7 @@ export default function Home() {
       useSocket.off("msg:send-message");
     };
   }, [useSocket]);
+
   const [roomId, setRoomId] = React.useState("");
   const handleOpenRoom = (id: string) => {
     setRoomId(id);
@@ -139,11 +147,12 @@ export default function Home() {
               </div>
               <div className="flex flex-row justify-between bg-white">
                 <div className="flex flex-col w-2/5 border-r-2 overflow-x-auto h-96">
-                  {listRoom &&
-                    listRoom.map((item) => (
-                      <div key={item.roomId}>
-                        {item.fromId !== user?.id ||
-                          (item.toId !== user?.id && (
+                  {filterData &&
+                    filterData?.map((item) => {
+                      return (
+                        <div key={item.roomId} className="relative">
+                          {item.fromId !== user?.id ||
+                          item.toId !== user?.id ? (
                             <div
                               className="cursor-pointer"
                               onClick={() => handleOpenRoom(item.roomId)}
@@ -156,9 +165,14 @@ export default function Home() {
                                 </div>
                               </div>
                             </div>
-                          ))}
-                      </div>
-                    ))}
+                          ) : (
+                            <>
+                              <h1>no data</h1>
+                            </>
+                          )}
+                        </div>
+                      );
+                    })}
                 </div>
                 {roomId !== "" ? (
                   <MemoizedClientChat

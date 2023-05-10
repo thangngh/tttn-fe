@@ -5,6 +5,7 @@ import { getMessageUserAction } from "@/redux/action/user.action";
 import { useAppDispatch, useAppSelector } from "@/redux/hook";
 import { RootState } from "@/redux/store";
 import Link from "next/link";
+import { useRouter } from "next/router";
 import React from "react";
 
 interface IProp {
@@ -38,8 +39,10 @@ export default function Message({ children }: IProp) {
     }
   );
 
-  const [showUnique, setShowUnique] = React.useState(false);
-  console.log(filterData);
+  const router = useRouter();
+
+  console.log("router", { router });
+
   return (
     <ShopLayout>
       <div className="h-full w-[90%] mx-auto  overflow-x-auto  my-4 p-4 space-y-4">
@@ -56,7 +59,6 @@ export default function Message({ children }: IProp) {
                 xmlns="http://www.w3.org/2000/svg"
                 aria-hidden="true"
                 className="w-6 h-6"
-                // onClick={handleCloseChat}
               >
                 <path
                   strokeLinecap="round"

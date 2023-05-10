@@ -2,12 +2,16 @@ import { Form, Input, Modal, Rate, Upload } from "antd";
 import Rating from "./rating";
 import { PlusOutlined } from "@ant-design/icons";
 import { toast } from "react-toastify";
+import { useAppDispatch } from "@/redux/hook";
+import { addReviewProductAction } from "@/redux/action/user.action";
 
 interface IProps {
-  openModal: boolean;
-  handleCloseModal: () => void;
+  openModal?: boolean;
+  handleCloseModal?: () => void;
+  productId: string;
+  userId?: string;
 }
-export default function AddReview() {
+export default function AddReview({ productId, userId }: IProps) {
   const [forms] = Form.useForm();
   const validateMessages = {
     required: "${label} is required!",
@@ -23,14 +27,24 @@ export default function AddReview() {
     }
     return e && e.fileList;
   };
-
+  const dispatch = useAppDispatch();
   const onCreateReview = async () => {
     const values = await forms.validateFields();
+    const { content, rate, file } = values;
     try {
-      console.log("onCreateReview", values);
-      for (const file of values.file) {
-        console.log("onCreateRevidat", file.originFileObj);
-      }
+      await dispatch(
+        addReviewProductAction({
+          body: {
+            productId: productId,
+            rating: rate | 0,
+            userId: +(userId as unknown as string),
+            content,
+          },
+          file: {
+            lists: file,
+          },
+        })
+      );
     } catch (error: any) {
       toast.error(error);
     }
@@ -59,8 +73,6 @@ export default function AddReview() {
                 />
               </Form.Item>
               <div className="flex space-x-2 items-center py-2">
-                {/* <span className="text-gray-700">vote</span>
-                <Rating /> */}
                 <Form.Item name="rate" label="Rate">
                   <Rate className="text-primary w-full h-10" />
                 </Form.Item>

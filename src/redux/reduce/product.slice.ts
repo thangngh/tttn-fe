@@ -1,5 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { createProductAction, createProductInventoryAction, deleteProductAction, getAllProductAction, getAllProductWithShopAction, getOneProductAction, getOneProductInventoryAction, getProductByCategoryAction, getProductInMonth, getProductWithShopIdAction, updateProductAction } from "../action/product.action";
+import { createProductAction, createProductInventoryAction, deleteProductAction, getAllProductAction, getAllProductWithShopAction, getOneProductAction, getOneProductInventoryAction, getProductByCategoryAction, getProductInMonth, getProductWithShopIdAction, ownerShopProductAction, updateProductAction } from "../action/product.action";
 import { IProduct } from "@/type/product.interface";
 import { formatter } from "@/pages/shop/product/[id]";
 
@@ -24,6 +24,7 @@ interface initialState {
 	price: string;
 	prePrice: string;
 	productByCategory: any[];
+	isOwnerProduct: string;
 }
 
 const initialState: initialState = {
@@ -46,7 +47,8 @@ const initialState: initialState = {
 	productInMonth: [],
 	price: '',
 	prePrice: '',
-	productByCategory: []
+	productByCategory: [],
+	isOwnerProduct: ''
 }
 
 const ProductSlice = createSlice({
@@ -116,8 +118,11 @@ const ProductSlice = createSlice({
 		})
 
 		builder.addCase(getProductByCategoryAction.fulfilled, (state, action) => {
-			console.log("action.payload", action.payload)
 			state.productByCategory = action.payload;
+		})
+
+		builder.addCase(ownerShopProductAction.fulfilled, (state, action) => {
+			state.isOwnerProduct = action.payload;
 		})
 
 	}

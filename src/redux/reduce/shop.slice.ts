@@ -1,11 +1,13 @@
 import { createSlice } from "@reduxjs/toolkit"
-import { createShopAction, getShopByUserAction, isShopAction } from "../action/shop.action";
+import { createShopAction, getRatingProductAction, getReviewProductByShopAction, getShopByUserAction, isShopAction } from "../action/shop.action";
 
 interface initState {
 	isSuccess: boolean,
 	isFail: boolean,
 	isShop: boolean,
 	shopId: string;
+	getRatingProduct: any,
+	getReviewProductShop: any[]
 }
 
 const initState: initState = {
@@ -13,6 +15,8 @@ const initState: initState = {
 	isFail: false,
 	isShop: false,
 	shopId: "",
+	getRatingProduct: null,
+	getReviewProductShop: []
 }
 
 const ShopSlice = createSlice({
@@ -37,6 +41,15 @@ const ShopSlice = createSlice({
 
 		builder.addCase(getShopByUserAction.fulfilled, (state, action) => {
 			state.shopId = action.payload?.data?.id
+		})
+
+		builder.addCase(getRatingProductAction.fulfilled, (state, action) => {
+			state.getRatingProduct = action.payload.data
+		})
+
+		builder.addCase(getReviewProductByShopAction.fulfilled, (state, action) => {
+			console.log(action.payload)
+			state.getReviewProductShop = action.payload
 		})
 
 	}

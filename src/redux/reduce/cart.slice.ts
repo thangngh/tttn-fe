@@ -51,7 +51,7 @@ const CartSlice = createSlice({
 			}
 		})
 		builder.addCase(findAllProductCartUserAction.fulfilled, (state, action) => {
-			state.cartProduct = action.payload
+			state.cartProduct = action?.payload
 			let total = 0;
 			for (const { price } of action.payload) {
 				total = total + price;

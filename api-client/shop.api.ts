@@ -44,5 +44,23 @@ export const ShopAPI = {
 		}
 	},
 
+	getRatingProduct: async (productId: string) => {
+		try {
+			const response = await axiosConfig.get(`/review/group-by-rating-product/${productId}`)
+			return response.data
+		} catch (error: any) {
+			toast.error(error.message);
+			return error;
+		}
+	},
 
+	getReviewProductByShop: async () => {
+		try {
+			const response = await axiosConfig.get("/review/get-review-shop-product")
+			return response.data
+		} catch (error: any) {
+			toast.error(error.message);
+			return error;
+		}
+	}
 }

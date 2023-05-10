@@ -1,5 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { addAddressUserAction, deleteAddressUserAction, editProfileAction, getAddressUserAction, getAllUserAction, getMessageRoomAction, getMessageUserAction, getNotificationShopAction, getOneAddressUserAction, getProfileAction, getRoleAction, updateUserAddressAction, uploadAvatarAction } from "../action/user.action";
+import { addAddressUserAction, addReviewProductAction, deleteAddressUserAction, editProfileAction, getAddressUserAction, getAllUserAction, getMessageRoomAction, getMessageUserAction, getNotificationShopAction, getOneAddressUserAction, getProfileAction, getReviewProductAction, getRoleAction, updateUserAddressAction, uploadAvatarAction } from "../action/user.action";
 import { IUser, IUserAddress } from "@/type/user.interface";
 import { toast } from "react-toastify";
 
@@ -17,7 +17,8 @@ interface initState {
 	default: boolean,
 	dataNotification: any[],
 	messageUser: any[],
-	messageRoom: any[]
+	messageRoom: any[],
+	productReview: any[]
 }
 
 const initState: initState = {
@@ -34,7 +35,8 @@ const initState: initState = {
 	default: false,
 	dataNotification: [],
 	messageUser: [],
-	messageRoom: []
+	messageRoom: [],
+	productReview: []
 }
 
 const UserSlice = createSlice({
@@ -138,6 +140,16 @@ const UserSlice = createSlice({
 		builder
 			.addCase(getMessageRoomAction.fulfilled, (state, action) => {
 				state.messageRoom = action.payload
+			})
+
+		builder
+			.addCase(addReviewProductAction.fulfilled, (state, action) => {
+				console.log("addReviewProductAction", action.payload)
+			})
+
+		builder
+			.addCase(getReviewProductAction.fulfilled, (state, action) => {
+				state.productReview = action.payload?.data
 			})
 	}
 

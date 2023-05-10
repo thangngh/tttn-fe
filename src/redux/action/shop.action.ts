@@ -29,3 +29,20 @@ export const getShopByUserAction = createAsyncThunk(
 	}
 )
 
+export const getRatingProductAction = createAsyncThunk(
+	"/shop/get-rating-product",
+	async (productId: string) => {
+		const response = await ShopAPI.getRatingProduct(productId);
+
+		return response;
+	}
+)
+
+export const getReviewProductByShopAction = createAsyncThunk(
+	"/shop/get-review-product-shop",
+	async () => {
+		const response = await ShopAPI.getReviewProductByShop();
+
+		return response;
+	}
+)

@@ -147,4 +147,14 @@ export const ProductAPI = {
 			return error;
 		}
 	},
+
+	ownerShopProduct: async (productId: string) => {
+		try {
+			const response = await axiosConfig.get(`/product/is-shop-owner-product/${productId}`);
+			return response.data;
+		} catch (error: any) {
+			toast.error(error.message);
+			return error;
+		}
+	}
 }

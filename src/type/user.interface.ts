@@ -23,3 +23,17 @@ export interface IUserAddress {
 	userId?: string;
 	user?: string
 }
+
+export interface IComment {
+	lists?: Array<File>;
+}
+
+export interface IAddReview {
+	productId?: string;
+	userId?: number;
+	rating?: number;
+	createAt?: Date;
+	updateAt?: Date;
+	deletedAt?: Date;
+	content: string;
+}

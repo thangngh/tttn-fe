@@ -126,12 +126,17 @@ export default function ProductItem() {
   const ownerProduct = useAppSelector(
     (state: RootState) => state.productReducer.isOwnerProduct
   );
-  console.log("ownerProduct", ownerProduct);
-  // React.useEffect(() => {
-  //   if (ownerProduct === "true" || router.isReady) {
-  //     router.push(`/shop/product/${router?.query?.id as string}`);
-  //   }
-  // }, [ownerProduct, router.isReady]);
+
+  React.useEffect(() => {
+    if (
+      typeof ownerProduct === "boolean" &&
+      ownerProduct === true &&
+      router.isReady
+    ) {
+      router.push(`/shop/product/${router?.query?.id as string}`);
+    }
+  }, [ownerProduct, router.isReady]);
+
   React.useEffect(() => {
     if (router.isReady) {
       dispatch(getOneProductAction(router?.query?.id as string));

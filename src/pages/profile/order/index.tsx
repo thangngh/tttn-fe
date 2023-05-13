@@ -1,3 +1,4 @@
+import FeedBack from "@/components/feedback/FeedBack";
 import OrderCompleted from "@/components/order/OderCompleted";
 import OrderApprovedByShop from "@/components/order/OrderApprovedByShop";
 import OrderDetail from "@/components/order/OrderDetail";
@@ -6,6 +7,7 @@ import OrderRejectByShop from "@/components/order/OrderRejectByShop";
 import OrderRejected from "@/components/order/OrderRejected";
 import ProfileLayout from "@/layouts/ProfileLayout";
 import { AppBar, Box, Tab, Tabs, useTheme } from "@mui/material";
+import { Modal } from "antd";
 import React from "react";
 import SwipeableViews from "react-swipeable-views";
 
@@ -42,6 +44,17 @@ const TabData = [
   },
 ];
 
+const arrComponent = [
+  {
+    id: 1,
+    component: <FeedBack />,
+  },
+  {
+    id: 2,
+    component: <></>,
+  },
+];
+
 export default function Order() {
   const theme = useTheme();
   const [value, setValueMenu] = React.useState(0);
@@ -50,11 +63,23 @@ export default function Order() {
     setValueMenu(newValue);
   };
 
+  const randomize = (myArray: any) => {
+    return myArray[Math.floor(Math.random() * myArray.length)];
+  };
+  const [feedBack, setFeedBack] = React.useState(true);
   const handleChangeIndex = (index: number) => {
     setValueMenu(index);
   };
   return (
     <ProfileLayout>
+      {/* <Modal
+        open={feedBack}
+        onCancel={() => setFeedBack(false)}
+        className="w-full min-w-[1200px]"
+        footer={null}
+      >
+        <FeedBack />
+      </Modal> */}
       <Box>
         <AppBar position="static">
           <Tabs

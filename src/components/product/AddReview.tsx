@@ -44,7 +44,7 @@ export default function AddReview({ productId, userId }: IProps) {
             lists: file,
           },
         })
-      );
+      ).then(() => window.location.reload());
     } catch (error: any) {
       toast.error(error);
     }

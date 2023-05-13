@@ -18,6 +18,8 @@ import { SocketContext } from "@/provider/userSocket";
 import Link from "next/link";
 import ClientChat from "@/components/client-chat/ClientChat";
 import NoData from "@/components/nodata/Nodata";
+import { Modal } from "antd";
+import FeedBack from "@/components/feedback/FeedBack";
 export default function Home() {
   const dispatch = useAppDispatch();
   const profile = useAppSelector((state: RootState) => state.userReducer.user);
@@ -86,12 +88,37 @@ export default function Home() {
 
   const MemoizedClientChat = React.memo(ClientChat);
 
+  const randomize = (myArray: any) => {
+    return myArray[Math.floor(Math.random() * myArray.length)];
+  };
+
+  const arrComponent = [
+    {
+      id: 1,
+      component: <FeedBack />,
+    },
+    {
+      id: 2,
+      component: <></>,
+    },
+  ];
+  const [feedBack, setFeedBack] = React.useState(true);
   return (
     <Screen>
       <div className="bg-white ">
         <main className={styles.main}>
           {/* <NewProduct /> */}
           <ProductFilter />
+          {/* {
+            <Modal
+              open={feedBack}
+              onCancel={() => setFeedBack(false)}
+              className="w-full min-w-[1200px]"
+              footer={null}
+            >
+              {randomize(arrComponent)}
+            </Modal>
+          } */}
         </main>
 
         {!isShowChat ? (

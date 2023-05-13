@@ -7,6 +7,7 @@ import React from "react";
 import Image from "next/image";
 import Slider, { Settings } from "react-slick";
 import SVGLogo from "@/components/svg/Svg-logo";
+import Link from "next/link";
 export default function ViewShop() {
   const router = useRouter();
   const dispatch = useAppDispatch();
@@ -22,7 +23,7 @@ export default function ViewShop() {
       dispatch(getProductWithShopIdAction(id as string));
     }
   }, [router.isReady]);
-
+  console.log("shop detail", shop);
   React.useEffect(() => {
     const data: any[] = [];
     shop?.map((item: any) => {
@@ -145,16 +146,18 @@ export default function ViewShop() {
 
                                 <div className="flex items-center ml-auto">
                                   <button className="text-gray-200 hover:text-gray-400 focus:outline-none focus:text-gray-400">
-                                    <svg
-                                      className="h-6 w-6 fill-current"
-                                      viewBox="0 0 24 24"
-                                    >
-                                      <path
-                                        fillRule="evenodd"
-                                        clipRule="evenodd"
-                                        d="M12 2C6.477 2 2 6.477 2 12s4.477 10 10 10 10-4.477 10-10S17.523 2 12 2zm0 18c-4.411 0-8-3.589-8-8s3.589-8 8-8 8 3.589 8 8-3.589 8-8 8zm-1-5h2v2h-2v-2zm0-8h2v6h-2V7z"
-                                      />
-                                    </svg>
+                                    <Link href={`/product/${item.productId}`}>
+                                      <svg
+                                        className="h-6 w-6 fill-current"
+                                        viewBox="0 0 24 24"
+                                      >
+                                        <path
+                                          fillRule="evenodd"
+                                          clipRule="evenodd"
+                                          d="M12 2C6.477 2 2 6.477 2 12s4.477 10 10 10 10-4.477 10-10S17.523 2 12 2zm0 18c-4.411 0-8-3.589-8-8s3.589-8 8-8 8 3.589 8 8-3.589 8-8 8zm-1-5h2v2h-2v-2zm0-8h2v6h-2V7z"
+                                        />
+                                      </svg>
+                                    </Link>
                                   </button>
                                 </div>
                               </div>

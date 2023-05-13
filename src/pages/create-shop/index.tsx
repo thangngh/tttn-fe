@@ -45,16 +45,17 @@ export default function CreateShop() {
     accessToken && dispatch(getRoleAction());
   }, []);
 
-  console.log("role ", role);
-
   React.useEffect(() => {
-    if (checkIsShop) {
-      router.push("/shop/dashboard");
-    } else if (role?.data === IRole.ADMIN) {
-      router.push("/not-found");
-    } else {
-      return;
-    }
+    let checkShop = setTimeout(() => {
+      if (checkIsShop) {
+        router.push("/shop/dashboard");
+      } else if (role?.data === IRole.ADMIN) {
+        router.push("/not-found");
+      } else {
+        return;
+      }
+    });
+    return () => clearTimeout(checkShop);
   }, [checkIsShop, role?.data, router]);
 
   const handleNext = () => {

@@ -12,8 +12,8 @@ export default function App({
   pageProps: { session, ...pageProps },
 }: AppProps<{ session: Session }>) {
   return (
-    <SocketProvider>
-      <SessionProvider session={session}>
+    <SessionProvider session={session}>
+      <SocketProvider>
         <Provider store={store}>
           <Component {...pageProps} />
         </Provider>
@@ -29,7 +29,7 @@ export default function App({
           draggable
           pauseOnHover
         />
-      </SessionProvider>
-    </SocketProvider>
+      </SocketProvider>
+    </SessionProvider>
   );
 }

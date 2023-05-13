@@ -188,7 +188,7 @@ export default function Home() {
                               <div className="flex flex-row py-4 px-2 justify-center items-center border-b-2 border-l-4 border-blue-400 relative">
                                 <div className="w-1/4 text-black"></div>
                                 <div className="w-3/4 text-black">
-                                  <div className="text-base font-semibold">{`${item?.to.firstName} ${item?.to.lastName}`}</div>
+                                  <div className="text-base font-semibold">{` ${item?.from.firstName} ${item?.from.lastName}`}</div>
                                 </div>
                               </div>
                             </div>
